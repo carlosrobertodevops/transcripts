@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { NotificationsBell } from '@/components/app/notifications-bell'
 
 export function Header() {
   const router = useRouter()

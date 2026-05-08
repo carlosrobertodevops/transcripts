@@ -64,8 +64,8 @@ export function TranscriptCard({ transcript, onClick, dragHandleProps }: Transcr
     <Card
       onClick={onClick}
       className={cn(
-        "relative overflow-hidden transition-all cursor-pointer",
-        "hover:border-primary/40 hover:scale-105",
+        "relative overflow-hidden group transition-all duration-300 ease-out cursor-pointer",
+        "hover:border-primary/40 hover:scale-105 glass-border-animated",
         onClick && "cursor-pointer"
       )}
     >

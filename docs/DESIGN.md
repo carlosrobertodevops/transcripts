@@ -198,7 +198,7 @@ Lucide React e a biblioteca padrao. Icones devem ser funcionais, nao decorativos
 ### Grid e Container
 
 - **Dashboard:** grid responsivo 1 coluna mobile, 2 colunas tablet, 3 colunas desktop largo.
-- **Auth:** split 45/55 no desktop; painel visual oculto no mobile.
+- **Auth:** split 2/3 + 1/3 (visual + form) no desktop; painel visual oculto no mobile.
 - **Admin:** largura ate `max-w-4xl`, com tabs e estatisticas.
 - **Plataforma:** largura ate `max-w-5xl`, com mais colunas e densidade global.
 - **Forms simples:** `max-w-sm` a `max-w-md`.

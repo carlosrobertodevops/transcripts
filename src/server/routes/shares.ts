@@ -5,9 +5,9 @@ import { shares, transcripts, users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { AuthError, NotFoundError } from "../plugins/error";
 
-export const sharesRoutes = new Elysia({ prefix: "/shares" })
+export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/shares" })
   .post(
-    "/transcripts/:transcriptId",
+    "/",
     async (ctx: any) => {
       const { params, body, user, set } = ctx;
       const typedUser = user as { id: string } | undefined;
@@ -80,7 +80,7 @@ export const sharesRoutes = new Elysia({ prefix: "/shares" })
       return { share: created[0] };
     }
   )
-  .get("/transcripts/:transcriptId", async (ctx: any) => {
+  .get("/", async (ctx: any) => {
     const { params, user, set } = ctx;
     if (!user) {
       set.status = 401;
