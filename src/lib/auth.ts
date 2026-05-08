@@ -36,7 +36,7 @@ export async function getSessionFromCookie(req: Request): Promise<Session | null
   if (!payload) return null;
 
   return {
-    id: payload.id as string,
+    id: payload.sub as string,
     email: payload.email as string,
     role: payload.role as string,
   };
