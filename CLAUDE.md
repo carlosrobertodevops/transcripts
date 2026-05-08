@@ -4,6 +4,13 @@
 
 SaaS de transcrição automática com dashboard web. Usuários fazem upload de mídia (áudio/vídeo), sistema processa via Groq Whisper Large V3 ou OpenAI Whisper, retorna transcrição editável. Frontend Next.js 16; backend Elysia; banco PostgreSQL 16; workers async para processamento.
 
+## Roteamento Raiz
+
+- Sem landing page. Root `/` redireciona:
+  - Anônimo → `/login`
+  - Autenticado → `/dashboard`
+- Auth split layout: 2/3 painel visual (esquerda) + 1/3 form (direita) em desktop; 100% form em mobile.
+
 ## Stack
 
 **Runtime & Build:**
@@ -23,6 +30,8 @@ SaaS de transcrição automática com dashboard web. Usuários fazem upload de m
 - Sonner 1.7.0 (notificações toast)
 - react-dropzone 14.3.5 (upload de arquivos)
 - @dnd-kit/core 6.1.0 + @dnd-kit/sortable 8.0.0 (drag-and-drop)
+- motion (page transitions via AnimatePresence keyed por pathname)
+- dayjs (manipulação e formatação de datas, locale pt-BR)
 
 **Backend & API:**
 
@@ -64,11 +73,7 @@ SaaS de transcrição automática com dashboard web. Usuários fazem upload de m
 /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/
 ├── src/
 │   ├── app/                          # Next.js App Router
-│   │   ├── (marketing)/              # Rotas públicas
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/page.tsx
-│   │   ├── (auth)/                   # Login, register
+│   │   ├── (auth)/                   # Login, register (split 2/3 visual + 1/3 form)
 │   │   │   ├── login/page.tsx
 │   │   │   └── register/page.tsx
 │   │   ├── (app)/                    # Rotas protegidas (autenticadas)
@@ -101,14 +106,11 @@ SaaS de transcrição automática com dashboard web. Usuários fazem upload de m
 │   │   │   ├── transcript-grid.tsx
 │   │   │   ├── transcript-card.tsx
 │   │   │   ├── new-transcript-dialog.tsx
-│   │   │   ├── upload-dialog.tsx
+│   │   │   ├── media-section.tsx     # Lista + upload de mídia em transcript detail
 │   │   │   └── share-dialog.tsx
-│   │   ├── marketing/                # Landing page components
-│   │   │   ├── hero.tsx
-│   │   │   ├── features.tsx
-│   │   │   └── ...
 │   │   └── providers/                # Client providers
 │   │       ├── theme-provider.tsx
+│   │       ├── page-transition.tsx   # AnimatePresence keyed por pathname
 │   │       └── sonner.tsx
 │   ├── server/
 │   │   ├── routes/                   # Elysia route handlers
