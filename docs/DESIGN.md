@@ -409,8 +409,8 @@ Estilo `new-york` em `src/components/ui/`: `button`, `card`, `input`, `label`, `
 - `BgGrid` (`src/components/app/bg-grid.tsx`): grid de linhas finas com fade radial via mask + blob azul/cyan blur baixo.
 - Classe `.glass-border-animated` em `globals.css`: borda cônica `#007AFF` → `#5AC8FA` rotacionando 8s linear infinite.
 
-### Auth split 45/55
-`src/app/(auth)/layout.tsx` implementa split desktop com painel visual à esquerda (`src/components/auth/visual-panel.tsx` — partículas SVG, glow azul/cyan, tagline PT-BR) e formulários `<LoginForm />` / `<RegisterForm />` à direita centralizados em `max-w-md`. Mobile esconde painel visual.
+### Auth split 2/3 + 1/3
+`src/app/(auth)/layout.tsx` implementa split desktop com painel visual à esquerda (`src/components/auth/visual-panel.tsx` — partículas SVG, glow azul/cyan, tagline PT-BR) em 2/3 da tela e formulários `<LoginForm />` / `<RegisterForm />` à direita em 1/3, centralizados em `max-w-md`. Mobile esconde painel visual, form ocupa 100%.
 
 ### Marketing
 `src/app/(marketing)/inicio/page.tsx` compõe:
