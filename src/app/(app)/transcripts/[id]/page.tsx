@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireUser, getTranscriptDetail } from "@/lib/auth-server";
 import { TranscriptEditor } from "@/components/transcripts/transcript-editor";
+import { MediaSection } from "@/components/transcripts/media-section";
 
 export default async function Page({
   params,
@@ -13,5 +14,10 @@ export default async function Page({
 
   if (!data) notFound();
 
-  return <TranscriptEditor transcriptId={data.id} initialContent={data.analysis ?? ""} />;
+  return (
+    <div className="space-y-6">
+      <MediaSection transcriptId={id} initialMedia={data.media || []} />
+      <TranscriptEditor transcriptId={data.id} initialContent={data.analysis ?? ""} />
+    </div>
+  );
 }

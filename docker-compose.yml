@@ -69,11 +69,13 @@ services:
       DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
       APP_URL: http://app:3000
+      NEXT_PUBLIC_APP_URL: http://app:3000
       TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       STORAGE_DIR: /app/uploads
       TRANSCRIBER_URL: http://transcriber:8000
+      NODE_ENV: production
     volumes:
       - uploads:/app/uploads
     command: ["bun", "run", "worker:loop"]

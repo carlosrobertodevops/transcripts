@@ -14,9 +14,9 @@ const isValidMediaMime = (mime: string): boolean => {
   return mime.startsWith("audio/") || mime.startsWith("video/");
 };
 
-export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/media" })
+export const mediaRoutes = new Elysia()
   .use(authPlugin)
-  .post("/upload", async (ctx: any) => {
+  .post("/transcripts/:id/media", async (ctx: any) => {
     const { user, params, request, set } = ctx;
     if (!user) {
       set.status = 401;
@@ -27,7 +27,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
     const transcript = await db
       .select()
       .from(transcripts)
-      .where(eq(transcripts.id, params.transcriptId))
+      .where(eq(transcripts.id, params.id))
       .limit(1);
 
     if (transcript.length === 0) {
@@ -44,7 +44,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
         .from(shares)
         .where(
           and(
-            eq(shares.transcriptId, params.transcriptId),
+            eq(shares.transcriptId, params.id),
             eq(shares.sharedWithUserId, user.id),
             eq(shares.canEdit, true)
           )
@@ -95,7 +95,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
       const buf = Buffer.from(buffer);
 
       // Generate storage path
-      const dest = `${params.transcriptId}/${crypto.randomUUID()}-${sanitizeFilename(file.name)}`;
+      const dest = `${params.id}/${crypto.randomUUID()}-${sanitizeFilename(file.name)}`;
 
       // Save to storage
       await storage.save(buf, dest);
@@ -104,7 +104,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
       const mediaRecord = await db
         .insert(media)
         .values({
-          transcriptId: params.transcriptId,
+          transcriptId: params.id,
           filename: file.name,
           mime: file.type,
           sizeBytes: file.size,
@@ -133,7 +133,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
         await db
           .update(transcripts)
           .set({ status: "processing" })
-          .where(eq(transcripts.id, params.transcriptId));
+          .where(eq(transcripts.id, params.id));
         isFirstUpload = false;
       }
     }
@@ -144,7 +144,7 @@ export const mediaRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/medi
       jobsQueued: jobsQueued.length,
     };
   })
-  .delete("/:mediaId", async (ctx: any) => {
+  .delete("/media/:id", async (ctx: any) => {
     const { user, params, set } = ctx;
     if (!user) {
       set.status = 401;

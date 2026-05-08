@@ -147,12 +147,77 @@ export function NewTranscriptDialog({ open, setOpen, onCreated }: NewTranscriptD
             />
           </div>
 
+          <div className="space-y-2">
+            <Label>Mídia (áudio/vídeo)</Label>
+            <div
+              {...getRootProps()}
+              className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${
+                isDragActive
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50 hover:bg-accent/30"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <Music className="h-6 w-6 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                {isDragActive
+                  ? "Solte os arquivos aqui..."
+                  : "Arraste arquivos ou clique para selecionar"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                MP3, WAV, M4A, AAC, MP4, MOV, AVI, MKV — até 500MB cada
+              </p>
+            </div>
+
+            {selectedFiles.length > 0 && (
+              <ul className="space-y-1 max-h-40 overflow-auto">
+                {selectedFiles.map((file, index) => {
+                  const isVideo = file.type.startsWith("video/");
+                  const Icon = isVideo ? FileVideo : Music;
+                  return (
+                    <li
+                      key={`${file.name}-${index}`}
+                      className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-2 py-1.5 text-sm"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <span className="flex-1 truncate">{file.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {(file.size / (1024 * 1024)).toFixed(1)}MB
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => removeFile(index)}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
           <div className="flex gap-2 justify-end pt-4">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={submitting}>
-              {submitting ? "Criando..." : "Criar"}
+            <Button type="submit" disabled={submitting || uploading}>
+              {uploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Enviando mídia...
+                </>
+              ) : submitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Criando...
+                </>
+              ) : (
+                "Criar"
+              )}
             </Button>
           </div>
         </form>
