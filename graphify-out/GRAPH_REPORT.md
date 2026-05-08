@@ -1,7 +1,7 @@
 # Graph Report - /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts  (2026-05-08)
 
 ## Corpus Check
-- 95 files · ~37,767 words
+- 95 files · ~38,585 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
