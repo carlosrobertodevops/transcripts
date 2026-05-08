@@ -9,9 +9,22 @@ SaaS de gerenciamento de transcrições de mídia (`.opus`, `.mp3`, `.wav`, `.fl
 - **Elysia** API montada via Route Handler
 - **Drizzle ORM** + **PostgreSQL 16**
 - **Zod 4** validação
-- **Tailwind v4** + **ShadCN/UI** + **Lucide** + **Sonner**
+- **Tailwind v4** + **ShadCN/UI** + **Lucide** + **Sonner** + **Framer Motion**
 - **JWT** (cookie httpOnly) + **bcrypt**
 - Provedores transcrição: **Local Faster-Whisper** (default, gratuito) / **Groq Whisper-large-v3** / **OpenAI Whisper**
+
+## Recursos
+
+- Transcrição automática com múltiplos provedores (Local Faster-Whisper, Groq, OpenAI)
+- Dashboard responsivo com busca por conteúdo
+- Upload múltiplo de mídia com drag-and-drop
+- Reordenação de transcrições via drag-and-drop
+- Compartilhamento de transcrições por email (usuários convidados podem editar)
+- Notificações em tempo real (sino de notificações)
+- Transições de página animadas com Framer Motion
+- Bordas brilhantes animadas em cards
+- Layout de login com split 2/3 responsivo
+- Edição inline de transcrições
 
 ## Rodar local (sem Docker)
 
@@ -38,13 +51,21 @@ docker compose exec app bun run db:migrate
 docker compose exec app bun run db:seed
 ```
 
+**Nota**: O container `app` aguarda que o `db` esteja saudável antes de iniciar. Os comandos de migração e seed devem ser executados após o build.
+
 ## Conta seed
 
+Contas padrão criadas após `bun run db:seed`:
+
+**Admin:**
 - **email**: `admin@transcripts.dev`
 - **senha**: `admin123`
-- **role**: `admin`
 
-5 transcrições demo criadas.
+**Usuário comum:**
+- **email**: `user@transcripts.dev`
+- **senha**: `user123`
+
+5 transcrições demo pré-carregadas (visíveis após login).
 
 ## Estrutura
 
@@ -124,6 +145,38 @@ Response:
 ## Variáveis de ambiente
 
 Veja [`.env.example`](./.env.example).
+
+## Troubleshooting
+
+### Build falha em type check
+
+Se o build falhar com erros de tipo relacionados a `getTranscriptDetail`, verifique se a projeção de campos em `src/server/routes/transcripts.ts` ou `src/server/services/transcription.ts` corresponde aos tipos definidos em `src/db/schema.ts`, especialmente na tabela `MediaSection`.
+
+**Solução comum:**
+```bash
+# Regenerar tipos Drizzle
+bun run db:generate
+
+# Recompile
+bun run build
+```
+
+### Docker compose falha ao conectar ao banco
+
+Se a aplicação não conseguir conectar ao PostgreSQL, verifique:
+
+1. O container `db` está saudável: `docker compose ps`
+2. A variável `DATABASE_URL` em `.env` usa o hostname correto: `db` (não `localhost`)
+3. Aguarde alguns segundos após `docker compose up --build` antes de rodar migrations
+
+### Transcrição não inicia
+
+Se jobs de transcrição ficarem pendurados:
+
+1. Confirme que `TRANSCRIPTION_PROVIDER` está definido em `.env`
+2. Se usar **Groq** ou **OpenAI**, verifique as chaves de API (`GROQ_API_KEY`, `OPENAI_API_KEY`)
+3. Se usar **Local Faster-Whisper**, confirme que o container `transcriber` (ou seu equivalent) está rodando
+4. Verifique logs: `docker compose logs app`
 
 ## Licença
 
