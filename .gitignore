@@ -13,3 +13,5 @@ uploads
 .idea
 .vscode
 coverage
+tsconfig.tsbuildinfo
+graphify-out/cache/
