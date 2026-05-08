@@ -39,6 +39,35 @@
 - Não retorne linhas do banco diretamente pela API quando houver campos sensíveis ou formato público diferente; mapeie para DTO.
 - Use transações Drizzle quando uma regra alterar múltiplas tabelas de forma atômica.
 
+## JWT
+
+- Tokens assinados com payload `{ sub: user.id }`.
+- Sempre ler `payload.sub` para identificar usuário, **nunca** `payload.id`.
+- Middleware centralizado em `src/server/plugins/auth.ts` verifica e extrai JWT do header `Authorization: Bearer <token>`.
+- Refresco automático: cliente usa `refresh_token` para obter novo access token antes de expiração.
+
+## Animations
+
+- Usar lib `motion` (Framer Motion) para transições de página.
+- Layout app em `src/app/(app)/layout.tsx` envolve `children` em `<AnimatePresence mode="wait">`.
+- Keyar `AnimatePresence` pelo pathname para animar saída/entrada de páginas.
+- Fade + slide-up 200ms ease-out padrão para page transitions.
+
+## Notifications
+
+- Bell icon em header polling GET `/api/notifications` a cada 30s.
+- Response: `{ id, userId, type, message, read, createdAt }`.
+- Marcar lida: PATCH `/api/notifications/:id` com `{ read: true }`.
+- Usar Sonner toast para UI feedback imediato.
+
+## Shares Routes
+
+- Nested REST: `/api/transcripts/:id/shares`.
+- GET `/api/transcripts/:id/shares` lista shares do transcript.
+- POST `/api/transcripts/:id/shares` cria nova share (gera token único).
+- PATCH `/api/transcripts/:id/shares/:shareId` atualiza (permissões, expiry).
+- DELETE `/api/transcripts/:id/shares/:shareId` revoga acesso.
+
 ## Docker
 
 - `docker-compose.yml` deve conter `app` e `db`.
