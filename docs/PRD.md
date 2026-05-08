@@ -118,13 +118,11 @@
 - **RF-23:** Busca full-text em título + conteúdo de transcrições do usuário
 - **Endpoint:** `GET /transcripts?q=searchterm` (implementado em `transcripts.ts`)
 
-### 5.8 Landing Page Pública
+### 5.8 Root Redirect (Landing Page Removida)
 
-- **RF-24:** Hero section com headline, CTA (Sign Up), visual moderno
-- **RF-25:** Features: 4 cards com ícones (Rápido, Preciso, Colaborativo, Seguro)
-- **RF-26:** Pricing: 3 planos (Free, Pro, Enterprise) com descrição/features
-- **RF-27:** Footer: links, copyright, redes sociais
-- **Arquivo:** `/src/app/(marketing)/inicio/page.tsx` → `<Hero/>`, `<Features/>`, `<Pricing/>`
+- **RF-24:** Root `/` redireciona usuário anônimo para `/login`, usuário autenticado para `/dashboard`
+- **RF-25:** Tela inicial de autenticação: login + register em `/src/app/(auth)/`
+- **RF-26:** Sem marketing landing pública (roadmap futuro: landing page SaaS após v0.1)
 
 ### 5.9 UI/UX
 
@@ -259,4 +257,4 @@
 **Notificações:** `/src/server/routes/notifications.ts` (list, read, delete)  
 **Jobs:** `/src/server/routes/jobs.ts` (transcrição queue)  
 **Schema BD:** `/src/db/schema.ts` (users, transcripts, media, transcriptionJobs, shares, notifications)  
-**Landing:** `/src/app/(marketing)/inicio/page.tsx` + componentes em `/src/components/marketing/`
+**Root Redirect:** `/src/app/(auth)/` e `/src/app/(app)/` com middleware de autenticação
