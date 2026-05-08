@@ -67,6 +67,7 @@ export interface TranscriptWithMedia {
     mime: string;
     sizeBytes: number | null;
     durationSeconds: number | null;
+    createdAt: Date;
   }>;
 }
 
@@ -112,6 +113,7 @@ export const getTranscriptsForUser = async (
       mime: media.mime,
       sizeBytes: media.sizeBytes,
       durationSeconds: media.durationSeconds,
+      createdAt: media.createdAt,
     })
     .from(media)
     .where(inArray(media.transcriptId, transcriptIds));
@@ -125,6 +127,7 @@ export const getTranscriptsForUser = async (
         mime: m.mime,
         sizeBytes: m.sizeBytes,
         durationSeconds: m.durationSeconds,
+        createdAt: m.createdAt,
       });
       return acc;
     },
@@ -206,6 +209,7 @@ export const getTranscriptDetail = async (
       mime: media.mime,
       sizeBytes: media.sizeBytes,
       durationSeconds: media.durationSeconds,
+      createdAt: media.createdAt,
     })
     .from(media)
     .where(eq(media.transcriptId, id));
