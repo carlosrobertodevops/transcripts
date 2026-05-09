@@ -10,9 +10,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { Textarea } from "@/components/ui/textarea";
 import { LiveTranscription } from "@/components/transcripts/live-transcription";
+import { segmentsToHighlightedHtml, type TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
-import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles } from "lucide-react";
+import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles, Wand2 } from "lucide-react";
+
+interface PendingFile {
+  file: File;
+  description: string;
+}
 
 interface MediaItem {
   id: string;
@@ -20,6 +27,7 @@ interface MediaItem {
   mime: string;
   sizeBytes: number | null;
   durationSeconds: number | null;
+  description: string | null;
 }
 
 interface SegmentItem {
@@ -61,6 +69,7 @@ interface TranscriptLite {
   operationDate: string | null;
   transcriptionDate: string | null;
   analysis: string | null;
+  transcriptHtml?: string | null;
 }
 
 interface EditTranscriptDialogProps {
@@ -76,22 +85,46 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
   const [segments, setSegments] = useState<SegmentItem[]>([]);
   const [retranscribingId, setRetranscribingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [liveActive, setLiveActive] = useState(false);
+  const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
+  const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
+  const [tagList, setTagList] = useState<TagRef[]>([]);
+  const [transcriptHtml, setTranscriptHtml] = useState<string>("");
+  const [savedTranscriptHtml, setSavedTranscriptHtml] = useState<string>("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { title: "", operationName: "", operationDate: "", transcriptionDate: "", analysis: "" },
   });
 
+  const fetchTags = useCallback(async () => {
+    try {
+      const res = await fetch("/api/tags", { credentials: "include" });
+      if (res.ok) {
+        const data = (await res.json()) as { tags: TagRef[] };
+        setTagList(data.tags ?? []);
+      }
+    } catch (err) {
+      console.error("[edit-dialog] fetch tags", err);
+    }
+  }, []);
+
   const fetchDetail = useCallback(async (id: string) => {
     try {
       const res = await fetch(`/api/transcripts/${id}`, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
-        setMediaList(data.media ?? []);
+        const list: MediaItem[] = data.media ?? [];
+        setMediaList(list);
         setSegments(data.segments ?? []);
+        const drafts: Record<string, string> = {};
+        for (const m of list) drafts[m.id] = m.description ?? "";
+        setMediaDescDrafts(drafts);
+        const stored = data.transcript?.transcriptHtml ?? "";
+        setSavedTranscriptHtml(stored);
+        setTranscriptHtml(stored);
       }
     } catch (err) {
       console.error("[edit-dialog] fetch detail", err);
@@ -109,19 +142,26 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
       });
       setPendingFiles([]);
       fetchDetail(transcript.id);
+      fetchTags();
     }
-  }, [transcript, open, form, fetchDetail]);
+  }, [transcript, open, form, fetchDetail, fetchTags]);
 
   const onDrop = useCallback((accepted: File[]) => {
-    const valid = accepted.filter((f) => {
-      if (f.size > 500 * 1024 * 1024) {
-        toast.error(`${f.name} excede 500MB`);
-        return false;
-      }
-      return true;
-    });
+    const valid: PendingFile[] = accepted
+      .filter((f) => {
+        if (f.size > 500 * 1024 * 1024) {
+          toast.error(`${f.name} excede 500MB`);
+          return false;
+        }
+        return true;
+      })
+      .map((file) => ({ file, description: "" }));
     setPendingFiles((prev) => [...prev, ...valid]);
   }, []);
+
+  const updatePendingDesc = (index: number, value: string) => {
+    setPendingFiles((prev) => prev.map((p, i) => (i === index ? { ...p, description: value } : p)));
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -137,15 +177,18 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     if (!transcript || pendingFiles.length === 0) return;
     setUploading(true);
     try {
-      for (const file of pendingFiles) {
+      for (const entry of pendingFiles) {
         const fd = new FormData();
-        fd.append("file", file);
+        fd.append("file", entry.file);
+        if (entry.description.trim().length > 0) {
+          fd.append("description", entry.description);
+        }
         const res = await fetch(`/api/transcripts/${transcript.id}/media`, {
           method: "POST",
           body: fd,
           credentials: "include",
         });
-        if (!res.ok) throw new Error(`Falha ao enviar ${file.name}`);
+        if (!res.ok) throw new Error(`Falha ao enviar ${entry.file.name}`);
       }
       toast.success(`${pendingFiles.length} arquivo(s) enviados — transcrição enfileirada`);
       setPendingFiles([]);
@@ -178,6 +221,29 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     }
   };
 
+  const handleSaveMediaDesc = async (mediaId: string) => {
+    const original = mediaList.find((m) => m.id === mediaId)?.description ?? "";
+    const draft = mediaDescDrafts[mediaId] ?? "";
+    if (draft === original) return;
+    setSavingMediaId(mediaId);
+    try {
+      const res = await fetch(`/api/media/${mediaId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ description: draft }),
+      });
+      if (!res.ok) throw new Error("falha");
+      setMediaList((prev) => prev.map((m) => (m.id === mediaId ? { ...m, description: draft.length > 0 ? draft : null } : m)));
+      toast.success("Descrição salva");
+    } catch (err) {
+      toast.error("Erro ao salvar descrição");
+      console.error(err);
+    } finally {
+      setSavingMediaId(null);
+    }
+  };
+
   const handleDeleteMedia = async (mediaId: string) => {
     setDeletingId(mediaId);
     try {
@@ -201,6 +267,8 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     if (!transcript) return;
     setSubmitting(true);
     try {
+      const transcriptHtmlPayload =
+        transcriptHtml !== savedTranscriptHtml ? transcriptHtml : undefined;
       const res = await fetch(`/api/transcripts/${transcript.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -211,6 +279,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           operationDate: data.operationDate || null,
           transcriptionDate: data.transcriptionDate || null,
           analysis: data.analysis || null,
+          ...(transcriptHtmlPayload !== undefined ? { transcriptHtml: transcriptHtmlPayload } : {}),
         }),
       });
 
@@ -293,51 +362,96 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           <div className="space-y-2">
             <Label>Mídia ({mediaList.length})</Label>
             {mediaList.length > 0 ? (
-              <ul className="space-y-2 max-h-40 overflow-auto">
-                {mediaList.map((m) => (
-                  <li
-                    key={m.id}
-                    className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm min-w-0"
-                  >
-                    <FileAudio className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate" title={m.filename}>{m.filename}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatSize(m.sizeBytes)} • {formatDuration(m.durationSeconds)}
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 shrink-0"
-                      onClick={() => handleRetranscribe(m.id)}
-                      disabled={retranscribingId === m.id}
-                      title="Refazer transcrição"
+              <ul className="space-y-2 max-h-72 overflow-auto">
+                {mediaList.map((m) => {
+                  const draft = mediaDescDrafts[m.id] ?? "";
+                  const dirty = draft !== (m.description ?? "");
+                  return (
+                    <li
+                      key={m.id}
+                      className="space-y-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm min-w-0"
                     >
-                      {retranscribingId === m.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <RotateCcw className="h-4 w-4" />
+                      <div className="flex items-center gap-2 min-w-0">
+                        <FileAudio className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <div className="flex-1 min-w-0">
+                          <p className="truncate" title={m.filename}>{m.filename}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatSize(m.sizeBytes)} • {formatDuration(m.durationSeconds)}
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0"
+                          onClick={() => handleRetranscribe(m.id)}
+                          disabled={retranscribingId === m.id}
+                          title="Refazer transcrição"
+                        >
+                          {retranscribingId === m.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <RotateCcw className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0 text-destructive"
+                          onClick={() => handleDeleteMedia(m.id)}
+                          disabled={deletingId === m.id}
+                          title="Remover mídia"
+                        >
+                          {deletingId === m.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={draft}
+                        onChange={(e) =>
+                          setMediaDescDrafts((prev) => ({ ...prev, [m.id]: e.target.value }))
+                        }
+                        onBlur={() => dirty && handleSaveMediaDesc(m.id)}
+                        placeholder="Descrição desta mídia (opcional)"
+                        className="min-h-12 text-xs resize-none"
+                        disabled={savingMediaId === m.id}
+                      />
+                      {dirty && (
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 text-xs"
+                            onClick={() =>
+                              setMediaDescDrafts((prev) => ({ ...prev, [m.id]: m.description ?? "" }))
+                            }
+                          >
+                            Desfazer
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            className="h-6 text-xs"
+                            onClick={() => handleSaveMediaDesc(m.id)}
+                            disabled={savingMediaId === m.id}
+                          >
+                            {savingMediaId === m.id ? (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                              "Salvar"
+                            )}
+                          </Button>
+                        </div>
                       )}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 shrink-0 text-destructive"
-                      onClick={() => handleDeleteMedia(m.id)}
-                      disabled={deletingId === m.id}
-                      title="Remover mídia"
-                    >
-                      {deletingId === m.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <p className="text-xs text-muted-foreground">Nenhuma mídia anexada.</p>
@@ -365,29 +479,38 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
             {pendingFiles.length > 0 && (
               <>
-                <ul className="space-y-1 max-h-40 overflow-auto min-w-0 w-full">
-                  {pendingFiles.map((file, index) => {
+                <ul className="space-y-2 max-h-72 overflow-auto min-w-0 w-full">
+                  {pendingFiles.map((entry, index) => {
+                    const file = entry.file;
                     const isVideo = file.type.startsWith("video/");
                     const Icon = isVideo ? FileVideo : Music;
                     return (
                       <li
                         key={`${file.name}-${index}`}
-                        className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-2 py-1.5 text-sm min-w-0"
+                        className="space-y-2 rounded-md border border-border bg-muted/30 px-2 py-2 text-sm min-w-0"
                       >
-                        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        <span className="flex-1 truncate min-w-0" title={file.name}>{file.name}</span>
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {(file.size / (1024 * 1024)).toFixed(1)}MB
-                        </span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={() => removePending(index)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <span className="flex-1 truncate min-w-0" title={file.name}>{file.name}</span>
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {(file.size / (1024 * 1024)).toFixed(1)}MB
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => removePending(index)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <Textarea
+                          value={entry.description}
+                          onChange={(e) => updatePendingDesc(index, e.target.value)}
+                          placeholder="Descrição desta mídia (opcional)"
+                          className="min-h-12 text-xs resize-none"
+                        />
                       </li>
                     );
                   })}
@@ -420,6 +543,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
             <LiveTranscription
               transcriptId={transcript.id}
               enabled={liveActive}
+              tags={tagList}
               onAllDone={() => {
                 setLiveActive(false);
                 fetchDetail(transcript.id);
@@ -430,10 +554,39 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
           {!liveActive && segments.length > 0 && (
             <div className="space-y-2">
-              <Label>Transcrição ({segments.length} segmentos)</Label>
-              <div className="max-h-48 overflow-auto rounded-md border border-border bg-muted/20 p-3 text-sm leading-relaxed text-muted-foreground">
-                {[...segments].sort((a, b) => a.startMs - b.startMs).map((s) => s.text).join(" ")}
+              <div className="flex items-center justify-between">
+                <Label>Transcrição ({segments.length} segmentos)</Label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs"
+                  onClick={() => {
+                    const sorted = [...segments].sort((a, b) => a.startMs - b.startMs);
+                    setTranscriptHtml(segmentsToHighlightedHtml(sorted, tagList));
+                  }}
+                  title="Regenerar com tags atuais"
+                >
+                  <Wand2 className="mr-1 h-3 w-3" />
+                  Aplicar tags
+                </Button>
               </div>
+              <RichTextEditor
+                value={
+                  transcriptHtml ||
+                  segmentsToHighlightedHtml(
+                    [...segments].sort((a, b) => a.startMs - b.startMs),
+                    tagList
+                  )
+                }
+                onChange={setTranscriptHtml}
+                placeholder="Transcrição..."
+              />
+              {tagList.length > 0 && (
+                <p className="text-[11px] text-muted-foreground">
+                  {tagList.length} tag(s) destacadas em negrito. Clique em &quot;Aplicar tags&quot; para regenerar com as tags atuais.
+                </p>
+              )}
             </div>
           )}
 

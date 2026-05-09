@@ -14,6 +14,7 @@ import {
   Moon,
   Sun,
   AudioWaveform,
+  Tag,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from 'next-themes'
@@ -42,6 +43,11 @@ export function Sidebar() {
       label: 'Transcrições',
       href: '/transcripts',
       icon: FileText,
+    },
+    {
+      label: 'Tags',
+      href: '/tags',
+      icon: Tag,
     },
     {
       label: 'Notificações',

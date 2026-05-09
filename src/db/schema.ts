@@ -47,12 +47,29 @@ export const transcripts = pgTable("transcripts", {
   operationDate: timestamp("operation_date"),
   transcriptionDate: timestamp("transcription_date"),
   analysis: text("analysis"),
+  transcriptHtml: text("transcript_html"),
   status: transcriptStatusEnum("status").default("pending").notNull(),
   position: integer("position").default(0),
   deletedAt: timestamp("deleted_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const tags = pgTable(
+  "tags",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ownerId: uuid("owner_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    color: text("color").notNull().default("#6366f1"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    ownerNameIdx: uniqueIndex("tags_owner_name_idx").on(t.ownerId, t.name),
+  })
+);
 
 export const media = pgTable("media", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -64,6 +81,7 @@ export const media = pgTable("media", {
   sizeBytes: integer("size_bytes"),
   storagePath: text("storage_path"),
   durationSeconds: real("duration_seconds"),
+  description: text("description"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

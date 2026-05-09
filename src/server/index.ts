@@ -7,6 +7,7 @@ import { sharesRoutes } from "./routes/shares";
 import { notificationsRoutes } from "./routes/notifications";
 import { usersRoutes } from "./routes/users";
 import { jobsRoutes } from "./routes/jobs";
+import { tagsRoutes } from "./routes/tags";
 import { errorPlugin } from "./plugins/error";
 import { authPlugin } from "./plugins/auth";
 
@@ -22,7 +23,8 @@ const app = new Elysia({
   .use(sharesRoutes)
   .use(notificationsRoutes)
   .use(usersRoutes)
-  .use(jobsRoutes);
+  .use(jobsRoutes)
+  .use(tagsRoutes);
 
 export { app };
 

@@ -16,9 +16,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { LiveTranscription } from "@/components/transcripts/live-transcription";
+import type { TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
 import { Loader2, X, Music, FileVideo, Sparkles, ArrowRight } from "lucide-react";
+
+interface FileEntry {
+  file: File;
+  description: string;
+}
 
 const schema = z.object({
   title: z.string().min(1, "Título é obrigatório").max(200),
@@ -61,25 +68,32 @@ export function NewTranscriptDialog({
 }: NewTranscriptDialogProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileEntry[]>([]);
   const [uploading, setUploading] = useState(false);
   const [createdTranscript, setCreatedTranscript] = useState<Transcript | null>(null);
   const [liveActive, setLiveActive] = useState(false);
+  const [tagList, setTagList] = useState<TagRef[]>([]);
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { title: "", operationName: "", operationDate: "", transcriptionDate: "" },
   });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const validFiles = acceptedFiles.filter((file) => {
-      if (file.size > 500 * 1024 * 1024) {
-        toast.error(`${file.name} excede 500MB`);
-        return false;
-      }
-      return true;
-    });
-    setSelectedFiles((prev) => [...prev, ...validFiles]);
+    const validEntries: FileEntry[] = acceptedFiles
+      .filter((file) => {
+        if (file.size > 500 * 1024 * 1024) {
+          toast.error(`${file.name} excede 500MB`);
+          return false;
+        }
+        return true;
+      })
+      .map((file) => ({ file, description: "" }));
+    setSelectedFiles((prev) => [...prev, ...validEntries]);
   }, []);
+
+  const updateDescription = (index: number, value: string) => {
+    setSelectedFiles((prev) => prev.map((e, i) => (i === index ? { ...e, description: value } : e)));
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -97,15 +111,18 @@ export function NewTranscriptDialog({
     if (selectedFiles.length === 0) return;
     setUploading(true);
     try {
-      for (const file of selectedFiles) {
+      for (const entry of selectedFiles) {
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", entry.file);
+        if (entry.description.trim().length > 0) {
+          formData.append("description", entry.description);
+        }
         const res = await fetch(`/api/transcripts/${transcriptId}/media`, {
           method: "POST",
           body: formData,
           credentials: "include",
         });
-        if (!res.ok) throw new Error(`Failed to upload ${file.name}`);
+        if (!res.ok) throw new Error(`Failed to upload ${entry.file.name}`);
       }
       toast.success("Mídia enviada com sucesso!");
     } catch (error) {
@@ -136,6 +153,15 @@ export function NewTranscriptDialog({
         toast.success("Transcrição iniciada!");
         setCreatedTranscript(transcript);
         setLiveActive(true);
+        try {
+          const tagRes = await fetch("/api/tags", { credentials: "include" });
+          if (tagRes.ok) {
+            const data = (await tagRes.json()) as { tags: TagRef[] };
+            setTagList(data.tags ?? []);
+          }
+        } catch (err) {
+          console.error("[new-dialog] fetch tags", err);
+        }
         onCreated?.(transcript);
       } else {
         toast.success("Transcrição criada!");
@@ -182,6 +208,7 @@ export function NewTranscriptDialog({
             <LiveTranscription
               transcriptId={createdTranscript.id}
               enabled={liveActive}
+              tags={tagList}
               onAllDone={() => {
                 setLiveActive(false);
                 toast.success("Transcrição concluída");
@@ -282,34 +309,40 @@ export function NewTranscriptDialog({
             </div>
 
             {selectedFiles.length > 0 && (
-              <ul className="space-y-1 max-h-40 overflow-auto min-w-0 w-full">
-                {selectedFiles.map((file, index) => {
+              <ul className="space-y-2 max-h-72 overflow-auto min-w-0 w-full">
+                {selectedFiles.map((entry, index) => {
+                  const file = entry.file;
                   const isVideo = file.type.startsWith("video/");
                   const Icon = isVideo ? FileVideo : Music;
                   return (
                     <li
                       key={`${file.name}-${index}`}
-                      className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-2 py-1.5 text-sm min-w-0"
+                      className="space-y-2 rounded-md border border-border bg-muted/30 px-2 py-2 text-sm min-w-0"
                     >
-                      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span
-                        className="flex-1 truncate min-w-0"
-                        title={file.name}
-                      >
-                        {file.name}
-                      </span>
-                      <span className="shrink-0 text-xs text-muted-foreground">
-                        {(file.size / (1024 * 1024)).toFixed(1)}MB
-                      </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={() => removeFile(index)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 truncate min-w-0" title={file.name}>
+                          {file.name}
+                        </span>
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                          {(file.size / (1024 * 1024)).toFixed(1)}MB
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={() => removeFile(index)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={entry.description}
+                        onChange={(e) => updateDescription(index, e.target.value)}
+                        placeholder="Descrição desta mídia (opcional)"
+                        className="min-h-12 text-xs resize-none"
+                      />
                     </li>
                   );
                 })}

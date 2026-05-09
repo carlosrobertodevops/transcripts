@@ -269,12 +269,14 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       operationDate?: string | null;
       transcriptionDate?: string | null;
       analysis?: string | null;
+      transcriptHtml?: string | null;
     };
 
     const updateSet: Record<string, unknown> = {};
     if (updates.title !== undefined) updateSet.title = updates.title;
     if (updates.operationName !== undefined) updateSet.operationName = updates.operationName;
     if (updates.analysis !== undefined) updateSet.analysis = updates.analysis;
+    if (updates.transcriptHtml !== undefined) updateSet.transcriptHtml = updates.transcriptHtml;
     if (updates.operationDate !== undefined) {
       updateSet.operationDate = updates.operationDate ? new Date(updates.operationDate) : null;
     }

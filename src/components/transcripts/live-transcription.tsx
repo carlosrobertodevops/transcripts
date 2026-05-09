@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { HighlightedText, type TagRef } from "@/lib/highlight-tags";
 import { Loader2, CheckCircle2, AlertCircle, FileAudio, Clock } from "lucide-react";
 
 type JobStatus = "pending" | "processing" | "done" | "failed";
@@ -23,6 +24,7 @@ interface LiveTranscriptionProps {
   onAllDone?: () => void;
   pollIntervalMs?: number;
   charPerTickMs?: number;
+  tags?: TagRef[];
 }
 
 const POLL_DEFAULT = 1000;
@@ -34,6 +36,7 @@ export const LiveTranscription = ({
   onAllDone,
   pollIntervalMs = POLL_DEFAULT,
   charPerTickMs = TYPE_TICK_DEFAULT,
+  tags = [],
 }: LiveTranscriptionProps) => {
   const [jobs, setJobs] = useState<LiveJob[]>([]);
   const [rendered, setRendered] = useState<Record<string, string>>({});
@@ -149,7 +152,9 @@ export const LiveTranscription = ({
                 <p className="text-xs text-destructive">{job.error}</p>
               ) : (
                 <div className="rounded-sm bg-background/60 px-2 py-1.5 text-xs leading-relaxed text-foreground/90 max-h-32 overflow-y-auto whitespace-pre-wrap">
-                  {text || (
+                  {text ? (
+                    <HighlightedText text={text} tags={tags} />
+                  ) : (
                     <span className="text-muted-foreground italic">
                       {job.status === "pending" ? "Aguardando processamento..." : "Aguardando segmentos..."}
                     </span>

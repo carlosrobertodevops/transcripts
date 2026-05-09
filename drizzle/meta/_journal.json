@@ -22,6 +22,20 @@
       "when": 1778291000000,
       "tag": "0002_add_dates_transcripts",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778292000000,
+      "tag": "0003_add_description_media",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1778293000000,
+      "tag": "0004_add_tags",
+      "breakpoints": true
     }
   ]
 }

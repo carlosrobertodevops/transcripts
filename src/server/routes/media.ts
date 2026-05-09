@@ -103,7 +103,18 @@ export const mediaRoutes = new Elysia()
 
     const provider = process.env.TRANSCRIPTION_PROVIDER ?? "groq";
 
-    for (const file of files) {
+    const rawDescriptions = (body as Record<string, unknown>).descriptions;
+    const descriptionList: string[] = Array.isArray(rawDescriptions)
+      ? rawDescriptions.map((d) => (typeof d === "string" ? d : ""))
+      : typeof rawDescriptions === "string"
+        ? [rawDescriptions]
+        : [];
+    const singleDescription = (body as Record<string, unknown>).description;
+    if (descriptionList.length === 0 && typeof singleDescription === "string") {
+      descriptionList.push(singleDescription);
+    }
+
+    for (const [idx, file] of files.entries()) {
       const mime = inferMime(file);
 
       if (!isValidMediaMime(mime, file.name)) {
@@ -129,6 +140,7 @@ export const mediaRoutes = new Elysia()
         return { error: "storage_failed", message: (err as Error)?.message };
       }
 
+      const desc = descriptionList[idx];
       const mediaRecord = await db
         .insert(media)
         .values({
@@ -138,6 +150,7 @@ export const mediaRoutes = new Elysia()
           sizeBytes: file.size,
           storagePath: dest,
           durationSeconds: null,
+          description: desc && desc.trim().length > 0 ? desc : null,
         })
         .returning();
 
@@ -170,6 +183,80 @@ export const mediaRoutes = new Elysia()
       media: mediaList,
       jobsQueued: jobsQueued.length,
     };
+  })
+  .patch("/media/:id", async (ctx: any) => {
+    const { user, params, body, set } = ctx;
+    if (!user) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+
+    const mediaRecord = await db
+      .select()
+      .from(media)
+      .where(eq(media.id, params.id))
+      .limit(1);
+
+    if (mediaRecord.length === 0) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+
+    const m = mediaRecord[0];
+    const transcript = await db
+      .select()
+      .from(transcripts)
+      .where(eq(transcripts.id, m.transcriptId))
+      .limit(1);
+
+    if (transcript.length === 0) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+
+    const isOwner = transcript[0].ownerId === user.id;
+    if (!isOwner) {
+      const share = await db
+        .select()
+        .from(shares)
+        .where(
+          and(
+            eq(shares.transcriptId, m.transcriptId),
+            eq(shares.sharedWithUserId, user.id),
+            eq(shares.canEdit, true)
+          )
+        )
+        .limit(1);
+
+      if (share.length === 0) {
+        set.status = 403;
+        return { error: "forbidden" };
+      }
+    }
+
+    const updates = body as { description?: string | null; filename?: string };
+    const updateSet: Record<string, unknown> = {};
+    if (updates.description !== undefined) {
+      const d = typeof updates.description === "string" ? updates.description.trim() : "";
+      updateSet.description = d.length > 0 ? d : null;
+    }
+    if (typeof updates.filename === "string" && updates.filename.trim().length > 0) {
+      updateSet.filename = updates.filename.trim();
+    }
+
+    if (Object.keys(updateSet).length === 0) {
+      set.status = 400;
+      return { error: "no_updates" };
+    }
+
+    const updated = await db
+      .update(media)
+      .set(updateSet)
+      .where(eq(media.id, params.id))
+      .returning();
+
+    set.status = 200;
+    return updated[0];
   })
   .delete("/media/:id", async (ctx: any) => {
     const { user, params, set } = ctx;
