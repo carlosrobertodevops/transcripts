@@ -1,37 +1,17 @@
-'use server'
-
-import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
 import { Sidebar } from '@/components/app/sidebar'
 import { Header } from '@/components/app/header'
 import { PageTransition } from '@/components/providers/page-transition'
-
-async function getCurrentUser() {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('transcripts_session')?.value
-
-  if (!session) {
-    redirect('/login')
-  }
-
-  // TODO: Validate session token and fetch user data from backend
-  // For now, return a basic user object
-  return {
-    id: '1',
-    name: 'User',
-    email: 'user@example.com',
-  }
-}
+import { requireUser } from '@/lib/auth-server'
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  await getCurrentUser()
+  await requireUser()
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-transparent">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />

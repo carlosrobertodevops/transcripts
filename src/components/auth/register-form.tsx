@@ -12,6 +12,8 @@ import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useProximity } from '@/hooks/use-proximity'
+import type { CSSProperties } from 'react'
 
 const registerSchema = z
   .object({
@@ -30,6 +32,7 @@ type RegisterFormData = z.infer<typeof registerSchema>
 export function RegisterForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const { ref: cardRef, proximity } = useProximity<HTMLDivElement>({ radius: 260 })
   const {
     register,
     handleSubmit,
@@ -44,6 +47,7 @@ export function RegisterForm() {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           name: data.name,
           email: data.email,
@@ -52,8 +56,8 @@ export function RegisterForm() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        toast.error(error.message || 'Erro ao criar conta')
+        const error = await response.json().catch(() => ({}))
+        toast.error(error.message || error.error || 'Erro ao criar conta')
         setIsLoading(false)
         return
       }
@@ -77,7 +81,11 @@ export function RegisterForm() {
         </p>
       </div>
 
-      <Card className="border-border/40 bg-card/60 backdrop-blur-lg p-6">
+      <Card
+        ref={cardRef}
+        style={{ '--proximity': proximity } as CSSProperties}
+        className="glass-border-animated border border-border/40 bg-card/60 backdrop-blur-lg p-[16pt]"
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Nome</Label>

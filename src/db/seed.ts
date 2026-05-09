@@ -44,27 +44,27 @@ async function seed() {
 
     // Seed transcripts for admin
     const transcriptTitles = [
-      "Reunião comercial — Cliente Acme",
-      "Operação Atendimento 0421",
-      "Consulta jurídica Souza & Lima",
-      "Briefing campanha Q2",
-      "Ata diretoria 12/04",
+      "Interceptação telemática — alvo TX-001 — sessão 03",
+      "Comunicação monitorada — ID 2026-AB-417",
+      "Sessão de monitoramento — protocolo 0421",
+      "Captação ambiental — ponto focal Norte",
+      "Ligação intercedida — alvo secundário TX-014",
     ];
 
     const operationNames = [
-      "Negociação contrato anual",
-      "Suporte técnico — Incidente crítico",
-      "Parecer jurídico contratual",
-      "Planejamento estratégico — Marketing",
-      "Decisões administrativas",
+      "Operação Sentinela — Protocolo CX-2026/04",
+      "Operação Águia Branca — Fase 2",
+      "Protocolo Vigilância Contínua — CX-2026",
+      "Operação Guarda-Chuva — Bloco 4",
+      "Operação Linha Dura — Etapa Alfa",
     ];
 
     const analyses = [
-      "Discussão sobre termos comerciais e prazos de entrega para novo contrato com cliente Acme. Acordadas metas de margem e SLA.",
-      "Atendimento ao cliente sobre falha no sistema de pagamento. Problemas resolvidos com reinicialização de servidor e validação de integrações.",
-      "Consulta jurídica para revisão de cláusulas de não-competição e sigilo em contrato de parceria. Recomendações legais documentadas.",
-      "Brainstorm da campanha de marketing para Q2. Aprovados canais digitais, orçamento alocado e cronograma de lançamento.",
-      "Aprovação de políticas de trabalho remoto, aumento de benefícios e metas de 2026. Atas documentadas para arquivo.",
+      "Diálogo entre alvo principal e contato não identificado. Mencionados encontro em local público e troca de pacote. Encaminhado para análise de equipe técnica.",
+      "Comunicação telefônica curta. Alvo confirma recebimento de valores e cita codinomes recorrentes (\"o velho\", \"a casa\"). Indícios de articulação logística.",
+      "Sessão prolongada com discussão sobre rotas de deslocamento e horários de movimentação. Trechos relevantes marcados para correlação com vigilância física.",
+      "Captação ambiental em ponto focal. Conversa entre dois indivíduos sobre transferência financeira. Vocabulário codificado identificado para futura cross-reference.",
+      "Ligação interceptada de alvo secundário. Mencionados nomes presentes em outras sessões. Recomenda-se elevar prioridade do alvo no plano operacional.",
     ];
 
     const insertedTranscripts = await db

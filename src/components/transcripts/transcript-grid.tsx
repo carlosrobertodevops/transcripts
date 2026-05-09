@@ -9,12 +9,17 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { TranscriptCard } from "./transcript-card";
 import { SortableCard } from "./sortable-card";
 import { NewTranscriptDialog } from "./new-transcript-dialog";
+import { EditTranscriptDialog } from "./edit-transcript-dialog";
+import { ConfirmDialog } from "./confirm-dialog";
 import { SearchBar } from "./search-bar";
+import { toast } from "sonner";
 
 type Transcript = {
   id: string;
   title: string;
   operationName: string | null;
+  operationDate: string | null;
+  transcriptionDate: string | null;
   analysis: string | null;
   status: "pending" | "processing" | "done" | "failed";
   position: number;
@@ -33,6 +38,54 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
   const [query, setQuery] = useState("");
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editingTranscript, setEditingTranscript] = useState<Transcript | null>(null);
+  const [deletingTranscript, setDeletingTranscript] = useState<Transcript | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleEditSaved = (updated: {
+    id: string;
+    title: string;
+    operationName: string | null;
+    operationDate: string | null;
+    transcriptionDate: string | null;
+    analysis: string | null;
+  }) => {
+    setItems((prev) =>
+      prev.map((t) =>
+        t.id === updated.id
+          ? {
+              ...t,
+              title: updated.title,
+              operationName: updated.operationName,
+              operationDate: updated.operationDate,
+              transcriptionDate: updated.transcriptionDate,
+              analysis: updated.analysis,
+            }
+          : t,
+      ),
+    );
+    setEditingTranscript(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingTranscript) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/transcripts/${deletingTranscript.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok && res.status !== 204) throw new Error("Falha ao apagar");
+      setItems((prev) => prev.filter((t) => t.id !== deletingTranscript.id));
+      toast.success("Transcrição removida");
+      setDeletingTranscript(null);
+    } catch (error) {
+      toast.error("Erro ao apagar transcrição");
+      console.error(error);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchTranscripts = async () => {
@@ -41,7 +94,8 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
         const res = await fetch("/api/transcripts", { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
-          setItems(data);
+          const list = Array.isArray(data) ? data : (data?.items ?? []);
+          setItems(list);
         }
       } catch (error) {
         console.error("Failed to fetch transcripts:", error);
@@ -130,13 +184,16 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
 
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={filtered.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-fr">
             {filtered.map((transcript) => (
               <SortableCard
                 key={transcript.id}
                 id={transcript.id}
                 transcript={transcript}
-                onClick={() => router.push(`/transcripts/${transcript.id}`)}
+                onClick={() => setEditingTranscript(transcript)}
+                onOpen={() => router.push(`/transcripts/${transcript.id}`)}
+                onEdit={() => setEditingTranscript(transcript)}
+                onDelete={() => setDeletingTranscript(transcript)}
               />
             ))}
           </div>
@@ -147,6 +204,24 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
         open={newDialogOpen}
         setOpen={setNewDialogOpen}
         onCreated={handleNewTranscript}
+      />
+
+      <EditTranscriptDialog
+        open={!!editingTranscript}
+        setOpen={(open) => !open && setEditingTranscript(null)}
+        transcript={editingTranscript}
+        onSaved={handleEditSaved}
+      />
+
+      <ConfirmDialog
+        open={!!deletingTranscript}
+        title="Apagar transcrição?"
+        description={`A transcrição "${deletingTranscript?.title ?? ""}" será ocultada do dashboard. Os dados permanecem armazenados.`}
+        confirmText="Apagar"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => !deleting && setDeletingTranscript(null)}
       />
 
       {query && filtered.length === 0 && (

@@ -1,14 +1,23 @@
 "use client";
 
-import { Mic, Clock, GripVertical, Loader2 } from "lucide-react";
+import { Mic, Clock, GripVertical, Loader2, MoreVertical, Pencil, Trash2, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 type Transcript = {
   id: string;
   title: string;
   operationName: string | null;
+  operationDate: string | null;
+  transcriptionDate: string | null;
   analysis: string | null;
   status: "pending" | "processing" | "done" | "failed";
   position: number;
@@ -20,6 +29,9 @@ type Transcript = {
 interface TranscriptCardProps {
   transcript: Transcript;
   onClick?: () => void;
+  onOpen?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
@@ -56,7 +68,7 @@ function getStatusBadge(status: Transcript["status"]) {
   return variants[status];
 }
 
-export function TranscriptCard({ transcript, onClick, dragHandleProps }: TranscriptCardProps) {
+export function TranscriptCard({ transcript, onClick, onOpen, onEdit, onDelete, dragHandleProps }: TranscriptCardProps) {
   const { variant, label } = getStatusBadge(transcript.status);
   const totalDuration = transcript.media.reduce((acc, m) => acc + (m.durationSeconds ?? 0), 0);
 
@@ -64,23 +76,76 @@ export function TranscriptCard({ transcript, onClick, dragHandleProps }: Transcr
     <Card
       onClick={onClick}
       className={cn(
-        "relative overflow-hidden group transition-all duration-300 ease-out cursor-pointer",
-        "hover:border-primary/40 hover:scale-105 glass-border-animated",
+        "relative overflow-hidden group transition-all duration-300 ease-out cursor-pointer h-full flex flex-col",
+        "hover:border-primary/40 hover:scale-[1.02] glass-border-animated",
         onClick && "cursor-pointer"
       )}
     >
-      {dragHandleProps && (
-        <div
-          {...dragHandleProps}
-          className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-foreground"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <GripVertical className="size-4" />
-        </div>
-      )}
+      <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+        {(onEdit || onDelete) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreVertical className="size-4" />
+                <span className="sr-only">Ações</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+              {onEdit && (
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit();
+                  }}
+                >
+                  <Pencil className="mr-2 size-4" />
+                  Editar
+                </DropdownMenuItem>
+              )}
+              {onOpen && (
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpen();
+                  }}
+                >
+                  <ExternalLink className="mr-2 size-4" />
+                  Abrir página
+                </DropdownMenuItem>
+              )}
+              {onDelete && (
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  Apagar
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        {dragHandleProps && (
+          <div
+            {...dragHandleProps}
+            className="p-1 text-muted-foreground hover:text-foreground cursor-grab"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GripVertical className="size-4" />
+          </div>
+        )}
+      </div>
 
       <CardHeader>
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2 pr-16">
           <div className="flex-1 min-w-0">
             <CardTitle className="text-sm font-semibold truncate line-clamp-2">
               {transcript.title}
@@ -96,9 +161,11 @@ export function TranscriptCard({ transcript, onClick, dragHandleProps }: Transcr
         </div>
       </CardHeader>
 
-      <CardContent>
-        {transcript.analysis && (
+      <CardContent className="flex-1 min-h-[3.5rem]">
+        {transcript.analysis ? (
           <p className="text-xs text-muted-foreground line-clamp-3">{transcript.analysis}</p>
+        ) : (
+          <p className="text-xs text-muted-foreground italic">Sem análise registrada</p>
         )}
       </CardContent>
 

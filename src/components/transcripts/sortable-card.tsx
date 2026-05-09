@@ -10,6 +10,8 @@ type Transcript = {
   id: string;
   title: string;
   operationName: string | null;
+  operationDate: string | null;
+  transcriptionDate: string | null;
   analysis: string | null;
   status: "pending" | "processing" | "done" | "failed";
   position: number;
@@ -22,9 +24,12 @@ interface SortableCardProps {
   id: string;
   transcript: Transcript;
   onClick?: () => void;
+  onOpen?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function SortableCard({ id, transcript, onClick }: SortableCardProps) {
+export function SortableCard({ id, transcript, onClick, onOpen, onEdit, onDelete }: SortableCardProps) {
   const {
     attributes,
     listeners,
@@ -44,7 +49,7 @@ export function SortableCard({ id, transcript, onClick }: SortableCardProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "relative group",
+        "relative group h-full",
         isDragging && "opacity-50 scale-95"
       )}
     >
@@ -55,7 +60,13 @@ export function SortableCard({ id, transcript, onClick }: SortableCardProps) {
       >
         <GripVertical className="size-5 text-muted-foreground" />
       </div>
-      <TranscriptCard transcript={transcript} onClick={onClick} />
+      <TranscriptCard
+        transcript={transcript}
+        onClick={onClick}
+        onOpen={onOpen}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     </div>
   );
 }

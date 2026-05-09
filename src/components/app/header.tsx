@@ -26,7 +26,7 @@ export function Header() {
   }
 
   return (
-    <header className="h-16 border-b border-border/40 bg-card/30 backdrop-blur-lg flex items-center justify-between px-6">
+    <header className="h-16 border-b border-primary/15 bg-card/40 backdrop-blur-xl flex items-center justify-between px-6">
       <div className="flex-1 flex items-center gap-4">
         <Button
           variant="ghost"

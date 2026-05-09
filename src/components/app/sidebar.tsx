@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Moon,
   Sun,
+  AudioWaveform,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from 'next-themes'
@@ -56,19 +57,24 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`flex h-screen flex-col border-r border-border/40 bg-card/30 backdrop-blur-lg transition-all duration-300 ${
+      className={`flex h-screen flex-col border-r border-primary/15 bg-sidebar/55 backdrop-blur-2xl transition-all duration-300 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
-      <div className="flex items-center justify-between border-b border-border/40 p-4">
-        {!isCollapsed && (
-          <h1 className="text-lg font-bold text-foreground">transcripts</h1>
-        )}
+      <div className="flex items-center justify-between gap-2 border-b border-primary/15 p-4">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 p-1.5 backdrop-blur-xl border border-primary/30 shrink-0">
+            <AudioWaveform className="h-5 w-5 text-primary" />
+          </div>
+          {!isCollapsed && (
+            <h1 className="text-lg font-bold text-foreground truncate">transcripts</h1>
+          )}
+        </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="h-8 w-8"
+          className="h-8 w-8 shrink-0"
         >
           {isCollapsed ? (
             <ChevronRight className="h-4 w-4" />
@@ -98,7 +104,6 @@ export function Sidebar() {
       <div className="border-t border-border/40 p-4 space-y-2">
         <Button
           variant="ghost"
-          size="icon"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="w-full justify-start text-muted-foreground hover:bg-primary/10 hover:text-primary"
         >

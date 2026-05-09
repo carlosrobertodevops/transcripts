@@ -5,7 +5,7 @@ import { shares, transcripts, users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { AuthError, NotFoundError } from "../plugins/error";
 
-export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/shares" })
+export const sharesRoutes = new Elysia({ prefix: "/transcripts/:id/shares" })
   .post(
     "/",
     async (ctx: any) => {
@@ -23,7 +23,7 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/sha
         .from(transcripts)
         .where(
           and(
-            eq(transcripts.id, params.transcriptId),
+            eq(transcripts.id, params.id),
             eq(transcripts.ownerId, typedUser.id)
           )
         )
@@ -55,7 +55,7 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/sha
         .from(shares)
         .where(
           and(
-            eq(shares.transcriptId, params.transcriptId),
+            eq(shares.transcriptId, params.id),
             eq(shares.sharedWithUserId, sharedUser[0].id)
           )
         )
@@ -69,7 +69,7 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/sha
       const created = await db
         .insert(shares)
         .values({
-          transcriptId: params.transcriptId,
+          transcriptId: params.id,
           ownerId: user.id,
           sharedWithUserId: sharedUser[0].id,
           canEdit: data.canEdit,
@@ -92,7 +92,7 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/sha
       .from(transcripts)
       .where(
         and(
-          eq(transcripts.id, params.transcriptId),
+          eq(transcripts.id, params.id),
           eq(transcripts.ownerId, user.id)
         )
       )
@@ -106,7 +106,7 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:transcriptId/sha
     const result = await db
       .select()
       .from(shares)
-      .where(eq(shares.transcriptId, params.transcriptId));
+      .where(eq(shares.transcriptId, params.id));
 
     return { shares: result };
   })

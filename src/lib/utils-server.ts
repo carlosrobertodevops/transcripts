@@ -1,9 +1,12 @@
 import { SESSION_COOKIE, REFRESH_COOKIE } from "./auth";
 
+const isHttpsAppUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "").startsWith("https://");
+const cookieSecure = process.env.COOKIE_SECURE === "1" || isHttpsAppUrl;
+
 const COOKIE_OPTIONS = {
   path: "/",
   httpOnly: true,
-  secure: true,
+  secure: cookieSecure,
   sameSite: "Lax" as const,
 };
 

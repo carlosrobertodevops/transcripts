@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import { db } from "@/db/client";
-import { media, transcripts, transcriptionJobs, shares } from "@/db/schema";
+import { media, transcripts, transcriptionJobs, transcriptSegments, shares } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { authPlugin } from "../plugins/auth";
 import { storage } from "@/server/services/storage";
@@ -10,14 +10,32 @@ const sanitizeFilename = (name: string): string => {
   return name.replace(/[^a-z0-9._-]/gi, "_").slice(0, 255);
 };
 
-const isValidMediaMime = (mime: string): boolean => {
-  return mime.startsWith("audio/") || mime.startsWith("video/");
+const AUDIO_VIDEO_EXTS = new Set([
+  "mp3", "wav", "m4a", "aac", "ogg", "oga", "opus", "flac", "wma", "mp4", "mov", "avi", "mkv", "webm", "m4v",
+]);
+
+const isValidMediaMime = (mime: string, filename: string): boolean => {
+  if (mime?.startsWith("audio/") || mime?.startsWith("video/")) return true;
+  const ext = filename.toLowerCase().split(".").pop() ?? "";
+  return AUDIO_VIDEO_EXTS.has(ext);
+};
+
+const inferMime = (file: File): string => {
+  if (file.type) return file.type;
+  const ext = file.name.toLowerCase().split(".").pop() ?? "";
+  const map: Record<string, string> = {
+    mp3: "audio/mpeg", wav: "audio/wav", m4a: "audio/mp4", aac: "audio/aac",
+    ogg: "audio/ogg", oga: "audio/ogg", opus: "audio/ogg", flac: "audio/flac",
+    mp4: "video/mp4", mov: "video/quicktime", avi: "video/x-msvideo",
+    mkv: "video/x-matroska", webm: "video/webm", m4v: "video/mp4",
+  };
+  return map[ext] ?? "application/octet-stream";
 };
 
 export const mediaRoutes = new Elysia()
   .use(authPlugin)
   .post("/transcripts/:id/media", async (ctx: any) => {
-    const { user, params, request, set } = ctx;
+    const { user, params, body, set } = ctx;
     if (!user) {
       set.status = 401;
       return { error: "unauthorized" };
@@ -57,18 +75,24 @@ export const mediaRoutes = new Elysia()
       }
     }
 
-    const formData = await request.formData();
-    let files = formData.getAll("files") as File[];
-
-    // Fallback: accept single 'file' field if 'files' not provided
-    if (!files || files.length === 0) {
-      const singleFile = formData.get("file") as File | null;
-      if (singleFile) {
-        files = [singleFile];
+    let files: File[] = [];
+    if (body && typeof body === "object") {
+      const filesField = (body as Record<string, unknown>).files;
+      if (Array.isArray(filesField)) {
+        files = filesField.filter((f): f is File => f instanceof File);
+      } else if (filesField instanceof File) {
+        files = [filesField];
+      }
+      if (files.length === 0) {
+        const singleFile = (body as Record<string, unknown>).file;
+        if (singleFile instanceof File) files = [singleFile];
+        else if (Array.isArray(singleFile)) {
+          files = singleFile.filter((f): f is File => f instanceof File);
+        }
       }
     }
 
-    if (!files || files.length === 0) {
+    if (files.length === 0) {
       set.status = 400;
       return { error: "no_files" };
     }
@@ -77,50 +101,53 @@ export const mediaRoutes = new Elysia()
     const jobsQueued = [];
     let isFirstUpload = true;
 
+    const provider = process.env.TRANSCRIPTION_PROVIDER ?? "groq";
+
     for (const file of files) {
-      // Validate MIME type
-      if (!isValidMediaMime(file.type)) {
+      const mime = inferMime(file);
+
+      if (!isValidMediaMime(mime, file.name)) {
         set.status = 400;
-        return { error: "invalid_mime_type" };
+        return { error: "invalid_mime_type", filename: file.name, mime };
       }
 
-      // Validate size (< 500MB)
       if (file.size > 500 * 1024 * 1024) {
         set.status = 413;
         return { error: "file_too_large" };
       }
 
-      // Read file buffer
       const buffer = await file.arrayBuffer();
       const buf = Buffer.from(buffer);
 
-      // Generate storage path
       const dest = `${params.id}/${crypto.randomUUID()}-${sanitizeFilename(file.name)}`;
 
-      // Save to storage
-      await storage.save(buf, dest);
+      try {
+        await storage.save(buf, dest);
+      } catch (err) {
+        console.error("[media] storage.save failed", err);
+        set.status = 500;
+        return { error: "storage_failed", message: (err as Error)?.message };
+      }
 
-      // Insert media record
       const mediaRecord = await db
         .insert(media)
         .values({
           transcriptId: params.id,
           filename: file.name,
-          mime: file.type,
+          mime,
           sizeBytes: file.size,
           storagePath: dest,
-          durationSeconds: null, // Will be set by transcription job
+          durationSeconds: null,
         })
         .returning();
 
       mediaList.push(mediaRecord[0]);
 
-      // Create transcription job
       const job = await db
         .insert(transcriptionJobs)
         .values({
           mediaId: mediaRecord[0].id,
-          provider: "openai", // Default provider
+          provider,
           status: "pending",
           attempts: 0,
         })
@@ -187,4 +214,56 @@ export const mediaRoutes = new Elysia()
 
     set.status = 204;
     return null;
+  })
+  .post("/media/:id/retranscribe", async (ctx: any) => {
+    const { user, params, set } = ctx;
+    if (!user) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+
+    // Fetch media
+    const mediaRecord = await db
+      .select()
+      .from(media)
+      .where(eq(media.id, params.id))
+      .limit(1);
+
+    if (mediaRecord.length === 0) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+
+    const m = mediaRecord[0];
+
+    // Check ownership (only owner can retranscribe)
+    const transcript = await db
+      .select()
+      .from(transcripts)
+      .where(eq(transcripts.id, m.transcriptId))
+      .limit(1);
+
+    if (transcript.length === 0 || transcript[0].ownerId !== user.id) {
+      set.status = 403;
+      return { error: "forbidden" };
+    }
+
+    // Delete existing segments + job for this media
+    await db.delete(transcriptSegments).where(eq(transcriptSegments.mediaId, params.id));
+    await db.delete(transcriptionJobs).where(eq(transcriptionJobs.mediaId, params.id));
+
+    // Create new pending job
+    const provider = process.env.TRANSCRIPTION_PROVIDER ?? "groq";
+    const job = await db
+      .insert(transcriptionJobs)
+      .values({
+        mediaId: params.id,
+        provider,
+        status: "pending",
+        attempts: 0,
+      })
+      .returning();
+
+    set.status = 201;
+    return { job: job[0] };
   });

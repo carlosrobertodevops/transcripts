@@ -157,14 +157,14 @@ export const MediaSection = ({
             {media.map((m) => (
               <div
                 key={m.id}
-                className="flex items-center justify-between p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex items-center justify-between gap-3 p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors min-w-0"
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="text-muted-foreground">
                     {getMediaIcon(m.mime)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-sm font-medium truncate min-w-0" title={m.filename}>
                       {m.filename}
                     </p>
                     <p className="text-xs text-muted-foreground">

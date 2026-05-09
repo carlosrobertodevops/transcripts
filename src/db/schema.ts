@@ -44,9 +44,12 @@ export const transcripts = pgTable("transcripts", {
     .references(() => users.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   operationName: text("operation_name"),
+  operationDate: timestamp("operation_date"),
+  transcriptionDate: timestamp("transcription_date"),
   analysis: text("analysis"),
   status: transcriptStatusEnum("status").default("pending").notNull(),
   position: integer("position").default(0),
+  deletedAt: timestamp("deleted_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

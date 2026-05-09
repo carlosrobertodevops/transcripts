@@ -14,7 +14,59 @@ Rules:
 
 | Agent                       | Propósito                                                                      | Triggers                  | Escopo                                 | Modelo           |
 | --------------------------- | ------------------------------------------------------------------------------ | ------------------------- | -------------------------------------- | ---------------- |
+| `worker-loop-agent`         | Orquestrar ticks de 15s e invocar job runner para processar transcrições      | Timer 15s (setInterval)   | READ-ONLY jobs/transcription logic     | N/A (Bun service) |
+| `job-runner-agent`          | Executar lote de jobs pendentes (pending → processing → done/failed)          | POST /api/jobs/run        | READ-WRITE DB (transcriptions, media) | N/A (Elysia route)|
 | `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md com codebase real | Manual (invocação direta) | READ-ONLY inspection + WRITE-ONLY docs | Claude Haiku 4.5 |
+
+---
+
+## Detalhes dos Agentes
+
+### worker-loop-agent
+
+**Propósito:** Orquestrar ticks periódicos e invocar job runner para processar transcrições assincronamente.
+
+**Triggers:**
+
+- Timer setInterval(15s) em `src/workers/loop.ts`
+- Executável manual via `bun run worker:loop` (loop infinito) ou `bun run worker:tick` (single tick, exit code)
+
+**Escopo:**
+
+- Lê configurações de worker (timeout, retry logic)
+- Chama `POST /api/jobs/run` com header `x-internal-key`
+- Stateless — sem persistência de fila externa
+- Responsável apenas por gatilhar, não processar
+
+**Modelo:** Bun service (não Claude — execution nativa)
+
+**Código:** `src/workers/loop.ts`
+
+---
+
+### job-runner-agent
+
+**Propósito:** Processar lote de jobs pendentes, transitando-os de pending → processing → done/failed.
+
+**Triggers:**
+
+- `POST /api/jobs/run` (endpoint Elysia em `src/server/routes/jobs.ts`)
+- Requer header `x-internal-key` para autenticação interna
+- Invocado por worker-loop-agent a cada 15s
+- Processa até `limit` jobs por chamada (padrão 3, configurável)
+
+**Escopo:**
+
+- Lê transcrições com status `pending` de `transcription_jobs`
+- Para cada job: marca `processing`, lê arquivo de `STORAGE_DIR`, chama provider (Groq/OpenAI/local Faster-Whisper), grava `transcript_segments`, marca `done` ou `failed`
+- Cria notificações ao término
+- Transação Drizzle para atomicidade
+
+**Modelo:** Elysia route handler (não Claude — execution nativa)
+
+**Código:** `src/server/routes/jobs.ts` + `src/server/services/jobs.ts`
+
+---
 
 ### project-docs-synchronizer
 
@@ -56,7 +108,7 @@ Incluir em AGENTS.md para cada novo agente:
 - [Diretórios/files que pode escrever]
 - [Restrições (READ-ONLY, WRITE-ONLY, etc)]
 
-**Modelo:** [Claude Haiku 4.5 | Claude Opus | outro]
+**Modelo:** [Claude Haiku 4.5 | Claude Opus | Bun service | Elysia route | outro]
 ```
 
 ### Idioma e Estilo
@@ -65,6 +117,7 @@ Incluir em AGENTS.md para cada novo agente:
 - **Inglês** em nomes de agentes (kebab-case)
 - Resuma objetivo em uma frase
 - Especifique triggers concretos (não "when needed")
+- Indique se é Claude (LLM) ou nativo (Bun/Elysia service)
 
 ### Preservação de Seções Críticas
 
@@ -88,7 +141,16 @@ Agentes devem espelhar esses padrões obrigatoriamente.
 ### Invocação Manual Direta
 
 ```bash
+# project-docs-synchronizer
 claude-code invoke project-docs-synchronizer --scope src
+
+# worker-loop-agent
+bun run worker:loop      # loop infinito (15s)
+bun run worker:tick      # single tick, exit code
+
+# job-runner-agent (via worker, ou manual para debug)
+curl -X POST http://localhost:3000/api/jobs/run \
+  -H "x-internal-key: $INTERNAL_API_KEY"
 ```
 
 ### Via Claude Code CLI
@@ -110,6 +172,7 @@ Agentes assumem:
 - Variáveis de ambiente em `.env` (não commitado)
 - Permissão de leitura em `/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/`
 - Permissão de escrita em `/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/*.md`
+- `INTERNAL_API_KEY` definida para autenticação de worker
 
 ---
 
@@ -117,10 +180,11 @@ Agentes assumem:
 
 ### Restrições Técnicas
 
-- **Token budget**: Haiku 4.5 ≈ 200k tokens por sessão
+- **Token budget (Claude agents)**: Haiku 4.5 ≈ 200k tokens por sessão
 - **Time limit**: 15 minutos max por invocação (timeout padrão)
 - **File size**: Max 50MB por arquivo inspecionado
 - **Parallelismo**: Máx 5 agents rodando simultaneamente
+- **Worker tick**: 15s interval (fixo); processa até `limit` jobs por tick (padrão 3)
 
 ### Restrições Funcionais
 
@@ -130,11 +194,22 @@ Agentes assumem:
   - Escreve apenas em `.md` documentação
   - Não commita automaticamente (requer `git add` manual)
 
+- **worker-loop-agent**:
+  - Não retorna resposta HTTP (fire-and-forget setInterval)
+  - Depende de `INTERNAL_API_KEY` para autenticar chamadas ao job runner
+  - Exit code 0 se tick bem-sucedido, 1 se erro
+
+- **job-runner-agent**:
+  - Requer autenticação interna (header `x-internal-key`)
+  - Acesso DB total (lê/escreve transcription_jobs, transcript_segments, notifications)
+  - Não exposto ao frontend — apenas worker e admin podem chamar
+
 ### Falhas Esperadas
 
 - Divergências não-reportáveis (ex: código quebrado não sincronizável com docs úteis)
 - Stack mismatch não-resolvível (ex: Prisma docs vs Drizzle código)
 - Circularidade em dependencies entre docs
+- Worker offline ou timeout: jobs acumulam em `pending` até próximo tick bem-sucedido
 
 **Fallback:** Reportar divergências e parar; não tentar "consertar" código.
 

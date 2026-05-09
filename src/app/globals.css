@@ -47,75 +47,75 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── Light Mode — Apple Clean ── */
+/* ── Light Mode — Blue + Red ── */
 :root {
-  --background: #ffffff;
-  --foreground: #1d1d1f;
-  --card: #ffffff;
-  --card-foreground: #1d1d1f;
-  --popover: #ffffff;
-  --popover-foreground: #1d1d1f;
-  --primary: #007AFF;
-  --primary-foreground: #ffffff;
-  --secondary: #f5f5f7;
-  --secondary-foreground: #1d1d1f;
-  --muted: #f5f5f7;
-  --muted-foreground: #86868b;
-  --accent: #f5f5f7;
-  --accent-foreground: #1d1d1f;
-  --destructive: #FF3B30;
-  --border: transparent;
-  --input: transparent;
-  --ring: #007AFF;
-  --chart-1: #007AFF;
-  --chart-2: #5AC8FA;
-  --chart-3: #FF2D55;
-  --chart-4: #FF9500;
-  --chart-5: #34C759;
+  --background: oklch(98.5% 0 0);
+  --foreground: oklch(15% 0 0);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(15% 0 0);
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(15% 0 0);
+  --primary: oklch(55% 0.18 245);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(94% 0 0);
+  --secondary-foreground: oklch(20% 0 0);
+  --muted: oklch(94% 0 0);
+  --muted-foreground: oklch(48% 0 0);
+  --accent: oklch(58% 0.25 25);
+  --accent-foreground: oklch(100% 0 0);
+  --destructive: oklch(58% 0.25 25);
+  --border: oklch(92% 0 0);
+  --input: oklch(100% 0 0);
+  --ring: oklch(55% 0.18 245);
+  --chart-1: oklch(55% 0.18 245);
+  --chart-2: oklch(58% 0.25 25);
+  --chart-3: oklch(48% 0.12 180);
+  --chart-4: oklch(65% 0.15 280);
+  --chart-5: oklch(62% 0.18 60);
   --radius: 0.75rem;
-  --sidebar: #f5f5f7;
-  --sidebar-foreground: #1d1d1f;
-  --sidebar-primary: #007AFF;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e8e8ed;
-  --sidebar-accent-foreground: #1d1d1f;
-  --sidebar-border: transparent;
-  --sidebar-ring: #007AFF;
+  --sidebar: oklch(96% 0 0);
+  --sidebar-foreground: oklch(15% 0 0);
+  --sidebar-primary: oklch(55% 0.18 245);
+  --sidebar-primary-foreground: oklch(100% 0 0);
+  --sidebar-accent: oklch(58% 0.25 25);
+  --sidebar-accent-foreground: oklch(100% 0 0);
+  --sidebar-border: oklch(92% 0 0);
+  --sidebar-ring: oklch(55% 0.18 245);
 }
 
-/* ── Dark Mode — Apple Dark ── */
+/* ── Dark Mode — Navy + Red Pop ── */
 .dark {
-  --background: #000000;
-  --foreground: #f5f5f7;
-  --card: #1c1c1e;
-  --card-foreground: #f5f5f7;
-  --popover: #1c1c1e;
-  --popover-foreground: #f5f5f7;
-  --primary: #0A84FF;
-  --primary-foreground: #ffffff;
-  --secondary: #2c2c2e;
-  --secondary-foreground: #f5f5f7;
-  --muted: #2c2c2e;
-  --muted-foreground: #98989d;
-  --accent: #2c2c2e;
-  --accent-foreground: #f5f5f7;
-  --destructive: #FF453A;
-  --border: transparent;
-  --input: transparent;
-  --ring: #0A84FF;
-  --chart-1: #0A84FF;
-  --chart-2: #64D2FF;
-  --chart-3: #FF375F;
-  --chart-4: #FF9F0A;
-  --chart-5: #30D158;
-  --sidebar: #1c1c1e;
-  --sidebar-foreground: #f5f5f7;
-  --sidebar-primary: #0A84FF;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2c2c2e;
-  --sidebar-accent-foreground: #f5f5f7;
-  --sidebar-border: transparent;
-  --sidebar-ring: #0A84FF;
+  --background: oklch(12% 0.02 245);
+  --foreground: oklch(96% 0 0);
+  --card: oklch(18% 0.02 245);
+  --card-foreground: oklch(96% 0 0);
+  --popover: oklch(18% 0.02 245);
+  --popover-foreground: oklch(96% 0 0);
+  --primary: oklch(62% 0.20 245);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(26% 0.02 245);
+  --secondary-foreground: oklch(96% 0 0);
+  --muted: oklch(26% 0.02 245);
+  --muted-foreground: oklch(72% 0 0);
+  --accent: oklch(58% 0.26 25);
+  --accent-foreground: oklch(100% 0 0);
+  --destructive: oklch(58% 0.26 25);
+  --border: oklch(28% 0.02 245);
+  --input: oklch(20% 0.02 245);
+  --ring: oklch(62% 0.20 245);
+  --chart-1: oklch(62% 0.20 245);
+  --chart-2: oklch(58% 0.26 25);
+  --chart-3: oklch(48% 0.12 180);
+  --chart-4: oklch(65% 0.15 280);
+  --chart-5: oklch(62% 0.18 60);
+  --sidebar: oklch(15% 0.02 245);
+  --sidebar-foreground: oklch(96% 0 0);
+  --sidebar-primary: oklch(62% 0.20 245);
+  --sidebar-primary-foreground: oklch(100% 0 0);
+  --sidebar-accent: oklch(58% 0.26 25);
+  --sidebar-accent-foreground: oklch(100% 0 0);
+  --sidebar-border: oklch(28% 0.02 245);
+  --sidebar-ring: oklch(62% 0.20 245);
 }
 
 @layer base {
@@ -161,9 +161,18 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,122,255,0.8), rgba(90,200,250,0.3));
-  box-shadow: 0 0 12px 3px rgba(0,122,255,0.3);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--primary) 80%, transparent),
+    color-mix(in srgb, var(--primary) 30%, transparent)
+  );
+  box-shadow: 0 0 12px 3px color-mix(in srgb, var(--primary) 30%, transparent);
   animation: auth-particle-drift 12s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 .auth-particle-1 { top: 15%; left: 20%; animation-duration: 14s; }
@@ -181,8 +190,8 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(90,200,250,0.7);
-  box-shadow: 0 0 6px 2px rgba(90,200,250,0.2);
+  background: color-mix(in srgb, var(--primary) 70%, transparent);
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--primary) 20%, transparent);
   animation: auth-particle-sm-drift 6s ease-in-out infinite;
 }
 
@@ -304,30 +313,36 @@
 .glass-border-animated {
   position: relative;
   isolation: isolate;
+  --proximity: 0;
 }
 
-/* Borda animada — sempre visivel, intensifica no hover */
+/* Borda animada — invisível idle, aparece ao hover/focus/proximity */
 .glass-border-animated::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 0.5px;
+  padding: calc(0.5px + var(--proximity, 0) * 0.75px);
   background: conic-gradient(
     from var(--border-angle),
-    transparent 25%,
-    var(--primary) 50%,
-    transparent 75%
+    transparent 0%,
+    transparent 2%,
+    color-mix(in srgb, var(--primary) 90%, transparent) 4%,
+    var(--primary) 6%,
+    var(--primary) 9%,
+    color-mix(in srgb, var(--primary) 50%, transparent) 13%,
+    transparent 20%,
+    transparent 100%
   );
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: border-glow 6s linear infinite;
+  animation: border-glow calc(3s - var(--proximity, 0) * 1.5s) linear infinite;
   pointer-events: none;
-  opacity: 0.25;
-  transition: opacity 0.4s ease, padding 0.4s ease;
+  opacity: calc(var(--proximity, 0) * 0.95);
+  transition: opacity 0.25s ease, padding 0.25s ease;
 }
 
-/* Segundo layer — shimmer mais rapido, cor complementar */
+/* Segundo layer — streak reverso offset 180°, comet trail */
 .glass-border-animated::after {
   content: "";
   position: absolute;
@@ -336,37 +351,73 @@
   padding: 0.5px;
   background: conic-gradient(
     from calc(var(--border-angle) + 180deg),
-    transparent 30%,
-    rgba(90, 200, 250, 0.6) 50%,
-    transparent 70%
+    transparent 0%,
+    transparent 2%,
+    color-mix(in srgb, var(--primary) 80%, transparent) 4%,
+    color-mix(in srgb, var(--primary) 70%, transparent) 7%,
+    color-mix(in srgb, var(--primary) 30%, transparent) 11%,
+    transparent 18%,
+    transparent 100%
   );
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: border-glow 4s linear infinite reverse;
+  animation: border-glow calc(2s - var(--proximity, 0) * 0.8s) linear infinite reverse;
   pointer-events: none;
-  opacity: 0.1;
-  transition: opacity 0.4s ease;
+  opacity: calc(var(--proximity, 0) * 0.7);
+  transition: opacity 0.25s ease;
+  filter: blur(0.4px);
+}
+
+/* Hover/focus seta proximity para 1 — luz aparece percorrendo */
+.glass-border-animated:hover,
+.glass-border-animated:focus-within {
+  --proximity: 1;
 }
 
 .dark .glass-border-animated::after {
   background: conic-gradient(
     from calc(var(--border-angle) + 180deg),
-    transparent 30%,
-    rgba(100, 210, 255, 0.5) 50%,
-    transparent 70%
+    transparent 0%,
+    transparent 3%,
+    color-mix(in srgb, var(--primary) 70%, transparent) 5%,
+    color-mix(in srgb, var(--primary) 70%, transparent) 8%,
+    color-mix(in srgb, var(--primary) 30%, transparent) 12%,
+    transparent 18%,
+    transparent 100%
   );
 }
 
-/* Hover — ambas as camadas mais intensas */
+/* Hover — streak acelera e intensifica */
 .glass-border-animated:hover::before,
 .glass-border-animated:focus-within::before {
-  opacity: 0.7;
-  padding: 1px;
+  opacity: 0.85;
+  padding: 0.75px;
+  animation-duration: 2s;
 }
 
 .glass-border-animated:hover::after,
 .glass-border-animated:focus-within::after {
-  opacity: 0.4;
+  opacity: 0.3;
+  animation-duration: 1.5s;
+}
+
+/* Fallback para prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .glass-border-animated::before,
+  .glass-border-animated::after {
+    animation: none !important;
+    opacity: 0.15 !important;
+  }
+  
+  .glass-border-animated:hover::before,
+  .glass-border-animated:focus-within::before {
+    opacity: 0.3 !important;
+  }
+  
+  .glass-border-animated:hover::after,
+  .glass-border-animated:focus-within::after {
+    opacity: 0.15 !important;
+  }
 }
 
 /* Animacao de borda para inputs ao focar */
@@ -403,43 +454,36 @@
 aside[data-sidebar-panel],
 header[data-app-header],
 .auth-card {
-  --foreground: #f5f5f7;
-  --card-foreground: #f5f5f7;
-  --popover-foreground: #f5f5f7;
-  --secondary-foreground: #f5f5f7;
-  --accent-foreground: #f5f5f7;
-  --muted-foreground: #98989d;
-  --sidebar-foreground: #f5f5f7;
-  --sidebar-accent-foreground: #f5f5f7;
-  color: #f5f5f7;
+  color: var(--foreground);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   background:
-    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(10, 132, 255, 0.06), transparent 60%),
-    linear-gradient(180deg, rgba(15, 22, 36, 0.55), rgba(8, 12, 20, 0.55));
-  border: 1px solid rgba(56, 132, 255, 0.22);
+    radial-gradient(ellipse 120% 80% at 50% 0%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 60%),
+    radial-gradient(ellipse 120% 80% at 50% 100%, color-mix(in srgb, var(--primary) 6%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 75%, transparent), color-mix(in srgb, var(--card) 60%, transparent));
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
   box-shadow:
-    0 1px 0 0 rgba(120, 170, 255, 0.06) inset,
-    0 0 0 1px rgba(56, 132, 255, 0.04),
-    0 24px 60px -24px rgba(0, 0, 0, 0.7),
-    0 8px 24px -12px rgba(10, 132, 255, 0.18);
+    0 1px 0 0 color-mix(in srgb, var(--primary) 6%, transparent) inset,
+    0 0 0 1px color-mix(in srgb, var(--primary) 4%, transparent),
+    0 24px 60px -24px color-mix(in srgb, var(--background) 70%, transparent),
+    0 8px 24px -12px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
-/* Navbar — borda apenas inferior, sem shadow pesado */
+/* Navbar — borda inferior azul */
 header[data-app-header] {
   border-left: 0;
   border-right: 0;
   border-top: 0;
-  box-shadow: 0 1px 0 0 rgba(56, 132, 255, 0.18);
+  box-shadow: 0 1px 0 0 color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
-/* Sidebar — borda apenas direita, full height */
+/* Sidebar — borda direita vermelha */
 aside[data-sidebar-panel] {
   border-top: 0;
   border-bottom: 0;
   border-left: 0;
   border-radius: 0;
-  box-shadow: 1px 0 0 0 rgba(56, 132, 255, 0.18);
+  box-shadow: 1px 0 0 0 color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 /* Glassmorphism para sheet/sidebar content */
@@ -461,7 +505,7 @@ aside[data-sidebar-panel] {
   -webkit-backdrop-filter: blur(12px) saturate(150%);
 }
 
-/* Grid de fundo — linhas verticais + horizontais (estilo blueprint) */
+/* Grid de fundo — linhas AZUL APENAS (verticais + horizontais) */
 body::after {
   content: "";
   position: fixed;
@@ -469,8 +513,8 @@ body::after {
   z-index: -2;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, rgba(0, 122, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 122, 255, 0.22) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--primary) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 22%, transparent) 1px, transparent 1px);
   background-size: 44px 44px;
   mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 30%, transparent 95%);
   -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 30%, transparent 95%);
@@ -479,20 +523,20 @@ body::after {
 
 .dark body::after {
   background-image:
-    linear-gradient(to right, rgba(10, 132, 255, 0.28) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10, 132, 255, 0.28) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--primary) 28%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 28%, transparent) 1px, transparent 1px);
 }
 
-/* Fundo atmosferico — blur forte + halos radiais sobre grid */
+/* Fundo atmosferico — halos azul (blur sempre azul) */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(0, 122, 255, 0.18), transparent 60%),
-    radial-gradient(ellipse 70% 80% at 80% 80%, rgba(90, 200, 250, 0.14), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255, 255, 255, 0.55), transparent 70%);
+    radial-gradient(ellipse 80% 60% at 20% 20%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 80% at 80% 80%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--background) 55%, transparent), transparent 70%);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   pointer-events: none;
@@ -500,16 +544,16 @@ body::before {
 
 .dark body::before {
   background:
-    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(10, 132, 255, 0.28), transparent 60%),
-    radial-gradient(ellipse 70% 80% at 80% 80%, rgba(100, 210, 255, 0.20), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0, 0, 0, 0.35), transparent 70%);
+    radial-gradient(ellipse 80% 60% at 20% 20%, color-mix(in srgb, var(--primary) 28%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 80% at 80% 80%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--background) 35%, transparent), transparent 70%);
 }
 
 /* Compatibilidade — classe usada por BgGrid component */
 .bg-grid-faded {
   background-image:
-    linear-gradient(to right, rgba(0, 122, 255, 0.22) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 122, 255, 0.22) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--primary) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 22%, transparent) 1px, transparent 1px);
   background-size: 44px 44px;
   -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
@@ -517,8 +561,8 @@ body::before {
 
 .dark .bg-grid-faded {
   background-image:
-    linear-gradient(to right, rgba(10, 132, 255, 0.28) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10, 132, 255, 0.28) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in srgb, var(--primary) 28%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--primary) 28%, transparent) 1px, transparent 1px);
 }
 
 /* ── Hover States — cor de acesso (azul primary) ── */
@@ -531,26 +575,26 @@ body::before {
 [data-slot="card"]:hover {
   box-shadow:
     0 0 0 0.5px var(--primary),
-    0 4px 24px -4px rgba(0, 122, 255, 0.12);
+    0 4px 24px -4px color-mix(in srgb, var(--primary) 12%, transparent);
   transform: translateY(-1px);
 }
 
 .dark [data-slot="card"]:hover {
   box-shadow:
     0 0 0 0.5px var(--primary),
-    0 4px 24px -4px rgba(10, 132, 255, 0.15);
+    0 4px 24px -4px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 /* Itens de menu e dropdown — fundo azul translucido */
 [data-slot="dropdown-menu-item"]:focus,
 [data-slot="dropdown-menu-item"]:hover:not([data-disabled]) {
-  background-color: rgba(0, 122, 255, 0.08) !important;
+  background-color: color-mix(in srgb, var(--primary) 8%, transparent) !important;
   color: var(--primary) !important;
 }
 
 .dark [data-slot="dropdown-menu-item"]:focus,
 .dark [data-slot="dropdown-menu-item"]:hover:not([data-disabled]) {
-  background-color: rgba(10, 132, 255, 0.12) !important;
+  background-color: color-mix(in srgb, var(--primary) 12%, transparent) !important;
   color: var(--primary) !important;
 }
 
@@ -570,12 +614,12 @@ a[href]:not([class*="btn"]):not([data-slot]):hover {
 
 /* Sidebar items — highlight azul no hover */
 [data-sidebar="menu-button"]:hover {
-  background-color: rgba(0, 122, 255, 0.08);
+  background-color: color-mix(in srgb, var(--primary) 8%, transparent);
   color: var(--primary);
 }
 
 .dark [data-sidebar="menu-button"]:hover {
-  background-color: rgba(10, 132, 255, 0.12);
+  background-color: color-mix(in srgb, var(--primary) 12%, transparent);
   color: var(--primary);
 }
 
@@ -590,4 +634,53 @@ a[href]:not([class*="btn"]):not([data-slot]):hover {
   background-color: var(--tag-bg-dark);
   color: var(--tag-text-dark);
   border-color: var(--tag-border-dark);
+}
+
+/* ── Proximity Animation ── */
+@keyframes glass-border-pulse {
+  0%, 100% {
+    opacity: calc(0.25 + var(--proximity, 0) * 0.6);
+  }
+  50% {
+    opacity: calc(0.35 + var(--proximity, 0) * 0.5);
+  }
+}
+
+.glass-border-animated {
+  position: relative;
+}
+
+.glass-border-animated::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+  opacity: calc(0.25 + var(--proximity, 0) * 0.6);
+  animation: glass-border-pulse calc(6s - var(--proximity, 0) * 4s) ease-in-out infinite;
+  -webkit-mask-image: 
+    linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, transparent 1px),
+    linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, transparent 1px);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* ── Login Visual Panel — shimmer sweep ── */
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer-sweep 8s linear infinite;
 }

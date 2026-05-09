@@ -16,7 +16,10 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
   .post(
     "/register",
     async ({ body, set }) => {
-      const { name, email, password } = registerSchema.parse(body);
+      const parsed = registerSchema.parse(body);
+      const name = parsed.name;
+      const email = parsed.email.trim().toLowerCase();
+      const password = parsed.password;
 
       const existing = await db
         .select()
@@ -63,7 +66,9 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
   .post(
     "/login",
     async ({ body, set }) => {
-      const { email, password } = loginSchema.parse(body);
+      const parsed = loginSchema.parse(body);
+      const email = parsed.email.trim().toLowerCase();
+      const password = parsed.password;
 
       const result = await db
         .select()

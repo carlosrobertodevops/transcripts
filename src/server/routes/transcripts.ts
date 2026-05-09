@@ -3,7 +3,7 @@ import { db } from "@/db/client";
 import { transcripts, media, shares, transcriptSegments } from "@/db/schema";
 import { authPlugin } from "../plugins/auth";
 import { createNotification } from "@/server/services/notification";
-import { eq, and, or, desc, asc, ilike, inArray, sql } from "drizzle-orm";
+import { eq, and, or, desc, asc, ilike, inArray, sql, isNull } from "drizzle-orm";
 
 export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
   .use(authPlugin)
@@ -27,7 +27,7 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const sharedTranscriptIds = sharedIds.map((s) => s.transcriptId);
 
-    const whereCondition = or(
+    const ownershipCondition = or(
       eq(transcripts.ownerId, user.id),
       sharedTranscriptIds.length > 0 ? inArray(transcripts.id, sharedTranscriptIds) : undefined
     );
@@ -41,7 +41,11 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
           )
         : undefined;
 
-    const finalWhere = searchCondition ? and(whereCondition, searchCondition) : whereCondition;
+    const finalWhere = and(
+      ownershipCondition,
+      isNull(transcripts.deletedAt),
+      searchCondition,
+    );
 
     const items = await db
       .select()
@@ -88,9 +92,25 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       return { error: "unauthorized" };
     }
 
-    const { title } = body as { title: string };
+    const {
+      title,
+      operationName,
+      operationDate,
+      transcriptionDate,
+      analysis,
+    } = body as {
+      title: string;
+      operationName?: string | null;
+      operationDate?: string | null;
+      transcriptionDate?: string | null;
+      analysis?: string | null;
+    };
 
-    // position = max(position) + 1
+    if (!title || typeof title !== "string" || title.length === 0) {
+      set.status = 422;
+      return { error: "title_required" };
+    }
+
     const maxPos = await db
       .select({ maxPos: sql<number>`COALESCE(MAX(position), 0)` })
       .from(transcripts)
@@ -103,13 +123,17 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       .values({
         ownerId: user.id,
         title,
+        operationName: operationName || null,
+        operationDate: operationDate ? new Date(operationDate) : null,
+        transcriptionDate: transcriptionDate ? new Date(transcriptionDate) : null,
+        analysis: analysis || null,
         position: nextPosition,
         status: "pending",
       })
       .returning();
 
     set.status = 201;
-    return { transcript: newTranscript[0] };
+    return newTranscript[0];
   })
   .get("/:id", async (ctx: any) => { const { user, params, set } = ctx;
     if (!user) {
@@ -120,7 +144,7 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
     const transcript = await db
       .select()
       .from(transcripts)
-      .where(eq(transcripts.id, params.id))
+      .where(and(eq(transcripts.id, params.id), isNull(transcripts.deletedAt)))
       .limit(1);
 
     if (transcript.length === 0) {
@@ -241,13 +265,27 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const updates = body as {
       title?: string;
-      operationName?: string;
-      analysis?: string;
+      operationName?: string | null;
+      operationDate?: string | null;
+      transcriptionDate?: string | null;
+      analysis?: string | null;
     };
+
+    const updateSet: Record<string, unknown> = {};
+    if (updates.title !== undefined) updateSet.title = updates.title;
+    if (updates.operationName !== undefined) updateSet.operationName = updates.operationName;
+    if (updates.analysis !== undefined) updateSet.analysis = updates.analysis;
+    if (updates.operationDate !== undefined) {
+      updateSet.operationDate = updates.operationDate ? new Date(updates.operationDate) : null;
+    }
+    if (updates.transcriptionDate !== undefined) {
+      updateSet.transcriptionDate = updates.transcriptionDate ? new Date(updates.transcriptionDate) : null;
+    }
+    updateSet.updatedAt = new Date();
 
     await db
       .update(transcripts)
-      .set({ ...updates })
+      .set(updateSet)
       .where(eq(transcripts.id, params.id));
 
     // Notifica shared users
@@ -292,7 +330,10 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       return { error: "forbidden" };
     }
 
-    await db.delete(transcripts).where(eq(transcripts.id, params.id));
+    await db
+      .update(transcripts)
+      .set({ deletedAt: new Date() })
+      .where(eq(transcripts.id, params.id));
 
     set.status = 204;
     return null;

@@ -8,6 +8,20 @@
       "when": 1778248914374,
       "tag": "0000_fuzzy_the_enforcers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778290000000,
+      "tag": "0001_soft_delete_transcripts",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778291000000,
+      "tag": "0002_add_dates_transcripts",
+      "breakpoints": true
     }
   ]
 }

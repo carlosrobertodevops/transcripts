@@ -12,6 +12,8 @@ import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useProximity } from '@/hooks/use-proximity'
+import type { CSSProperties } from 'react'
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -23,6 +25,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const { ref: cardRef, proximity } = useProximity<HTMLDivElement>({ radius: 260 })
   const {
     register,
     handleSubmit,
@@ -37,12 +40,13 @@ export function LoginForm() {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(data),
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        toast.error(error.message || 'Erro ao fazer login')
+        const error = await response.json().catch(() => ({}))
+        toast.error(error.message || error.error || 'Credenciais inválidas')
         setIsLoading(false)
         return
       }
@@ -66,7 +70,11 @@ export function LoginForm() {
         </p>
       </div>
 
-      <Card className="border-border/40 bg-card/60 backdrop-blur-lg p-6">
+      <Card
+        ref={cardRef}
+        style={{ '--proximity': proximity } as CSSProperties}
+        className="glass-border-animated border border-border/40 bg-card/60 backdrop-blur-lg p-[16pt]"
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
