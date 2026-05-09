@@ -9,12 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { LiveTranscription } from "@/components/transcripts/live-transcription";
-import { segmentsToHighlightedHtml, type TagRef } from "@/lib/highlight-tags";
+import { MediaTranscriptEditor } from "@/components/transcripts/media-transcript-editor";
+import { type TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
-import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles, Wand2 } from "lucide-react";
+import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles } from "lucide-react";
 
 interface PendingFile {
   file: File;
@@ -28,6 +29,7 @@ interface MediaItem {
   sizeBytes: number | null;
   durationSeconds: number | null;
   description: string | null;
+  transcriptHtml: string | null;
 }
 
 interface SegmentItem {
@@ -91,8 +93,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
   const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
   const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
   const [tagList, setTagList] = useState<TagRef[]>([]);
-  const [transcriptHtml, setTranscriptHtml] = useState<string>("");
-  const [savedTranscriptHtml, setSavedTranscriptHtml] = useState<string>("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -122,9 +122,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
         const drafts: Record<string, string> = {};
         for (const m of list) drafts[m.id] = m.description ?? "";
         setMediaDescDrafts(drafts);
-        const stored = data.transcript?.transcriptHtml ?? "";
-        setSavedTranscriptHtml(stored);
-        setTranscriptHtml(stored);
       }
     } catch (err) {
       console.error("[edit-dialog] fetch detail", err);
@@ -267,8 +264,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     if (!transcript) return;
     setSubmitting(true);
     try {
-      const transcriptHtmlPayload =
-        transcriptHtml !== savedTranscriptHtml ? transcriptHtml : undefined;
       const res = await fetch(`/api/transcripts/${transcript.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -279,7 +274,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           operationDate: data.operationDate || null,
           transcriptionDate: data.transcriptionDate || null,
           analysis: data.analysis || null,
-          ...(transcriptHtmlPayload !== undefined ? { transcriptHtml: transcriptHtmlPayload } : {}),
         }),
       });
 
@@ -449,6 +443,19 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                           </Button>
                         </div>
                       )}
+                      {!liveActive && (
+                        <MediaTranscriptEditor
+                          mediaId={m.id}
+                          segments={segments.filter((s) => s.mediaId === m.id)}
+                          initialHtml={m.transcriptHtml}
+                          tags={tagList}
+                          onSaved={(html) =>
+                            setMediaList((prev) =>
+                              prev.map((mm) => (mm.id === m.id ? { ...mm, transcriptHtml: html } : mm))
+                            )
+                          }
+                        />
+                      )}
                     </li>
                   );
                 })}
@@ -550,44 +557,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                 toast.success("Transcrição concluída");
               }}
             />
-          )}
-
-          {!liveActive && segments.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Transcrição ({segments.length} segmentos)</Label>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() => {
-                    const sorted = [...segments].sort((a, b) => a.startMs - b.startMs);
-                    setTranscriptHtml(segmentsToHighlightedHtml(sorted, tagList));
-                  }}
-                  title="Regenerar com tags atuais"
-                >
-                  <Wand2 className="mr-1 h-3 w-3" />
-                  Aplicar tags
-                </Button>
-              </div>
-              <RichTextEditor
-                value={
-                  transcriptHtml ||
-                  segmentsToHighlightedHtml(
-                    [...segments].sort((a, b) => a.startMs - b.startMs),
-                    tagList
-                  )
-                }
-                onChange={setTranscriptHtml}
-                placeholder="Transcrição..."
-              />
-              {tagList.length > 0 && (
-                <p className="text-[11px] text-muted-foreground">
-                  {tagList.length} tag(s) destacadas em negrito. Clique em &quot;Aplicar tags&quot; para regenerar com as tags atuais.
-                </p>
-              )}
-            </div>
           )}
 
           <div className="flex gap-2 justify-end pt-4">

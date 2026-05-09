@@ -234,7 +234,11 @@ export const mediaRoutes = new Elysia()
       }
     }
 
-    const updates = body as { description?: string | null; filename?: string };
+    const updates = body as {
+      description?: string | null;
+      filename?: string;
+      transcriptHtml?: string | null;
+    };
     const updateSet: Record<string, unknown> = {};
     if (updates.description !== undefined) {
       const d = typeof updates.description === "string" ? updates.description.trim() : "";
@@ -242,6 +246,9 @@ export const mediaRoutes = new Elysia()
     }
     if (typeof updates.filename === "string" && updates.filename.trim().length > 0) {
       updateSet.filename = updates.filename.trim();
+    }
+    if (updates.transcriptHtml !== undefined) {
+      updateSet.transcriptHtml = updates.transcriptHtml || null;
     }
 
     if (Object.keys(updateSet).length === 0) {

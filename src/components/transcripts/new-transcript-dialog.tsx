@@ -18,7 +18,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LiveTranscription } from "@/components/transcripts/live-transcription";
+import { MediaTranscriptEditor } from "@/components/transcripts/media-transcript-editor";
 import type { TagRef } from "@/lib/highlight-tags";
+
+interface PostDoneMedia {
+  id: string;
+  filename: string;
+  transcriptHtml: string | null;
+}
+
+interface PostDoneSegment {
+  id: string;
+  mediaId: string;
+  startMs: number;
+  endMs: number;
+  text: string;
+}
 import { toast } from "sonner";
 import { Loader2, X, Music, FileVideo, Sparkles, ArrowRight } from "lucide-react";
 
@@ -73,6 +88,8 @@ export function NewTranscriptDialog({
   const [createdTranscript, setCreatedTranscript] = useState<Transcript | null>(null);
   const [liveActive, setLiveActive] = useState(false);
   const [tagList, setTagList] = useState<TagRef[]>([]);
+  const [postMediaList, setPostMediaList] = useState<PostDoneMedia[]>([]);
+  const [postSegments, setPostSegments] = useState<PostDoneSegment[]>([]);
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { title: "", operationName: "", operationDate: "", transcriptionDate: "" },
@@ -216,11 +233,54 @@ export function NewTranscriptDialog({
               transcriptId={createdTranscript.id}
               enabled={liveActive}
               tags={tagList}
-              onAllDone={() => {
+              onAllDone={async () => {
                 setLiveActive(false);
                 toast.success("Transcrição concluída");
+                try {
+                  const res = await fetch(`/api/transcripts/${createdTranscript.id}`, {
+                    credentials: "include",
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    setPostMediaList(data.media ?? []);
+                    setPostSegments(data.segments ?? []);
+                  }
+                } catch (err) {
+                  console.error("[new-dialog] post-done fetch", err);
+                }
               }}
             />
+
+            {!liveActive && postMediaList.length > 0 && (
+              <div className="space-y-3 border-t pt-3">
+                <p className="text-xs font-medium text-muted-foreground">
+                  Edite a transcrição de cada mídia (tags em cor):
+                </p>
+                {postMediaList.map((m) => (
+                  <div
+                    key={m.id}
+                    className="space-y-2 rounded-md border border-border bg-muted/30 px-3 py-2"
+                  >
+                    <p className="text-xs font-medium truncate" title={m.filename}>
+                      {m.filename}
+                    </p>
+                    <MediaTranscriptEditor
+                      mediaId={m.id}
+                      segments={postSegments.filter((s) => s.mediaId === m.id)}
+                      initialHtml={m.transcriptHtml}
+                      tags={tagList}
+                      onSaved={(html) =>
+                        setPostMediaList((prev) =>
+                          prev.map((mm) =>
+                            mm.id === m.id ? { ...mm, transcriptHtml: html } : mm
+                          )
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="flex justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={handleClose}>

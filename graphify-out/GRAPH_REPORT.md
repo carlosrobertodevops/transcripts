@@ -1,11 +1,11 @@
 # Graph Report - transcripts  (2026-05-08)
 
 ## Corpus Check
-- 107 files · ~103,537 words
+- 109 files · ~105,941 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 252 nodes · 179 edges · 96 communities detected
+- 258 nodes · 185 edges · 97 communities detected
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -106,6 +106,7 @@
 - [[_COMMUNITY_Community 93|Community 93]]
 - [[_COMMUNITY_Community 94|Community 94]]
 - [[_COMMUNITY_Community 95|Community 95]]
+- [[_COMMUNITY_Community 96|Community 96]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Page()` - 6 edges
@@ -113,9 +114,9 @@
 3. `runPendingJobs()` - 5 edges
 4. `api()` - 5 edges
 5. `requireUser()` - 5 edges
-6. `highlightToHtml()` - 4 edges
-7. `transcribe()` - 3 edges
-8. `load()` - 3 edges
+6. `load()` - 4 edges
+7. `highlightToHtml()` - 4 edges
+8. `transcribe()` - 3 edges
 9. `handleSave()` - 3 edges
 10. `DashboardPage()` - 3 edges
 
@@ -146,23 +147,23 @@ Cohesion: 0.18
 Nodes (3): Transcribe audio or video file.      Args:         file: Audio/video file (MP3,, transcribe(), LocalStorage
 
 ### Community 3 - "Community 3"
+Cohesion: 0.25
+Nodes (5): cancelEdit(), handleCreate(), handleDelete(), handleSave(), load()
+
+### Community 4 - "Community 4"
 Cohesion: 0.24
 Nodes (4): formatDuration(), formatSize(), handleUploadAndTranscribe(), onSubmit()
 
-### Community 4 - "Community 4"
+### Community 5 - "Community 5"
 Cohesion: 0.36
 Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
-
-### Community 5 - "Community 5"
-Cohesion: 0.43
-Nodes (4): cancelEdit(), handleCreate(), handleSave(), load()
 
 ### Community 6 - "Community 6"
 Cohesion: 0.33
 Nodes (2): formatDuration(), formatFileSize()
 
 ### Community 7 - "Community 7"
-Cohesion: 0.4
+Cohesion: 0.33
 Nodes (2): onSubmit(), uploadMedia()
 
 ### Community 11 - "Community 11"
@@ -304,33 +305,35 @@ Nodes (2): handle(), handler()
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 81`** (1 nodes): `dialog.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 82`** (1 nodes): `separator.tsx`
+- **Thin community `Community 82`** (1 nodes): `table.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 83`** (1 nodes): `button.tsx`
+- **Thin community `Community 83`** (1 nodes): `separator.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 84`** (1 nodes): `checkbox.tsx`
+- **Thin community `Community 84`** (1 nodes): `button.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 85`** (1 nodes): `dropdown-menu.tsx`
+- **Thin community `Community 85`** (1 nodes): `checkbox.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 86`** (1 nodes): `select.tsx`
+- **Thin community `Community 86`** (1 nodes): `dropdown-menu.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 87`** (1 nodes): `textarea.tsx`
+- **Thin community `Community 87`** (1 nodes): `select.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 88`** (1 nodes): `input.tsx`
+- **Thin community `Community 88`** (1 nodes): `textarea.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 89`** (1 nodes): `sortable-card.tsx`
+- **Thin community `Community 89`** (1 nodes): `input.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 90`** (1 nodes): `visual-panel.tsx`
+- **Thin community `Community 90`** (1 nodes): `sortable-card.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 91`** (1 nodes): `cn.ts`
+- **Thin community `Community 91`** (1 nodes): `visual-panel.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 92`** (1 nodes): `zod.ts`
+- **Thin community `Community 92`** (1 nodes): `cn.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 93`** (1 nodes): `schema.ts`
+- **Thin community `Community 93`** (1 nodes): `zod.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 94`** (1 nodes): `client.ts`
+- **Thin community `Community 94`** (1 nodes): `schema.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 95`** (1 nodes): `tick.ts`
+- **Thin community `Community 95`** (1 nodes): `client.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 96`** (1 nodes): `tick.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
