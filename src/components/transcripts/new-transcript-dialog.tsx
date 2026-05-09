@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -78,6 +78,22 @@ export function NewTranscriptDialog({
     defaultValues: { title: "", operationName: "", operationDate: "", transcriptionDate: "" },
   });
 
+  useEffect(() => {
+    if (!open) return;
+    const loadTags = async () => {
+      try {
+        const res = await fetch("/api/tags", { credentials: "include" });
+        if (res.ok) {
+          const data = (await res.json()) as { tags: TagRef[] };
+          setTagList(data.tags ?? []);
+        }
+      } catch (err) {
+        console.error("[new-dialog] fetch tags", err);
+      }
+    };
+    loadTags();
+  }, [open]);
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const validEntries: FileEntry[] = acceptedFiles
       .filter((file) => {
@@ -153,15 +169,6 @@ export function NewTranscriptDialog({
         toast.success("Transcrição iniciada!");
         setCreatedTranscript(transcript);
         setLiveActive(true);
-        try {
-          const tagRes = await fetch("/api/tags", { credentials: "include" });
-          if (tagRes.ok) {
-            const data = (await tagRes.json()) as { tags: TagRef[] };
-            setTagList(data.tags ?? []);
-          }
-        } catch (err) {
-          console.error("[new-dialog] fetch tags", err);
-        }
         onCreated?.(transcript);
       } else {
         toast.success("Transcrição criada!");

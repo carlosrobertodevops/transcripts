@@ -3,7 +3,34 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import { Mark, mergeAttributes } from "@tiptap/core";
 import { Bold, Italic, List, ListOrdered, Heading1, Heading2, Link2, Undo2, Redo2 } from "lucide-react";
+
+const ColoredBold = Mark.create({
+  name: "boldColored",
+  addOptions() {
+    return { HTMLAttributes: {} };
+  },
+  addAttributes() {
+    return {
+      color: {
+        default: null,
+        parseHTML: (el: HTMLElement) => el.style.color || null,
+        renderHTML: (attrs: { color?: string | null }) =>
+          attrs.color ? { style: `color:${attrs.color};font-weight:700` } : {},
+      },
+    };
+  },
+  parseHTML() {
+    return [
+      { tag: "strong[style*='color']" },
+      { tag: "b[style*='color']" },
+    ];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ["strong", mergeAttributes(HTMLAttributes), 0];
+  },
+});
 
 interface RichTextEditorProps {
   value?: string;
@@ -21,6 +48,7 @@ export const RichTextEditor = ({ value = "", onChange, placeholder = "Escreva...
         orderedList: { HTMLAttributes: { class: "list-decimal list-inside space-y-1" } },
       }),
       Link.configure({ openOnClick: false, autolink: true }),
+      ColoredBold,
     ],
     content: value || "",
     editorProps: {
