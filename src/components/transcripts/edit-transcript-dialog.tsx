@@ -354,6 +354,25 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           </div>
 
           <div className="space-y-2">
+            <div
+              {...getRootProps()}
+              className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
+                isDragActive
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50 hover:bg-accent/30"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <Music className="h-6 w-6 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                {isDragActive
+                  ? "Solte os arquivos aqui..."
+                  : "Adicionar mídia — arraste ou clique"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                MP3, WAV, M4A, AAC, OGG, OPUS, MP4, MOV — até 500MB cada
+              </p>
+            </div>
             <Label>Mídia ({mediaList.length})</Label>
             {mediaList.length > 0 ? (
               <ul className="space-y-2 max-h-72 overflow-auto">
@@ -463,26 +482,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
             ) : (
               <p className="text-xs text-muted-foreground">Nenhuma mídia anexada.</p>
             )}
-
-            <div
-              {...getRootProps()}
-              className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
-                isDragActive
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50 hover:bg-accent/30"
-              }`}
-            >
-              <input {...getInputProps()} />
-              <Music className="h-6 w-6 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {isDragActive
-                  ? "Solte os arquivos aqui..."
-                  : "Adicionar mídia — arraste ou clique"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                MP3, WAV, M4A, AAC, OGG, OPUS, MP4, MOV — até 500MB cada
-              </p>
-            </div>
 
             {pendingFiles.length > 0 && (
               <>

@@ -1089,7 +1089,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_edit_transcript_dialog_enhanced_tsx",
-      "community": 6,
+      "community": 8,
       "norm_label": "edit-transcript-dialog-enhanced.tsx"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L56",
       "id": "edit_transcript_dialog_enhanced_formatfilesize",
-      "community": 6,
+      "community": 8,
       "norm_label": "formatfilesize()"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L64",
       "id": "edit_transcript_dialog_enhanced_formatduration",
-      "community": 6,
+      "community": 8,
       "norm_label": "formatduration()"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L89",
       "id": "edit_transcript_dialog_enhanced_fetchdata",
-      "community": 6,
+      "community": 8,
       "norm_label": "fetchdata()"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L127",
       "id": "edit_transcript_dialog_enhanced_handleretranscribe",
-      "community": 6,
+      "community": 8,
       "norm_label": "handleretranscribe()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L148",
       "id": "edit_transcript_dialog_enhanced_handledeletemedia",
-      "community": 6,
+      "community": 8,
       "norm_label": "handledeletemedia()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L175",
       "id": "edit_transcript_dialog_enhanced_onsubmit",
-      "community": 6,
+      "community": 8,
       "norm_label": "onsubmit()"
     },
     {
@@ -1159,7 +1159,7 @@
       "label": "loadTags()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L83",
+      "source_location": "L100",
       "id": "new_transcript_dialog_loadtags",
       "community": 7,
       "norm_label": "loadtags()"
@@ -1168,7 +1168,7 @@
       "label": "updateDescription()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L110",
+      "source_location": "L127",
       "id": "new_transcript_dialog_updatedescription",
       "community": 7,
       "norm_label": "updatedescription()"
@@ -1177,7 +1177,7 @@
       "label": "removeFile()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L122",
+      "source_location": "L139",
       "id": "new_transcript_dialog_removefile",
       "community": 7,
       "norm_label": "removefile()"
@@ -1186,7 +1186,7 @@
       "label": "uploadMedia()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L126",
+      "source_location": "L143",
       "id": "new_transcript_dialog_uploadmedia",
       "community": 7,
       "norm_label": "uploadmedia()"
@@ -1195,7 +1195,7 @@
       "label": "onSubmit()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L153",
+      "source_location": "L170",
       "id": "new_transcript_dialog_onsubmit",
       "community": 7,
       "norm_label": "onsubmit()"
@@ -1204,10 +1204,19 @@
       "label": "handleClose()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L189",
+      "source_location": "L206",
       "id": "new_transcript_dialog_handleclose",
       "community": 7,
       "norm_label": "handleclose()"
+    },
+    {
+      "label": "async()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
+      "source_location": "L236",
+      "id": "new_transcript_dialog_async",
+      "community": 7,
+      "norm_label": "async()"
     },
     {
       "label": "confirm-dialog.tsx",
@@ -1287,7 +1296,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_transcript_grid_tsx",
-      "community": 8,
+      "community": 9,
       "norm_label": "transcript-grid.tsx"
     },
     {
@@ -1296,7 +1305,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L45",
       "id": "transcript_grid_handleeditsaved",
-      "community": 8,
+      "community": 9,
       "norm_label": "handleeditsaved()"
     },
     {
@@ -1305,7 +1314,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L70",
       "id": "transcript_grid_confirmdelete",
-      "community": 8,
+      "community": 9,
       "norm_label": "confirmdelete()"
     },
     {
@@ -1314,7 +1323,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L91",
       "id": "transcript_grid_fetchtranscripts",
-      "community": 8,
+      "community": 9,
       "norm_label": "fetchtranscripts()"
     },
     {
@@ -1323,7 +1332,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L119",
       "id": "transcript_grid_handledragend",
-      "community": 8,
+      "community": 9,
       "norm_label": "handledragend()"
     },
     {
@@ -1332,7 +1341,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L147",
       "id": "transcript_grid_handlenewtranscript",
-      "community": 8,
+      "community": 9,
       "norm_label": "handlenewtranscript()"
     },
     {
@@ -1431,7 +1440,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_media_section_tsx",
-      "community": 9,
+      "community": 10,
       "norm_label": "media-section.tsx"
     },
     {
@@ -1440,7 +1449,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L33",
       "id": "media_section_formatfilesize",
-      "community": 9,
+      "community": 10,
       "norm_label": "formatfilesize()"
     },
     {
@@ -1449,7 +1458,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L38",
       "id": "media_section_formatduration",
-      "community": 9,
+      "community": 10,
       "norm_label": "formatduration()"
     },
     {
@@ -1458,7 +1467,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L45",
       "id": "media_section_getmediaicon",
-      "community": 9,
+      "community": 10,
       "norm_label": "getmediaicon()"
     },
     {
@@ -1467,7 +1476,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L60",
       "id": "media_section_handleupload",
-      "community": 9,
+      "community": 10,
       "norm_label": "handleupload()"
     },
     {
@@ -1476,7 +1485,7 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L106",
       "id": "media_section_handledelete",
-      "community": 9,
+      "community": 10,
       "norm_label": "handledelete()"
     },
     {
@@ -1492,7 +1501,7 @@
       "label": "formatSize()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L41",
+      "source_location": "L43",
       "id": "edit_transcript_dialog_formatsize",
       "community": 4,
       "norm_label": "formatsize()"
@@ -1501,7 +1510,7 @@
       "label": "formatDuration()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L48",
+      "source_location": "L50",
       "id": "edit_transcript_dialog_formatduration",
       "community": 4,
       "norm_label": "formatduration()"
@@ -1510,7 +1519,7 @@
       "label": "updatePendingDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L162",
+      "source_location": "L159",
       "id": "edit_transcript_dialog_updatependingdesc",
       "community": 4,
       "norm_label": "updatependingdesc()"
@@ -1519,7 +1528,7 @@
       "label": "removePending()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L174",
+      "source_location": "L171",
       "id": "edit_transcript_dialog_removepending",
       "community": 4,
       "norm_label": "removepending()"
@@ -1528,7 +1537,7 @@
       "label": "handleUploadAndTranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L176",
+      "source_location": "L173",
       "id": "edit_transcript_dialog_handleuploadandtranscribe",
       "community": 4,
       "norm_label": "handleuploadandtranscribe()"
@@ -1537,7 +1546,7 @@
       "label": "handleRetranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L205",
+      "source_location": "L202",
       "id": "edit_transcript_dialog_handleretranscribe",
       "community": 4,
       "norm_label": "handleretranscribe()"
@@ -1546,7 +1555,7 @@
       "label": "handleSaveMediaDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L224",
+      "source_location": "L221",
       "id": "edit_transcript_dialog_handlesavemediadesc",
       "community": 4,
       "norm_label": "handlesavemediadesc()"
@@ -1555,7 +1564,7 @@
       "label": "handleDeleteMedia()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L247",
+      "source_location": "L244",
       "id": "edit_transcript_dialog_handledeletemedia",
       "community": 4,
       "norm_label": "handledeletemedia()"
@@ -1564,10 +1573,37 @@
       "label": "onSubmit()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L266",
+      "source_location": "L263",
       "id": "edit_transcript_dialog_onsubmit",
       "community": 4,
       "norm_label": "onsubmit()"
+    },
+    {
+      "label": "media-transcript-editor.tsx",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L1",
+      "id": "src_components_transcripts_media_transcript_editor_tsx",
+      "community": 5,
+      "norm_label": "media-transcript-editor.tsx"
+    },
+    {
+      "label": "handleApplyTags()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L55",
+      "id": "media_transcript_editor_handleapplytags",
+      "community": 5,
+      "norm_label": "handleapplytags()"
+    },
+    {
+      "label": "handleSave()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L62",
+      "id": "media_transcript_editor_handlesave",
+      "community": 5,
+      "norm_label": "handlesave()"
     },
     {
       "label": "transcript-editor.tsx",
@@ -1656,7 +1692,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
-      "community": 5,
+      "community": 6,
       "norm_label": "notification-list.tsx"
     },
     {
@@ -1665,7 +1701,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L28",
       "id": "notification_list_handlemarkasread",
-      "community": 5,
+      "community": 6,
       "norm_label": "handlemarkasread()"
     },
     {
@@ -1674,7 +1710,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L45",
       "id": "notification_list_handlemarkallasread",
-      "community": 5,
+      "community": 6,
       "norm_label": "handlemarkallasread()"
     },
     {
@@ -1719,7 +1755,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L1",
       "id": "src_components_app_notifications_bell_tsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "notifications-bell.tsx"
     },
     {
@@ -1728,7 +1764,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L37",
       "id": "notifications_bell_getnotificationlabel",
-      "community": 10,
+      "community": 11,
       "norm_label": "getnotificationlabel()"
     },
     {
@@ -1737,7 +1773,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L41",
       "id": "notifications_bell_getpayloadpreview",
-      "community": 10,
+      "community": 11,
       "norm_label": "getpayloadpreview()"
     },
     {
@@ -1746,7 +1782,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L55",
       "id": "notifications_bell_fetchnotifications",
-      "community": 10,
+      "community": 11,
       "norm_label": "fetchnotifications()"
     },
     {
@@ -1755,7 +1791,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L71",
       "id": "notifications_bell_handlemarkasread",
-      "community": 10,
+      "community": 11,
       "norm_label": "handlemarkasread()"
     },
     {
@@ -1764,7 +1800,7 @@
       "source_file": "src/components/app/notifications-bell.tsx",
       "source_location": "L90",
       "id": "notifications_bell_handlemarkallasread",
-      "community": 10,
+      "community": 11,
       "norm_label": "handlemarkallasread()"
     },
     {
@@ -1962,7 +1998,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
-      "community": 5,
+      "community": 6,
       "norm_label": "api-client.ts"
     },
     {
@@ -1971,7 +2007,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L1",
       "id": "api_client_api",
-      "community": 5,
+      "community": 6,
       "norm_label": "api()"
     },
     {
@@ -1980,7 +2016,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L23",
       "id": "api_client_apiget",
-      "community": 5,
+      "community": 6,
       "norm_label": "apiget()"
     },
     {
@@ -1989,7 +2025,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L24",
       "id": "api_client_apipost",
-      "community": 5,
+      "community": 6,
       "norm_label": "apipost()"
     },
     {
@@ -1998,7 +2034,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L29",
       "id": "api_client_apipatch",
-      "community": 5,
+      "community": 6,
       "norm_label": "apipatch()"
     },
     {
@@ -2007,7 +2043,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L34",
       "id": "api_client_apidelete",
-      "community": 5,
+      "community": 6,
       "norm_label": "apidelete()"
     },
     {
@@ -2052,7 +2088,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L1",
       "id": "src_lib_highlight_tags_tsx",
-      "community": 11,
+      "community": 5,
       "norm_label": "highlight-tags.tsx"
     },
     {
@@ -2061,7 +2097,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L9",
       "id": "highlight_tags_escaperegexp",
-      "community": 11,
+      "community": 5,
       "norm_label": "escaperegexp()"
     },
     {
@@ -2070,7 +2106,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L11",
       "id": "highlight_tags_escapehtml",
-      "community": 11,
+      "community": 5,
       "norm_label": "escapehtml()"
     },
     {
@@ -2079,7 +2115,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L19",
       "id": "highlight_tags_buildpattern",
-      "community": 11,
+      "community": 5,
       "norm_label": "buildpattern()"
     },
     {
@@ -2088,7 +2124,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L26",
       "id": "highlight_tags_highlighttohtml",
-      "community": 11,
+      "community": 5,
       "norm_label": "highlighttohtml()"
     },
     {
@@ -2097,7 +2133,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L41",
       "id": "highlight_tags_segmentstohighlightedhtml",
-      "community": 11,
+      "community": 5,
       "norm_label": "segmentstohighlightedhtml()"
     },
     {
@@ -3315,7 +3351,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L83",
+      "source_location": "L100",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_loadtags",
@@ -3327,7 +3363,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L110",
+      "source_location": "L127",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_updatedescription",
@@ -3339,7 +3375,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L122",
+      "source_location": "L139",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_removefile",
@@ -3351,7 +3387,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L126",
+      "source_location": "L143",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_uploadmedia",
@@ -3363,7 +3399,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L153",
+      "source_location": "L170",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_onsubmit",
@@ -3375,7 +3411,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L189",
+      "source_location": "L206",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_handleclose",
@@ -3384,10 +3420,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
+      "source_location": "L236",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_new_transcript_dialog_tsx",
+      "_tgt": "new_transcript_dialog_async",
+      "source": "src_components_transcripts_new_transcript_dialog_tsx",
+      "target": "new_transcript_dialog_async",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L168",
+      "source_location": "L185",
       "weight": 1.0,
       "_src": "new_transcript_dialog_onsubmit",
       "_tgt": "new_transcript_dialog_uploadmedia",
@@ -3651,7 +3699,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L379",
+      "source_location": "L373",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_formatsize",
@@ -3663,7 +3711,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L48",
+      "source_location": "L50",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_formatduration",
@@ -3675,7 +3723,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L162",
+      "source_location": "L159",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_updatependingdesc",
@@ -3687,7 +3735,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L174",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_removepending",
@@ -3699,7 +3747,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L176",
+      "source_location": "L173",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
@@ -3711,7 +3759,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L205",
+      "source_location": "L202",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleretranscribe",
@@ -3723,7 +3771,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L224",
+      "source_location": "L221",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handlesavemediadesc",
@@ -3735,7 +3783,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L247",
+      "source_location": "L244",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handledeletemedia",
@@ -3747,7 +3795,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L266",
+      "source_location": "L263",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_onsubmit",
@@ -3759,7 +3807,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L379",
+      "source_location": "L373",
       "weight": 1.0,
       "_src": "edit_transcript_dialog_formatsize",
       "_tgt": "edit_transcript_dialog_formatduration",
@@ -3771,13 +3819,49 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L289",
+      "source_location": "L283",
       "weight": 1.0,
       "_src": "edit_transcript_dialog_onsubmit",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
       "source": "edit_transcript_dialog_handleuploadandtranscribe",
       "target": "edit_transcript_dialog_onsubmit",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_transcript_editor_tsx",
+      "_tgt": "media_transcript_editor_handleapplytags",
+      "source": "src_components_transcripts_media_transcript_editor_tsx",
+      "target": "media_transcript_editor_handleapplytags",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_transcript_editor_tsx",
+      "_tgt": "media_transcript_editor_handlesave",
+      "source": "src_components_transcripts_media_transcript_editor_tsx",
+      "target": "media_transcript_editor_handlesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/components/transcripts/media-transcript-editor.tsx",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_src": "media_transcript_editor_handleapplytags",
+      "_tgt": "highlight_tags_segmentstohighlightedhtml",
+      "source": "media_transcript_editor_handleapplytags",
+      "target": "highlight_tags_segmentstohighlightedhtml"
     },
     {
       "relation": "contains",

@@ -4,15 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Plus, Music, Video, Loader2 } from "lucide-react";
+import { Music, Video } from "lucide-react";
 import { toast } from "sonner";
 import { MediaDropzone } from "./media-dropzone";
 
@@ -53,7 +45,6 @@ export const MediaSection = ({
   initialMedia,
 }: MediaSectionProps) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [media, setMedia] = useState<Media[]>(initialMedia);
 
@@ -93,7 +84,6 @@ export const MediaSection = ({
       toast.success(
         `${result.media.length} arquivo(s) enviado(s) com sucesso`
       );
-      setIsOpen(false);
       router.refresh();
     } catch (err) {
       toast.error("Erro ao enviar arquivo");
@@ -125,31 +115,14 @@ export const MediaSection = ({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Mídia</CardTitle>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Adicionar mídia
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Adicionar mídia</DialogTitle>
-              <DialogDescription>
-                Arraste ou clique para selecionar arquivos de áudio ou vídeo
-                (máximo 500MB)
-              </DialogDescription>
-            </DialogHeader>
-            <MediaDropzone
-              onFilesSelected={handleUpload}
-              isLoading={isUploading}
-            />
-          </DialogContent>
-        </Dialog>
+      <CardHeader>
+        <CardTitle>Mídia ({media.length})</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        <MediaDropzone
+          onFilesSelected={handleUpload}
+          isLoading={isUploading}
+        />
         {media.length === 0 ? (
           <p className="text-sm text-muted-foreground">Nenhuma mídia enviada</p>
         ) : (

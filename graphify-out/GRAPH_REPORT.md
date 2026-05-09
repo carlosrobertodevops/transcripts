@@ -1,12 +1,12 @@
 # Graph Report - transcripts  (2026-05-08)
 
 ## Corpus Check
-- 109 files · ~105,941 words
+- 110 files · ~106,759 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 258 nodes · 185 edges · 97 communities detected
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.8)
+- 262 nodes · 189 edges · 97 communities detected
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 17 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -155,20 +155,20 @@ Cohesion: 0.24
 Nodes (4): formatDuration(), formatSize(), handleUploadAndTranscribe(), onSubmit()
 
 ### Community 5 - "Community 5"
+Cohesion: 0.31
+Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
+
+### Community 6 - "Community 6"
 Cohesion: 0.36
 Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
 
-### Community 6 - "Community 6"
-Cohesion: 0.33
-Nodes (2): formatDuration(), formatFileSize()
-
 ### Community 7 - "Community 7"
-Cohesion: 0.33
+Cohesion: 0.29
 Nodes (2): onSubmit(), uploadMedia()
 
-### Community 11 - "Community 11"
-Cohesion: 0.53
-Nodes (4): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml()
+### Community 8 - "Community 8"
+Cohesion: 0.33
+Nodes (2): formatDuration(), formatFileSize()
 
 ### Community 12 - "Community 12"
 Cohesion: 0.4
