@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -22,7 +21,7 @@ import { LiveTranscription } from "@/components/transcripts/live-transcription";
 import { MediaTranscriptEditor } from "@/components/transcripts/media-transcript-editor";
 import { type TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
-import { Loader2, RotateCcw, Trash2, FileAudio, Music, ArrowRight, FileVideo, X, Sparkles } from "lucide-react";
+import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles } from "lucide-react";
 
 interface PendingFile {
   file: File;
@@ -101,7 +100,6 @@ export const NewTranscriptDialog = ({
   setOpen,
   onCreated,
 }: NewTranscriptDialogProps) => {
-  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [createdTranscript, setCreatedTranscript] = useState<Transcript | null>(null);
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
@@ -735,20 +733,6 @@ export const NewTranscriptDialog = ({
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            {createdTranscript && (
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  const id = createdTranscript.id;
-                  setOpen(false);
-                  router.push(`/transcripts/${id}`);
-                }}
-              >
-                Abrir transcrição
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            )}
             <Button type="submit" disabled={submitting || uploading}>
               {uploading ? (
                 <>

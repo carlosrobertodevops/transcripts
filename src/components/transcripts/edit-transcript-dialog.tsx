@@ -309,7 +309,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[90vh] overflow-hidden flex flex-col gap-4">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>Editar transcrição</DialogTitle>
           <DialogDescription>Atualize dados, gerencie mídia e dispare transcrição</DialogDescription>
@@ -350,7 +350,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 flex-1 min-h-0">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="edit-analysis">Análise (opcional)</Label>
             <Controller
               name="analysis"
@@ -360,8 +360,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="min-h-[300pt] flex-1"
-                  bodyClassName="h-full"
+                  className="min-h-[120px] max-h-[180px] overflow-y-auto"
                 />
               )}
             />

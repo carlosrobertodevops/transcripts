@@ -1,11 +1,11 @@
 # Graph Report - transcripts  (2026-05-11)
 
 ## Corpus Check
-- 110 files · ~109,274 words
+- 110 files · ~109,299 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 269 nodes · 198 edges · 96 communities detected
+- 262 nodes · 191 edges · 96 communities detected
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -150,40 +150,40 @@ Cohesion: 0.25
 Nodes (5): cancelEdit(), handleCreate(), handleDelete(), handleSave(), load()
 
 ### Community 4 - "Community 4"
-Cohesion: 0.2
-Nodes (2): formatDuration(), formatSize()
-
-### Community 5 - "Community 5"
 Cohesion: 0.22
 Nodes (2): formatDuration(), formatFileSize()
 
-### Community 6 - "Community 6"
+### Community 5 - "Community 5"
 Cohesion: 0.24
 Nodes (4): formatDuration(), formatSize(), handleUploadAndTranscribe(), onSubmit()
+
+### Community 6 - "Community 6"
+Cohesion: 0.31
+Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
 
 ### Community 7 - "Community 7"
 Cohesion: 0.36
 Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
 
 ### Community 8 - "Community 8"
-Cohesion: 0.31
-Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
-
-### Community 9 - "Community 9"
 Cohesion: 0.33
 Nodes (2): formatDuration(), formatFileSize()
 
-### Community 12 - "Community 12"
+### Community 11 - "Community 11"
 Cohesion: 0.4
 Nodes (2): AuthError, NotFoundError
 
-### Community 13 - "Community 13"
+### Community 12 - "Community 12"
 Cohesion: 0.5
 Nodes (2): handle(), handler()
 
-### Community 15 - "Community 15"
+### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (2): RichTextEditor(), cn()
+
+### Community 15 - "Community 15"
+Cohesion: 0.67
+Nodes (2): formatDuration(), formatSize()
 
 ## Knowledge Gaps
 - **1 isolated node(s):** `Transcribe audio or video file.      Args:         file: Audio/video file (MP3,`

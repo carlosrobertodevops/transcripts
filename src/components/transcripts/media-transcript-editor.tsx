@@ -131,7 +131,7 @@ export const MediaTranscriptEditor = ({
         value={html}
         onChange={setHtml}
         placeholder="Transcrição..."
-        className="h-[300pt]"
+        className="min-h-[120px] max-h-[280px] overflow-y-auto"
       />
     </div>
   );
