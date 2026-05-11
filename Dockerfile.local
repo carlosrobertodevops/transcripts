@@ -33,5 +33,5 @@ COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/src ./src
 RUN bun install --production --frozen-lockfile || bun install --production
-EXPOSE 3001
+EXPOSE 3000
 CMD ["bun", "run", "start"]

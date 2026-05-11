@@ -18,7 +18,7 @@ services:
 
   migrate:
     build:
-      context: .
+      context: Dockerfile.local
       target: migrate
     restart: "no"
     depends_on:
@@ -29,7 +29,8 @@ services:
       NODE_ENV: production
 
   app:
-    build: .
+    build:
+      context: Dockerfile.local
     restart: unless-stopped
     depends_on:
       db:
@@ -63,14 +64,21 @@ services:
     ports:
       - "8000:8000"
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8000/health')",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
   worker:
-    build: .
+    build:
+      context: Dockerfile.local
     restart: unless-stopped
     depends_on:
       db:
