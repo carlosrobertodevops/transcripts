@@ -317,7 +317,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4 min-w-0">
+        <div className="flex flex-col gap-4 min-w-0">
           <div className="space-y-2">
             <Label htmlFor="edit-title">Título *</Label>
             <Input
@@ -350,7 +350,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2 flex-1 min-h-0">
             <Label htmlFor="edit-analysis">Análise (opcional)</Label>
             <Controller
               name="analysis"
@@ -360,7 +360,8 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="h-[300pt]"
+                  className="min-h-[300pt] flex-1"
+                  bodyClassName="h-full"
                 />
               )}
             />

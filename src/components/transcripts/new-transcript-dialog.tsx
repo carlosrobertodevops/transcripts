@@ -108,7 +108,6 @@ export const NewTranscriptDialog = ({
   const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
   const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
   const [tagList, setTagList] = useState<TagRef[]>([]);
-  const [bufferedFiles, setBufferedFiles] = useState<File[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -165,7 +164,6 @@ export const NewTranscriptDialog = ({
       setSegments([]);
       setLiveActive(false);
       setMediaDescDrafts({});
-      setBufferedFiles([]);
     }
   }, [open, fetchTags, form]);
 
@@ -252,9 +250,9 @@ export const NewTranscriptDialog = ({
 
       const title = form.getValues("title");
       if (!title || title.trim().length === 0) {
-        setBufferedFiles((prev) => [...prev, ...valid]);
-        toast.info(`${valid.length} arquivo(s) selecionado(s). Preencha o título e clique Salvar para enviar.`);
-        return;
+        const auto = `Nova transcrição ${new Date().toLocaleString("pt-BR")}`;
+        form.setValue("title", auto, { shouldValidate: true });
+        toast.info(`Título definido como "${auto}" — edite se necessário`);
       }
 
       const transcript = await ensureTranscript();
@@ -365,11 +363,6 @@ export const NewTranscriptDialog = ({
         setCreatedTranscript(transcript);
         onCreated?.(transcript);
         toast.success("Transcrição salva");
-        if (bufferedFiles.length > 0) {
-          const files = bufferedFiles;
-          setBufferedFiles([]);
-          await uploadFiles(transcript.id, files);
-        }
       } else {
         const res = await fetch(`/api/transcripts/${createdTranscript.id}`, {
           method: "PATCH",
@@ -414,7 +407,7 @@ export const NewTranscriptDialog = ({
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4 min-w-0">
+        <div className="flex flex-col gap-4 min-w-0">
           <div className="space-y-2">
             <Label htmlFor="new-title">Título *</Label>
             <Input
@@ -451,7 +444,7 @@ export const NewTranscriptDialog = ({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2 flex-1 min-h-0">
             <Label htmlFor="new-analysis">Análise (opcional)</Label>
             <Controller
               name="analysis"
@@ -461,7 +454,8 @@ export const NewTranscriptDialog = ({
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="h-[300pt]"
+                  className="min-h-[300pt] flex-1"
+                  bodyClassName="h-full"
                 />
               )}
             />
@@ -498,36 +492,6 @@ export const NewTranscriptDialog = ({
               </div>
             )}
 
-            {!createdTranscript && bufferedFiles.length > 0 && (
-              <ul className="space-y-2">
-                {bufferedFiles.map((file, idx) => (
-                  <li
-                    key={`${file.name}-${idx}`}
-                    className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs min-w-0"
-                  >
-                    <Music className="h-3 w-3 shrink-0 text-muted-foreground" />
-                    <span className="flex-1 truncate min-w-0" title={file.name}>
-                      {file.name}
-                    </span>
-                    <span className="shrink-0 text-muted-foreground">
-                      {(file.size / (1024 * 1024)).toFixed(1)}MB
-                    </span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 shrink-0"
-                      onClick={() => setBufferedFiles((prev) => prev.filter((_, i) => i !== idx))}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </li>
-                ))}
-                <p className="text-xs text-muted-foreground italic">
-                  Preencha o título e clique <strong>Salvar</strong> para enviar.
-                </p>
-              </ul>
-            )}
 
             {createdTranscript && (
               <>
