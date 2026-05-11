@@ -172,7 +172,7 @@ export function TranscriptCard({ transcript, onClick, onOpen, onEdit, onDelete, 
       <CardFooter className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-1 text-muted-foreground">
           <Mic className="size-3.5" />
-          <span>{transcript.media.length} mídia(s)</span>
+          <span>{transcript.media?.length ?? 0} mídia(s)</span>
           {totalDuration > 0 && <span>• {formatDuration(totalDuration)}</span>}
         </div>
         <div className="flex items-center gap-1 text-muted-foreground">

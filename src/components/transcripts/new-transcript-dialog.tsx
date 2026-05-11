@@ -108,6 +108,7 @@ export const NewTranscriptDialog = ({
   const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
   const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
   const [tagList, setTagList] = useState<TagRef[]>([]);
+  const [bufferedFiles, setBufferedFiles] = useState<File[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -164,6 +165,7 @@ export const NewTranscriptDialog = ({
       setSegments([]);
       setLiveActive(false);
       setMediaDescDrafts({});
+      setBufferedFiles([]);
     }
   }, [open, fetchTags, form]);
 
@@ -242,16 +244,24 @@ export const NewTranscriptDialog = ({
         return true;
       });
       if (valid.length === 0) return;
-      toast.info(`Preparando ${valid.length} arquivo(s)...`);
-      const transcript = await ensureTranscript();
-      if (!transcript) {
-        console.log("[new-dialog] no transcript after ensure");
+
+      if (createdTranscript) {
+        await uploadFiles(createdTranscript.id, valid);
         return;
       }
-      console.log("[new-dialog] uploading to transcript", transcript.id);
+
+      const title = form.getValues("title");
+      if (!title || title.trim().length === 0) {
+        setBufferedFiles((prev) => [...prev, ...valid]);
+        toast.info(`${valid.length} arquivo(s) selecionado(s). Preencha o título e clique Salvar para enviar.`);
+        return;
+      }
+
+      const transcript = await ensureTranscript();
+      if (!transcript) return;
       await uploadFiles(transcript.id, valid);
     },
-    [ensureTranscript, uploadFiles],
+    [createdTranscript, ensureTranscript, uploadFiles, form],
   );
 
   const onDropRejected = useCallback((rejections: FileRejection[]) => {
@@ -355,6 +365,11 @@ export const NewTranscriptDialog = ({
         setCreatedTranscript(transcript);
         onCreated?.(transcript);
         toast.success("Transcrição salva");
+        if (bufferedFiles.length > 0) {
+          const files = bufferedFiles;
+          setBufferedFiles([]);
+          await uploadFiles(transcript.id, files);
+        }
       } else {
         const res = await fetch(`/api/transcripts/${createdTranscript.id}`, {
           method: "PATCH",
@@ -481,6 +496,37 @@ export const NewTranscriptDialog = ({
                 <Loader2 className="h-3 w-3 animate-spin" />
                 <span>Enviando arquivos e criando transcrição...</span>
               </div>
+            )}
+
+            {!createdTranscript && bufferedFiles.length > 0 && (
+              <ul className="space-y-2">
+                {bufferedFiles.map((file, idx) => (
+                  <li
+                    key={`${file.name}-${idx}`}
+                    className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs min-w-0"
+                  >
+                    <Music className="h-3 w-3 shrink-0 text-muted-foreground" />
+                    <span className="flex-1 truncate min-w-0" title={file.name}>
+                      {file.name}
+                    </span>
+                    <span className="shrink-0 text-muted-foreground">
+                      {(file.size / (1024 * 1024)).toFixed(1)}MB
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0"
+                      onClick={() => setBufferedFiles((prev) => prev.filter((_, i) => i !== idx))}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </li>
+                ))}
+                <p className="text-xs text-muted-foreground italic">
+                  Preencha o título e clique <strong>Salvar</strong> para enviar.
+                </p>
+              </ul>
             )}
 
             {createdTranscript && (

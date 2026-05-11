@@ -229,7 +229,7 @@ const TranscriptsPage = () => {
                   <TableCell className="text-center">
                     <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                       <FileAudio className="h-3 w-3" />
-                      {t.media.length}
+                      {t.media?.length ?? 0}
                     </span>
                   </TableCell>
                   <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
