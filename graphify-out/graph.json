@@ -342,7 +342,7 @@
       "source_file": "src/app/api/[...path]/route.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_api_path_route_ts",
-      "community": 12,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "src/app/api/[...path]/route.ts",
       "source_location": "L3",
       "id": "route_handler",
-      "community": 12,
+      "community": 13,
       "norm_label": "handler()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "src/server/index.ts",
       "source_location": "L1",
       "id": "src_server_index_ts",
-      "community": 12,
+      "community": 13,
       "norm_label": "index.ts"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "src/server/index.ts",
       "source_location": "L31",
       "id": "index_handle",
-      "community": 12,
+      "community": 13,
       "norm_label": "handle()"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "src/server/routes/media.ts",
       "source_location": "L1",
       "id": "src_server_routes_media_ts",
-      "community": 13,
+      "community": 14,
       "norm_label": "media.ts"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "src/server/routes/media.ts",
       "source_location": "L9",
       "id": "media_sanitizefilename",
-      "community": 13,
+      "community": 14,
       "norm_label": "sanitizefilename()"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "src/server/routes/media.ts",
       "source_location": "L17",
       "id": "media_isvalidmediamime",
-      "community": 13,
+      "community": 14,
       "norm_label": "isvalidmediamime()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "src/server/routes/media.ts",
       "source_location": "L23",
       "id": "media_infermime",
-      "community": 13,
+      "community": 14,
       "norm_label": "infermime()"
     },
     {
@@ -828,7 +828,7 @@
       "source_file": "src/components/ui/rich-text-editor.tsx",
       "source_location": "L1",
       "id": "src_components_ui_rich_text_editor_tsx",
-      "community": 14,
+      "community": 15,
       "norm_label": "rich-text-editor.tsx"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "src/components/ui/rich-text-editor.tsx",
       "source_location": "L44",
       "id": "rich_text_editor_richtexteditor",
-      "community": 14,
+      "community": 15,
       "norm_label": "richtexteditor()"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_new_transcript_dialog_tsx",
-      "community": 15,
+      "community": 16,
       "norm_label": "new-transcript-dialog.tsx"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L49",
       "id": "new_transcript_dialog_formatsize",
-      "community": 15,
+      "community": 16,
       "norm_label": "formatsize()"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L56",
       "id": "new_transcript_dialog_formatduration",
-      "community": 15,
+      "community": 16,
       "norm_label": "formatduration()"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L98",
       "id": "new_transcript_dialog_newtranscriptdialog",
-      "community": 15,
+      "community": 16,
       "norm_label": "newtranscriptdialog()"
     },
     {
@@ -1224,34 +1224,43 @@
       "source_file": "src/components/transcripts/transcript-card.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_transcript_card_tsx",
-      "community": 16,
+      "community": 12,
       "norm_label": "transcript-card.tsx"
+    },
+    {
+      "label": "stripHtml()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/transcript-card.tsx",
+      "source_location": "L15",
+      "id": "transcript_card_striphtml",
+      "community": 12,
+      "norm_label": "striphtml()"
     },
     {
       "label": "relativeTime()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L38",
+      "source_location": "L52",
       "id": "transcript_card_relativetime",
-      "community": 16,
+      "community": 12,
       "norm_label": "relativetime()"
     },
     {
       "label": "formatDuration()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L54",
+      "source_location": "L68",
       "id": "transcript_card_formatduration",
-      "community": 16,
+      "community": 12,
       "norm_label": "formatduration()"
     },
     {
       "label": "getStatusBadge()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L61",
+      "source_location": "L75",
       "id": "transcript_card_getstatusbadge",
-      "community": 16,
+      "community": 12,
       "norm_label": "getstatusbadge()"
     },
     {
@@ -2178,7 +2187,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_utils_ts",
-      "community": 14,
+      "community": 15,
       "norm_label": "utils.ts"
     },
     {
@@ -2187,7 +2196,7 @@
       "source_file": "src/lib/utils.ts",
       "source_location": "L4",
       "id": "utils_cn",
-      "community": 14,
+      "community": 15,
       "norm_label": "cn()"
     },
     {
@@ -3435,7 +3444,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L38",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_transcript_card_tsx",
+      "_tgt": "transcript_card_striphtml",
+      "source": "src_components_transcripts_transcript_card_tsx",
+      "target": "transcript_card_striphtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/transcript-card.tsx",
+      "source_location": "L52",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_card_tsx",
       "_tgt": "transcript_card_relativetime",
@@ -3447,7 +3468,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L54",
+      "source_location": "L68",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_card_tsx",
       "_tgt": "transcript_card_formatduration",
@@ -3459,7 +3480,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-card.tsx",
-      "source_location": "L61",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_card_tsx",
       "_tgt": "transcript_card_getstatusbadge",
