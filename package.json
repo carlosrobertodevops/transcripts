@@ -13,7 +13,9 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "bun run src/db/seed.ts",
     "worker:loop": "bun run src/workers/loop.ts",
-    "worker:tick": "bun run src/workers/tick.ts"
+    "worker:tick": "bun run src/workers/tick.ts",
+    "deploy": "bun --env-file=.env.deploy.local scripts/deploy-easypanel.ts",
+    "deploy:push": "git push && bun run deploy"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
