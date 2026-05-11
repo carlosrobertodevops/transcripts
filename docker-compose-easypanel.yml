@@ -25,7 +25,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
+      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
       NODE_ENV: production
 
   app:
@@ -37,7 +37,7 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
+      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
@@ -88,7 +88,7 @@ services:
       transcriber:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
+      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
       APP_URL: http://app:3001
       NEXT_PUBLIC_APP_URL: http://app:3001
