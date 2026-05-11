@@ -27,6 +27,12 @@ services:
     environment:
       DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
       NODE_ENV: production
+    command:
+      [
+        "sh",
+        "-lc",
+        "export DATABASE_URL='postgres://transcripts:transcripts@db:5432/transcripts' && echo DATABASE_URL=$DATABASE_URL && bun run db:migrate && (bun run src/db/seed.ts || true)",
+      ]
 
   app:
     build: .
@@ -38,15 +44,15 @@ services:
         condition: service_completed_successfully
     environment:
       DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
-      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}
-      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
-      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      TRANSCRIBER_URL: http://transcriber:8000
-      STORAGE_DIR: /app/uploads
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3001}
+      JWT_SECRET: "${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}"
+      JWT_REFRESH_SECRET: "${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}"
+      INTERNAL_API_KEY: "${INTERNAL_API_KEY:-dev-internal-key}"
+      TRANSCRIPTION_PROVIDER: "${TRANSCRIPTION_PROVIDER:-local}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      TRANSCRIBER_URL: "http://transcriber:8000"
+      STORAGE_DIR: "/app/uploads"
+      NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost:3001}"
       NODE_ENV: production
     ports:
       - "3001:3001"
@@ -89,14 +95,14 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
-      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
-      APP_URL: http://app:3001
-      NEXT_PUBLIC_APP_URL: http://app:3001
-      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      STORAGE_DIR: /app/uploads
-      TRANSCRIBER_URL: http://transcriber:8000
+      INTERNAL_API_KEY: "${INTERNAL_API_KEY:-dev-internal-key}"
+      APP_URL: "http://app:3001"
+      NEXT_PUBLIC_APP_URL: "http://app:3001"
+      TRANSCRIPTION_PROVIDER: "${TRANSCRIPTION_PROVIDER:-local}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      STORAGE_DIR: "/app/uploads"
+      TRANSCRIBER_URL: "http://transcriber:8000"
       NODE_ENV: production
     volumes:
       - uploads:/app/uploads
@@ -109,8 +115,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@transcripts.dev}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_EMAIL:-admin@transcripts.dev}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASSWORD:-admin123}"
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
       PGADMIN_LISTEN_PORT: 80
