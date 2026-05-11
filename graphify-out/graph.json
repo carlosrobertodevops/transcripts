@@ -1089,7 +1089,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_edit_transcript_dialog_enhanced_tsx",
-      "community": 8,
+      "community": 9,
       "norm_label": "edit-transcript-dialog-enhanced.tsx"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L56",
       "id": "edit_transcript_dialog_enhanced_formatfilesize",
-      "community": 8,
+      "community": 9,
       "norm_label": "formatfilesize()"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L64",
       "id": "edit_transcript_dialog_enhanced_formatduration",
-      "community": 8,
+      "community": 9,
       "norm_label": "formatduration()"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L89",
       "id": "edit_transcript_dialog_enhanced_fetchdata",
-      "community": 8,
+      "community": 9,
       "norm_label": "fetchdata()"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L127",
       "id": "edit_transcript_dialog_enhanced_handleretranscribe",
-      "community": 8,
+      "community": 9,
       "norm_label": "handleretranscribe()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L148",
       "id": "edit_transcript_dialog_enhanced_handledeletemedia",
-      "community": 8,
+      "community": 9,
       "norm_label": "handledeletemedia()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog-enhanced.tsx",
       "source_location": "L175",
       "id": "edit_transcript_dialog_enhanced_onsubmit",
-      "community": 8,
+      "community": 9,
       "norm_label": "onsubmit()"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_new_transcript_dialog_tsx",
-      "community": 7,
+      "community": 8,
       "norm_label": "new-transcript-dialog.tsx"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L45",
       "id": "new_transcript_dialog_formatsize",
-      "community": 7,
+      "community": 8,
       "norm_label": "formatsize()"
     },
     {
@@ -1170,52 +1170,52 @@
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L52",
       "id": "new_transcript_dialog_formatduration",
-      "community": 7,
+      "community": 8,
       "norm_label": "formatduration()"
     },
     {
       "label": "handleRetranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L263",
+      "source_location": "L271",
       "id": "new_transcript_dialog_handleretranscribe",
-      "community": 7,
+      "community": 8,
       "norm_label": "handleretranscribe()"
     },
     {
       "label": "handleSaveMediaDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L282",
+      "source_location": "L290",
       "id": "new_transcript_dialog_handlesavemediadesc",
-      "community": 7,
+      "community": 8,
       "norm_label": "handlesavemediadesc()"
     },
     {
       "label": "handleDeleteMedia()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L309",
+      "source_location": "L317",
       "id": "new_transcript_dialog_handledeletemedia",
-      "community": 7,
+      "community": 8,
       "norm_label": "handledeletemedia()"
     },
     {
       "label": "onSubmit()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L328",
+      "source_location": "L336",
       "id": "new_transcript_dialog_onsubmit",
-      "community": 7,
+      "community": 8,
       "norm_label": "onsubmit()"
     },
     {
       "label": "handleClose()",
       "file_type": "code",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L368",
+      "source_location": "L376",
       "id": "new_transcript_dialog_handleclose",
-      "community": 7,
+      "community": 8,
       "norm_label": "handleclose()"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_transcript_grid_tsx",
-      "community": 9,
+      "community": 10,
       "norm_label": "transcript-grid.tsx"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L45",
       "id": "transcript_grid_handleeditsaved",
-      "community": 9,
+      "community": 10,
       "norm_label": "handleeditsaved()"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L70",
       "id": "transcript_grid_confirmdelete",
-      "community": 9,
+      "community": 10,
       "norm_label": "confirmdelete()"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L91",
       "id": "transcript_grid_fetchtranscripts",
-      "community": 9,
+      "community": 10,
       "norm_label": "fetchtranscripts()"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L119",
       "id": "transcript_grid_handledragend",
-      "community": 9,
+      "community": 10,
       "norm_label": "handledragend()"
     },
     {
@@ -1341,7 +1341,7 @@
       "source_file": "src/components/transcripts/transcript-grid.tsx",
       "source_location": "L147",
       "id": "transcript_grid_handlenewtranscript",
-      "community": 9,
+      "community": 10,
       "norm_label": "handlenewtranscript()"
     },
     {
@@ -1440,53 +1440,89 @@
       "source_file": "src/components/transcripts/media-section.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_media_section_tsx",
-      "community": 10,
+      "community": 4,
       "norm_label": "media-section.tsx"
     },
     {
       "label": "formatFileSize()",
       "file_type": "code",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L25",
+      "source_location": "L40",
       "id": "media_section_formatfilesize",
-      "community": 10,
+      "community": 4,
       "norm_label": "formatfilesize()"
     },
     {
       "label": "formatDuration()",
       "file_type": "code",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L30",
+      "source_location": "L47",
       "id": "media_section_formatduration",
-      "community": 10,
+      "community": 4,
       "norm_label": "formatduration()"
     },
     {
       "label": "getMediaIcon()",
       "file_type": "code",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L37",
+      "source_location": "L54",
       "id": "media_section_getmediaicon",
-      "community": 10,
+      "community": 4,
       "norm_label": "getmediaicon()"
+    },
+    {
+      "label": "fetchTags()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L81",
+      "id": "media_section_fetchtags",
+      "community": 4,
+      "norm_label": "fetchtags()"
     },
     {
       "label": "handleUpload()",
       "file_type": "code",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L51",
+      "source_location": "L111",
       "id": "media_section_handleupload",
-      "community": 10,
+      "community": 4,
       "norm_label": "handleupload()"
+    },
+    {
+      "label": "handleRetranscribe()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L147",
+      "id": "media_section_handleretranscribe",
+      "community": 4,
+      "norm_label": "handleretranscribe()"
+    },
+    {
+      "label": "handleSaveDesc()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L166",
+      "id": "media_section_handlesavedesc",
+      "community": 4,
+      "norm_label": "handlesavedesc()"
     },
     {
       "label": "handleDelete()",
       "file_type": "code",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L96",
+      "source_location": "L191",
       "id": "media_section_handledelete",
-      "community": 10,
+      "community": 4,
       "norm_label": "handledelete()"
+    },
+    {
+      "label": "async()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L345",
+      "id": "media_section_async",
+      "community": 4,
+      "norm_label": "async()"
     },
     {
       "label": "edit-transcript-dialog.tsx",
@@ -1494,7 +1530,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_edit_transcript_dialog_tsx",
-      "community": 4,
+      "community": 5,
       "norm_label": "edit-transcript-dialog.tsx"
     },
     {
@@ -1503,7 +1539,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
       "source_location": "L43",
       "id": "edit_transcript_dialog_formatsize",
-      "community": 4,
+      "community": 5,
       "norm_label": "formatsize()"
     },
     {
@@ -1512,7 +1548,7 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
       "source_location": "L50",
       "id": "edit_transcript_dialog_formatduration",
-      "community": 4,
+      "community": 5,
       "norm_label": "formatduration()"
     },
     {
@@ -1521,61 +1557,61 @@
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
       "source_location": "L159",
       "id": "edit_transcript_dialog_updatependingdesc",
-      "community": 4,
+      "community": 5,
       "norm_label": "updatependingdesc()"
     },
     {
       "label": "removePending()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L179",
+      "source_location": "L177",
       "id": "edit_transcript_dialog_removepending",
-      "community": 4,
+      "community": 5,
       "norm_label": "removepending()"
     },
     {
       "label": "handleUploadAndTranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L181",
+      "source_location": "L179",
       "id": "edit_transcript_dialog_handleuploadandtranscribe",
-      "community": 4,
+      "community": 5,
       "norm_label": "handleuploadandtranscribe()"
     },
     {
       "label": "handleRetranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L210",
+      "source_location": "L208",
       "id": "edit_transcript_dialog_handleretranscribe",
-      "community": 4,
+      "community": 5,
       "norm_label": "handleretranscribe()"
     },
     {
       "label": "handleSaveMediaDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L229",
+      "source_location": "L227",
       "id": "edit_transcript_dialog_handlesavemediadesc",
-      "community": 4,
+      "community": 5,
       "norm_label": "handlesavemediadesc()"
     },
     {
       "label": "handleDeleteMedia()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L252",
+      "source_location": "L250",
       "id": "edit_transcript_dialog_handledeletemedia",
-      "community": 4,
+      "community": 5,
       "norm_label": "handledeletemedia()"
     },
     {
       "label": "onSubmit()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L271",
+      "source_location": "L269",
       "id": "edit_transcript_dialog_onsubmit",
-      "community": 4,
+      "community": 5,
       "norm_label": "onsubmit()"
     },
     {
@@ -1584,7 +1620,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_media_transcript_editor_tsx",
-      "community": 5,
+      "community": 7,
       "norm_label": "media-transcript-editor.tsx"
     },
     {
@@ -1593,7 +1629,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L55",
       "id": "media_transcript_editor_handleapplytags",
-      "community": 5,
+      "community": 7,
       "norm_label": "handleapplytags()"
     },
     {
@@ -1602,7 +1638,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L62",
       "id": "media_transcript_editor_handlesave",
-      "community": 5,
+      "community": 7,
       "norm_label": "handlesave()"
     },
     {
@@ -2088,7 +2124,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L1",
       "id": "src_lib_highlight_tags_tsx",
-      "community": 5,
+      "community": 7,
       "norm_label": "highlight-tags.tsx"
     },
     {
@@ -2097,7 +2133,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L9",
       "id": "highlight_tags_escaperegexp",
-      "community": 5,
+      "community": 7,
       "norm_label": "escaperegexp()"
     },
     {
@@ -2106,7 +2142,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L11",
       "id": "highlight_tags_escapehtml",
-      "community": 5,
+      "community": 7,
       "norm_label": "escapehtml()"
     },
     {
@@ -2115,7 +2151,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L19",
       "id": "highlight_tags_buildpattern",
-      "community": 5,
+      "community": 7,
       "norm_label": "buildpattern()"
     },
     {
@@ -2124,7 +2160,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L26",
       "id": "highlight_tags_highlighttohtml",
-      "community": 5,
+      "community": 7,
       "norm_label": "highlighttohtml()"
     },
     {
@@ -2133,7 +2169,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L41",
       "id": "highlight_tags_segmentstohighlightedhtml",
-      "community": 5,
+      "community": 7,
       "norm_label": "segmentstohighlightedhtml()"
     },
     {
@@ -2221,7 +2257,7 @@
       "label": "getTranscriptsForUser()",
       "file_type": "code",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "id": "auth_server_gettranscriptsforuser",
       "community": 0,
       "norm_label": "gettranscriptsforuser()"
@@ -2230,7 +2266,7 @@
       "label": "getTranscriptDetail()",
       "file_type": "code",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L165",
+      "source_location": "L171",
       "id": "auth_server_gettranscriptdetail",
       "community": 0,
       "norm_label": "gettranscriptdetail()"
@@ -2239,7 +2275,7 @@
       "label": "getNotifications()",
       "file_type": "code",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L243",
+      "source_location": "L251",
       "id": "auth_server_getnotifications",
       "community": 0,
       "norm_label": "getnotifications()"
@@ -3363,7 +3399,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L492",
+      "source_location": "L505",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_formatsize",
@@ -3387,7 +3423,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L263",
+      "source_location": "L271",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_handleretranscribe",
@@ -3399,7 +3435,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L282",
+      "source_location": "L290",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_handlesavemediadesc",
@@ -3411,7 +3447,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L309",
+      "source_location": "L317",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_handledeletemedia",
@@ -3423,7 +3459,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L328",
+      "source_location": "L336",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_onsubmit",
@@ -3435,7 +3471,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L368",
+      "source_location": "L376",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_handleclose",
@@ -3447,7 +3483,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L492",
+      "source_location": "L505",
       "weight": 1.0,
       "_src": "new_transcript_dialog_formatsize",
       "_tgt": "new_transcript_dialog_formatduration",
@@ -3651,7 +3687,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L25",
+      "source_location": "L240",
       "weight": 1.0,
       "_src": "src_components_transcripts_media_section_tsx",
       "_tgt": "media_section_formatfilesize",
@@ -3663,7 +3699,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L30",
+      "source_location": "L47",
       "weight": 1.0,
       "_src": "src_components_transcripts_media_section_tsx",
       "_tgt": "media_section_formatduration",
@@ -3675,7 +3711,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L37",
+      "source_location": "L54",
       "weight": 1.0,
       "_src": "src_components_transcripts_media_section_tsx",
       "_tgt": "media_section_getmediaicon",
@@ -3687,7 +3723,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L51",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_section_tsx",
+      "_tgt": "media_section_fetchtags",
+      "source": "src_components_transcripts_media_section_tsx",
+      "target": "media_section_fetchtags",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L111",
       "weight": 1.0,
       "_src": "src_components_transcripts_media_section_tsx",
       "_tgt": "media_section_handleupload",
@@ -3699,7 +3747,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/media-section.tsx",
-      "source_location": "L96",
+      "source_location": "L147",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_section_tsx",
+      "_tgt": "media_section_handleretranscribe",
+      "source": "src_components_transcripts_media_section_tsx",
+      "target": "media_section_handleretranscribe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L166",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_section_tsx",
+      "_tgt": "media_section_handlesavedesc",
+      "source": "src_components_transcripts_media_section_tsx",
+      "target": "media_section_handlesavedesc",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L191",
       "weight": 1.0,
       "_src": "src_components_transcripts_media_section_tsx",
       "_tgt": "media_section_handledelete",
@@ -3710,8 +3782,32 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L345",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_media_section_tsx",
+      "_tgt": "media_section_async",
+      "source": "src_components_transcripts_media_section_tsx",
+      "target": "media_section_async",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/media-section.tsx",
+      "source_location": "L240",
+      "weight": 1.0,
+      "_src": "media_section_formatfilesize",
+      "_tgt": "media_section_formatduration",
+      "source": "media_section_formatfilesize",
+      "target": "media_section_formatduration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L411",
+      "source_location": "L407",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_formatsize",
@@ -3747,7 +3843,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L179",
+      "source_location": "L177",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_removepending",
@@ -3759,7 +3855,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L181",
+      "source_location": "L179",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
@@ -3771,7 +3867,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L210",
+      "source_location": "L208",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleretranscribe",
@@ -3783,7 +3879,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L229",
+      "source_location": "L227",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handlesavemediadesc",
@@ -3795,7 +3891,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L252",
+      "source_location": "L250",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handledeletemedia",
@@ -3807,7 +3903,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L271",
+      "source_location": "L269",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_onsubmit",
@@ -3819,7 +3915,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L411",
+      "source_location": "L407",
       "weight": 1.0,
       "_src": "edit_transcript_dialog_formatsize",
       "_tgt": "edit_transcript_dialog_formatduration",
@@ -3831,7 +3927,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L291",
+      "source_location": "L289",
       "weight": 1.0,
       "_src": "edit_transcript_dialog_onsubmit",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
@@ -4515,7 +4611,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "_src": "src_lib_auth_server_ts",
       "_tgt": "auth_server_gettranscriptsforuser",
@@ -4527,7 +4623,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L165",
+      "source_location": "L171",
       "weight": 1.0,
       "_src": "src_lib_auth_server_ts",
       "_tgt": "auth_server_gettranscriptdetail",
@@ -4539,7 +4635,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/lib/auth-server.ts",
-      "source_location": "L243",
+      "source_location": "L251",
       "weight": 1.0,
       "_src": "src_lib_auth_server_ts",
       "_tgt": "auth_server_getnotifications",
