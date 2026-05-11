@@ -12,6 +12,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
+const stripHtml = (s: string): string =>
+  s
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
 type Transcript = {
   id: string;
   title: string;
@@ -162,8 +176,10 @@ export function TranscriptCard({ transcript, onClick, onOpen, onEdit, onDelete, 
       </CardHeader>
 
       <CardContent className="flex-1 min-h-[3.5rem]">
-        {transcript.analysis ? (
-          <p className="text-xs text-muted-foreground line-clamp-3">{transcript.analysis}</p>
+        {transcript.analysis && stripHtml(transcript.analysis).length > 0 ? (
+          <p className="text-xs text-muted-foreground line-clamp-3">
+            {stripHtml(transcript.analysis)}
+          </p>
         ) : (
           <p className="text-xs text-muted-foreground italic">Sem análise registrada</p>
         )}
