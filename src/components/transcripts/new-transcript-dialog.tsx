@@ -407,7 +407,7 @@ export const NewTranscriptDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : handleClose())}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[60vh] max-h-[60vh] overflow-hidden flex flex-col gap-4">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>
             {createdTranscript ? `Editar: ${createdTranscript.title}` : "Nova transcrição"}
@@ -458,7 +458,7 @@ export const NewTranscriptDialog = ({
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 flex-1 min-h-0">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="new-analysis">Análise (opcional)</Label>
             <Controller
               name="analysis"
@@ -468,8 +468,7 @@ export const NewTranscriptDialog = ({
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="min-h-[140px] flex-1"
-                  bodyClassName="h-full"
+                  className="min-h-[120px] max-h-[180px] overflow-y-auto"
                 />
               )}
             />
