@@ -407,7 +407,7 @@ export const NewTranscriptDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : handleClose())}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[90vh] overflow-hidden flex flex-col gap-4">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[60vh] max-h-[60vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>
             {createdTranscript ? `Editar: ${createdTranscript.title}` : "Nova transcrição"}
@@ -468,7 +468,7 @@ export const NewTranscriptDialog = ({
                   value={field.value ?? ""}
                   onChange={field.onChange}
                   placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="min-h-[300pt] flex-1"
+                  className="min-h-[140px] flex-1"
                   bodyClassName="h-full"
                 />
               )}
