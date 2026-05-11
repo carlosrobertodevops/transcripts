@@ -11,7 +11,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts"]
+      test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts -p 5432"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -25,7 +25,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5433/transcripts}
+      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
       NODE_ENV: production
 
   app:
@@ -37,7 +37,7 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5433/transcripts}
+      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
@@ -46,7 +46,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       TRANSCRIBER_URL: http://transcriber:8000
       STORAGE_DIR: /app/uploads
-      NEXT_PUBLIC_APP_URL: http://localhost:3001
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3001}
       NODE_ENV: production
     ports:
       - "3001:3001"
@@ -88,7 +88,7 @@ services:
       transcriber:
         condition: service_healthy
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5433/transcripts}
+      DATABASE_URL: ${DATABASE_URL:-postgres://transcripts:transcripts@db:5432/transcripts}
       INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
       APP_URL: http://app:3001
       NEXT_PUBLIC_APP_URL: http://app:3001
