@@ -70,7 +70,7 @@ function getStatusBadge(status: Transcript["status"]) {
 
 export function TranscriptCard({ transcript, onClick, onOpen, onEdit, onDelete, dragHandleProps }: TranscriptCardProps) {
   const { variant, label } = getStatusBadge(transcript.status);
-  const totalDuration = transcript.media.reduce((acc, m) => acc + (m.durationSeconds ?? 0), 0);
+  const totalDuration = (transcript.media ?? []).reduce((acc, m) => acc + (m.durationSeconds ?? 0), 0);
 
   return (
     <Card

@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { Mark, mergeAttributes } from "@tiptap/core";
 import { Bold, Italic, List, ListOrdered, Heading1, Heading2, Link2, Undo2, Redo2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ColoredBold = Mark.create({
   name: "boldColored",
@@ -36,9 +37,17 @@ interface RichTextEditorProps {
   value?: string;
   onChange?: (html: string) => void;
   placeholder?: string;
+  className?: string;
+  bodyClassName?: string;
 }
 
-export const RichTextEditor = ({ value = "", onChange, placeholder = "Escreva..." }: RichTextEditorProps) => {
+export const RichTextEditor = ({
+  value = "",
+  onChange,
+  placeholder = "Escreva...",
+  className,
+  bodyClassName,
+}: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -53,7 +62,10 @@ export const RichTextEditor = ({ value = "", onChange, placeholder = "Escreva...
     content: value || "",
     editorProps: {
       attributes: {
-        class: "prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[120px] p-3 bg-background border border-input rounded-md text-sm",
+        class: cn(
+          "prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[120px] p-3 bg-background border border-input rounded-md text-sm",
+          bodyClassName,
+        ),
       },
     },
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
@@ -73,7 +85,12 @@ export const RichTextEditor = ({ value = "", onChange, placeholder = "Escreva...
   );
 
   return (
-    <div className="border border-input rounded-lg overflow-hidden">
+    <div
+      className={cn(
+        "border border-input rounded-lg overflow-hidden flex flex-col min-h-0",
+        className,
+      )}
+    >
       <div className="flex gap-1 p-2 bg-muted border-b border-input flex-wrap">
         <ToolbarButton icon={Bold} onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive("bold")} title="Negrito" />
         <ToolbarButton icon={Italic} onClick={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Itálico" />
@@ -97,7 +114,9 @@ export const RichTextEditor = ({ value = "", onChange, placeholder = "Escreva...
         <ToolbarButton icon={Undo2} onClick={() => editor.chain().focus().undo().run()} title="Undo" />
         <ToolbarButton icon={Redo2} onClick={() => editor.chain().focus().redo().run()} title="Redo" />
       </div>
-      <EditorContent editor={editor} />
+      <div className="flex-1 min-h-0 overflow-auto">
+        <EditorContent editor={editor} className="h-full" />
+      </div>
     </div>
   );
 };

@@ -67,6 +67,8 @@ export interface TranscriptWithMedia {
     mime: string;
     sizeBytes: number | null;
     durationSeconds: number | null;
+    description: string | null;
+    transcriptHtml: string | null;
     createdAt: Date;
   }>;
 }
@@ -113,6 +115,8 @@ export const getTranscriptsForUser = async (
       mime: media.mime,
       sizeBytes: media.sizeBytes,
       durationSeconds: media.durationSeconds,
+      description: media.description,
+      transcriptHtml: media.transcriptHtml,
       createdAt: media.createdAt,
     })
     .from(media)
@@ -127,6 +131,8 @@ export const getTranscriptsForUser = async (
         mime: m.mime,
         sizeBytes: m.sizeBytes,
         durationSeconds: m.durationSeconds,
+        description: m.description,
+        transcriptHtml: m.transcriptHtml,
         createdAt: m.createdAt,
       });
       return acc;
@@ -209,6 +215,8 @@ export const getTranscriptDetail = async (
       mime: media.mime,
       sizeBytes: media.sizeBytes,
       durationSeconds: media.durationSeconds,
+      description: media.description,
+      transcriptHtml: media.transcriptHtml,
       createdAt: media.createdAt,
     })
     .from(media)

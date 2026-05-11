@@ -131,6 +131,7 @@ export const MediaTranscriptEditor = ({
         value={html}
         onChange={setHtml}
         placeholder="Transcrição..."
+        className="h-[300pt]"
       />
     </div>
   );

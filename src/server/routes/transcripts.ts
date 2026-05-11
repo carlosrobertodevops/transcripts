@@ -133,7 +133,7 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       .returning();
 
     set.status = 201;
-    return newTranscript[0];
+    return { ...newTranscript[0], media: [] };
   })
   .get("/:id", async (ctx: any) => { const { user, params, set } = ctx;
     if (!user) {

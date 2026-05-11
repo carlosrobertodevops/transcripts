@@ -25,6 +25,8 @@ interface LiveTranscriptionProps {
   pollIntervalMs?: number;
   charPerTickMs?: number;
   tags?: TagRef[];
+  mediaId?: string;
+  compact?: boolean;
 }
 
 const POLL_DEFAULT = 1000;
@@ -37,6 +39,8 @@ export const LiveTranscription = ({
   pollIntervalMs = POLL_DEFAULT,
   charPerTickMs = TYPE_TICK_DEFAULT,
   tags = [],
+  mediaId,
+  compact = false,
 }: LiveTranscriptionProps) => {
   const [jobs, setJobs] = useState<LiveJob[]>([]);
   const [rendered, setRendered] = useState<Record<string, string>>({});
@@ -57,7 +61,8 @@ export const LiveTranscription = ({
         });
         if (!res.ok) return;
         const data = (await res.json()) as { jobs: LiveJob[] };
-        const next = data.jobs ?? [];
+        const allJobs = data.jobs ?? [];
+        const next = mediaId ? allJobs.filter((j) => j.mediaId === mediaId) : allJobs;
         setJobs(next);
 
         const targets: Record<string, string> = {};
@@ -86,7 +91,7 @@ export const LiveTranscription = ({
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [enabled, transcriptId, pollIntervalMs, onAllDone]);
+  }, [enabled, transcriptId, pollIntervalMs, onAllDone, mediaId]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -117,27 +122,22 @@ export const LiveTranscription = ({
 
   if (!enabled || jobs.length === 0) return null;
 
-  return (
-    <div className="space-y-3 rounded-md border border-border bg-muted/20 p-3">
-      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        Transcrição em tempo real
-      </div>
-
-      <AnimatePresence initial={false}>
-        {jobs.map((job) => {
-          const text = rendered[job.mediaId] ?? "";
-          const target = job.transcriptText ?? "";
-          const typing = text.length < target.length;
-          const showCursor = job.status === "processing" || job.status === "pending" || typing;
-          return (
-            <motion.div
-              key={job.mediaId}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="space-y-1.5"
-            >
+  const jobList = (
+    <AnimatePresence initial={false}>
+      {jobs.map((job) => {
+        const text = rendered[job.mediaId] ?? "";
+        const target = job.transcriptText ?? "";
+        const typing = text.length < target.length;
+        const showCursor = job.status === "processing" || job.status === "pending" || typing;
+        return (
+          <motion.div
+            key={job.mediaId}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="space-y-1.5"
+          >
+            {!compact && (
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <FileAudio className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -147,27 +147,44 @@ export const LiveTranscription = ({
                 </div>
                 <StatusBadge status={job.status} segmentCount={job.segmentCount} />
               </div>
+            )}
+            {compact && (
+              <div className="flex items-center justify-end">
+                <StatusBadge status={job.status} segmentCount={job.segmentCount} />
+              </div>
+            )}
 
-              {job.status === "failed" && job.error ? (
-                <p className="text-xs text-destructive">{job.error}</p>
-              ) : (
-                <div className="rounded-sm bg-background/60 px-2 py-1.5 text-xs leading-relaxed text-foreground/90 max-h-32 overflow-y-auto whitespace-pre-wrap">
-                  {text ? (
-                    <HighlightedText text={text} tags={tags} />
-                  ) : (
-                    <span className="text-muted-foreground italic">
-                      {job.status === "pending" ? "Aguardando processamento..." : "Aguardando segmentos..."}
-                    </span>
-                  )}
-                  {showCursor && text && (
-                    <span className="ml-0.5 inline-block w-1.5 h-3 bg-primary align-middle animate-pulse" />
-                  )}
-                </div>
-              )}
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+            {job.status === "failed" && job.error ? (
+              <p className="text-xs text-destructive">{job.error}</p>
+            ) : (
+              <div className="rounded-sm bg-background/60 px-2 py-1.5 text-xs leading-relaxed text-foreground/90 max-h-32 overflow-y-auto whitespace-pre-wrap">
+                {text ? (
+                  <HighlightedText text={text} tags={tags} />
+                ) : (
+                  <span className="text-muted-foreground italic">
+                    {job.status === "pending" ? "Aguardando processamento..." : "Aguardando segmentos..."}
+                  </span>
+                )}
+                {showCursor && text && (
+                  <span className="ml-0.5 inline-block w-1.5 h-3 bg-primary align-middle animate-pulse" />
+                )}
+              </div>
+            )}
+          </motion.div>
+        );
+      })}
+    </AnimatePresence>
+  );
+
+  if (compact) return <div className="space-y-2">{jobList}</div>;
+
+  return (
+    <div className="space-y-3 rounded-md border border-border bg-muted/20 p-3">
+      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+        <Loader2 className="h-3 w-3 animate-spin" />
+        Transcrição em tempo real
+      </div>
+      {jobList}
     </div>
   );
 };

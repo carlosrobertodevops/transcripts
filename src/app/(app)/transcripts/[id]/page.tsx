@@ -16,7 +16,11 @@ export default async function Page({
 
   return (
     <div className="space-y-6">
-      <MediaSection transcriptId={id} initialMedia={data.media || []} />
+      <MediaSection
+        transcriptId={id}
+        initialMedia={data.media || []}
+        initialSegments={data.segments || []}
+      />
       <TranscriptEditor transcriptId={data.id} initialContent={data.analysis ?? ""} />
     </div>
   );

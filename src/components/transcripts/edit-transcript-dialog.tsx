@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, type FileRejection } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -160,12 +160,18 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     setPendingFiles((prev) => prev.map((p, i) => (i === index ? { ...p, description: value } : p)));
   };
 
+  const onDropRejected = useCallback((rejections: FileRejection[]) => {
+    for (const r of rejections) {
+      const reason = r.errors.map((e) => e.message).join(", ");
+      toast.error(`${r.file.name}: ${reason}`);
+    }
+  }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      "audio/*": [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".opus"],
-      "video/*": [".mp4", ".mov", ".avi", ".mkv"],
-    },
+    onDropRejected,
+    noClick: false,
+    noKeyboard: false,
   });
 
   const removePending = (i: number) => setPendingFiles((prev) => prev.filter((_, idx) => idx !== i));
@@ -303,13 +309,15 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl max-h-[90vh] overflow-y-auto flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>Editar transcrição</DialogTitle>
           <DialogDescription>Atualize dados, gerencie mídia e dispare transcrição</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4 min-w-0">
           <div className="space-y-2">
             <Label htmlFor="edit-title">Título *</Label>
             <Input
@@ -348,12 +356,20 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
               name="analysis"
               control={form.control}
               render={({ field }) => (
-                <RichTextEditor value={field.value ?? ""} onChange={field.onChange} placeholder="Resumo, codinomes identificados, próximas ações..." />
+                <RichTextEditor
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  placeholder="Resumo, codinomes identificados, próximas ações..."
+                  className="h-[300pt]"
+                />
               )}
             />
           </div>
+        </div>
 
-          <div className="space-y-2">
+        <div className="flex flex-col gap-4 min-w-0">
+          <Label>Mídia ({mediaList.length})</Label>
+          <div className="flex flex-col gap-2 min-w-0">
             <div
               {...getRootProps()}
               className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
@@ -373,7 +389,6 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                 MP3, WAV, M4A, AAC, OGG, OPUS, MP4, MOV — até 500MB cada
               </p>
             </div>
-            <Label>Mídia ({mediaList.length})</Label>
             {mediaList.length > 0 ? (
               <ul className="space-y-2 max-h-72 overflow-auto">
                 {mediaList.map((m) => {
@@ -462,7 +477,15 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
                           </Button>
                         </div>
                       )}
-                      {!liveActive && (
+                      {liveActive && transcript ? (
+                        <LiveTranscription
+                          transcriptId={transcript.id}
+                          mediaId={m.id}
+                          enabled={liveActive}
+                          tags={tagList}
+                          compact
+                        />
+                      ) : (
                         <MediaTranscriptEditor
                           mediaId={m.id}
                           segments={segments.filter((s) => s.mediaId === m.id)}
@@ -544,18 +567,22 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
               </>
             )}
           </div>
+        </div>
+        </div>
 
           {transcript && liveActive && (
-            <LiveTranscription
-              transcriptId={transcript.id}
-              enabled={liveActive}
-              tags={tagList}
-              onAllDone={() => {
-                setLiveActive(false);
-                fetchDetail(transcript.id);
-                toast.success("Transcrição concluída");
-              }}
-            />
+            <div className="sr-only">
+              <LiveTranscription
+                transcriptId={transcript.id}
+                enabled={liveActive}
+                tags={tagList}
+                onAllDone={() => {
+                  setLiveActive(false);
+                  fetchDetail(transcript.id);
+                  toast.success("Transcrição concluída");
+                }}
+              />
+            </div>
           )}
 
           <div className="flex gap-2 justify-end pt-4">
