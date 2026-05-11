@@ -145,8 +145,7 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
   }
 
   function handleNewTranscript(t: Transcript) {
-    setItems([t, ...items]);
-    setNewDialogOpen(false);
+    setItems((prev) => (prev.some((p) => p.id === t.id) ? prev : [t, ...prev]));
   }
 
   if (filtered.length === 0 && items.length === 0) {

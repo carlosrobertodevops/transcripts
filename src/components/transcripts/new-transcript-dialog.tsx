@@ -22,7 +22,12 @@ import { LiveTranscription } from "@/components/transcripts/live-transcription";
 import { MediaTranscriptEditor } from "@/components/transcripts/media-transcript-editor";
 import { type TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
-import { Loader2, RotateCcw, Trash2, FileAudio, Music, ArrowRight } from "lucide-react";
+import { Loader2, RotateCcw, Trash2, FileAudio, Music, ArrowRight, FileVideo, X, Sparkles } from "lucide-react";
+
+interface PendingFile {
+  file: File;
+  description: string;
+}
 
 interface MediaItem {
   id: string;
@@ -108,6 +113,7 @@ export const NewTranscriptDialog = ({
   const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
   const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
   const [tagList, setTagList] = useState<TagRef[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -164,6 +170,7 @@ export const NewTranscriptDialog = ({
       setSegments([]);
       setLiveActive(false);
       setMediaDescDrafts({});
+      setPendingFiles([]);
     }
   }, [open, fetchTags, form]);
 
@@ -200,21 +207,25 @@ export const NewTranscriptDialog = ({
     }
   }, [createdTranscript, form, onCreated]);
 
-  const uploadFiles = useCallback(
-    async (transcriptId: string, files: File[]) => {
+  const uploadPending = useCallback(
+    async (transcriptId: string, entries: PendingFile[]) => {
       setUploading(true);
       try {
-        for (const file of files) {
+        for (const entry of entries) {
           const fd = new FormData();
-          fd.append("file", file);
+          fd.append("file", entry.file);
+          if (entry.description.trim().length > 0) {
+            fd.append("description", entry.description);
+          }
           const res = await fetch(`/api/transcripts/${transcriptId}/media`, {
             method: "POST",
             body: fd,
             credentials: "include",
           });
-          if (!res.ok) throw new Error(`Falha ao enviar ${file.name}`);
+          if (!res.ok) throw new Error(`Falha ao enviar ${entry.file.name}`);
         }
-        toast.success(`${files.length} arquivo(s) enviados — transcrição enfileirada`);
+        toast.success(`${entries.length} arquivo(s) enviados — transcrição enfileirada`);
+        setPendingFiles([]);
         setLiveActive(true);
         await fetchDetail(transcriptId);
       } catch (err) {
@@ -227,40 +238,43 @@ export const NewTranscriptDialog = ({
     [fetchDetail],
   );
 
-  const onDrop = useCallback(
-    async (accepted: File[]) => {
-      console.log("[new-dialog] onDrop fired", accepted.length, "files");
-      if (accepted.length === 0) {
-        toast.info("Nenhum arquivo válido selecionado");
-        return;
-      }
-      const valid = accepted.filter((f) => {
+  const onDrop = useCallback((accepted: File[]) => {
+    if (accepted.length === 0) {
+      toast.info("Nenhum arquivo válido selecionado");
+      return;
+    }
+    const valid: PendingFile[] = accepted
+      .filter((f) => {
         if (f.size > 500 * 1024 * 1024) {
           toast.error(`${f.name} excede 500MB`);
           return false;
         }
         return true;
-      });
-      if (valid.length === 0) return;
+      })
+      .map((file) => ({ file, description: "" }));
+    if (valid.length === 0) return;
+    setPendingFiles((prev) => [...prev, ...valid]);
+  }, []);
 
-      if (createdTranscript) {
-        await uploadFiles(createdTranscript.id, valid);
-        return;
-      }
+  const updatePendingDesc = (index: number, value: string) => {
+    setPendingFiles((prev) => prev.map((p, i) => (i === index ? { ...p, description: value } : p)));
+  };
 
-      const title = form.getValues("title");
-      if (!title || title.trim().length === 0) {
-        const auto = `Nova transcrição ${new Date().toLocaleString("pt-BR")}`;
-        form.setValue("title", auto, { shouldValidate: true });
-        toast.info(`Título definido como "${auto}" — edite se necessário`);
-      }
+  const removePending = (i: number) =>
+    setPendingFiles((prev) => prev.filter((_, idx) => idx !== i));
 
-      const transcript = await ensureTranscript();
-      if (!transcript) return;
-      await uploadFiles(transcript.id, valid);
-    },
-    [createdTranscript, ensureTranscript, uploadFiles, form],
-  );
+  const handleUploadAndTranscribe = async () => {
+    if (pendingFiles.length === 0) return;
+    const title = form.getValues("title");
+    if (!title || title.trim().length === 0) {
+      const auto = `Nova transcrição ${new Date().toLocaleString("pt-BR")}`;
+      form.setValue("title", auto, { shouldValidate: true });
+      toast.info(`Título definido como "${auto}" — edite se necessário`);
+    }
+    const transcript = createdTranscript ?? (await ensureTranscript());
+    if (!transcript) return;
+    await uploadPending(transcript.id, pendingFiles);
+  };
 
   const onDropRejected = useCallback((rejections: FileRejection[]) => {
     for (const r of rejections) {
@@ -393,7 +407,7 @@ export const NewTranscriptDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : handleClose())}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl max-h-[90vh] overflow-y-auto flex flex-col gap-4">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[90vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>
             {createdTranscript ? `Editar: ${createdTranscript.title}` : "Nova transcrição"}
@@ -405,9 +419,9 @@ export const NewTranscriptDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4 min-w-0">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+        <div className="flex flex-col gap-4 min-w-0 min-h-0">
           <div className="space-y-2">
             <Label htmlFor="new-title">Título *</Label>
             <Input
@@ -462,9 +476,13 @@ export const NewTranscriptDialog = ({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 min-w-0">
-          <Label>Mídia{createdTranscript ? ` (${mediaList.length})` : ""}</Label>
-          <div className="flex flex-col gap-2 min-w-0">
+        <div className="flex flex-col gap-4 min-w-0 min-h-0">
+          <Label>
+            Mídia
+            {(mediaList.length > 0 || pendingFiles.length > 0) &&
+              ` (${mediaList.length}${pendingFiles.length > 0 ? ` + ${pendingFiles.length} pendente(s)` : ""})`}
+          </Label>
+          <div className="flex flex-col gap-2 min-w-0 flex-1 min-h-0 overflow-y-auto">
             <div
               {...getRootProps()}
               className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
@@ -485,18 +503,10 @@ export const NewTranscriptDialog = ({
               </p>
             </div>
 
-            {(uploading || submitting) && !createdTranscript && (
-              <div className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-xs">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span>Enviando arquivos e criando transcrição...</span>
-              </div>
-            )}
-
-
             {createdTranscript && (
               <>
                 {mediaList.length > 0 ? (
-                  <ul className="space-y-2 max-h-72 overflow-auto">
+                  <ul className="space-y-2">
                     {mediaList.map((m) => {
                       const draft = mediaDescDrafts[m.id] ?? "";
                       const dirty = draft !== (m.description ?? "");
@@ -618,6 +628,71 @@ export const NewTranscriptDialog = ({
                 ) : (
                   <p className="text-xs text-muted-foreground">Nenhuma mídia anexada.</p>
                 )}
+              </>
+            )}
+
+            {pendingFiles.length > 0 && (
+              <>
+                <ul className="space-y-2 max-h-72 overflow-auto min-w-0 w-full">
+                  {pendingFiles.map((entry, index) => {
+                    const file = entry.file;
+                    const isVideo = file.type.startsWith("video/");
+                    const Icon = isVideo ? FileVideo : Music;
+                    return (
+                      <li
+                        key={`${file.name}-${index}`}
+                        className="space-y-2 rounded-md border border-border bg-muted/30 px-2 py-2 text-sm min-w-0"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <span className="flex-1 truncate min-w-0" title={file.name}>
+                            {file.name}
+                          </span>
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {(file.size / (1024 * 1024)).toFixed(1)}MB
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => removePending(index)}
+                            disabled={uploading}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <Textarea
+                          value={entry.description}
+                          onChange={(e) => updatePendingDesc(index, e.target.value)}
+                          placeholder="Descrição desta mídia (opcional)"
+                          className="min-h-12 text-xs resize-none"
+                          disabled={uploading}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="w-full"
+                  onClick={handleUploadAndTranscribe}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando e enfileirando...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Transcrever {pendingFiles.length} arquivo(s)
+                    </>
+                  )}
+                </Button>
               </>
             )}
 

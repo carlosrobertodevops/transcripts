@@ -309,15 +309,15 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl max-h-[90vh] overflow-y-auto flex flex-col gap-4">
+      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-[90vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>Editar transcrição</DialogTitle>
           <DialogDescription>Atualize dados, gerencie mídia e dispare transcrição</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4 min-w-0">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+        <div className="flex flex-col gap-4 min-w-0 min-h-0">
           <div className="space-y-2">
             <Label htmlFor="edit-title">Título *</Label>
             <Input
@@ -368,9 +368,9 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 min-w-0">
+        <div className="flex flex-col gap-4 min-w-0 min-h-0">
           <Label>Mídia ({mediaList.length})</Label>
-          <div className="flex flex-col gap-2 min-w-0">
+          <div className="flex flex-col gap-2 min-w-0 flex-1 min-h-0 overflow-y-auto">
             <div
               {...getRootProps()}
               className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
@@ -391,7 +391,7 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
               </p>
             </div>
             {mediaList.length > 0 ? (
-              <ul className="space-y-2 max-h-72 overflow-auto">
+              <ul className="space-y-2">
                 {mediaList.map((m) => {
                   const draft = mediaDescDrafts[m.id] ?? "";
                   const dirty = draft !== (m.description ?? "");
