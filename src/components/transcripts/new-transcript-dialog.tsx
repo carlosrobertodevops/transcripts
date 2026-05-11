@@ -396,18 +396,35 @@ export const NewTranscriptDialog = ({
   };
 
   const handleClose = () => {
-    if (createdTranscript) {
-      const id = createdTranscript.id;
-      setOpen(false);
-      router.push(`/transcripts/${id}`);
-      return;
-    }
     setOpen(false);
   };
 
+  const canDismiss = !uploading && !submitting;
+
   return (
-    <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : handleClose())}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4">
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (o) {
+          setOpen(true);
+          return;
+        }
+        if (!canDismiss) return;
+        handleClose();
+      }}
+    >
+      <DialogContent
+        className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4"
+        onPointerDownOutside={(e) => {
+          if (!canDismiss) e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          if (!canDismiss) e.preventDefault();
+        }}
+        onInteractOutside={(e) => {
+          if (!canDismiss) e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>
             {createdTranscript ? `Editar: ${createdTranscript.title}` : "Nova transcrição"}
