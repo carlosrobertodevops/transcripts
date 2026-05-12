@@ -1,7 +1,7 @@
-# Graph Report - /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts  (2026-05-12)
+# Graph Report - transcripts  (2026-05-12)
 
 ## Corpus Check
-- 112 files · ~104,244 words
+- 112 files · ~120,430 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -124,15 +124,15 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `AppLayout()` --calls--> `requireUser()`  [INFERRED]
-  /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/layout.tsx → /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth.ts
+  src/app/(app)/layout.tsx → src/lib/auth.ts
 - `Page()` --calls--> `getTranscriptDetail()`  [INFERRED]
-  /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx → /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth-server.ts
+  src/app/(app)/notifications/page.tsx → src/lib/auth-server.ts
 - `Page()` --calls--> `getNotifications()`  [INFERRED]
-  /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx → /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth-server.ts
+  src/app/(app)/notifications/page.tsx → src/lib/auth-server.ts
 - `Page()` --calls--> `requireUser()`  [INFERRED]
-  /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx → /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth.ts
+  src/app/(app)/notifications/page.tsx → src/lib/auth.ts
 - `DashboardPage()` --calls--> `requireUser()`  [INFERRED]
-  /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/dashboard/page.tsx → /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth.ts
+  src/app/(app)/dashboard/page.tsx → src/lib/auth.ts
 
 ## Communities
 
@@ -172,37 +172,13 @@ Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsR
 Cohesion: 0.33
 Nodes (2): formatDuration(), formatFileSize()
 
-### Community 9 - "Community 9"
-Cohesion: 0.33
-Nodes (0): 
-
-### Community 10 - "Community 10"
-Cohesion: 0.33
-Nodes (0): 
-
 ### Community 11 - "Community 11"
 Cohesion: 0.4
 Nodes (2): AuthError, NotFoundError
 
-### Community 12 - "Community 12"
-Cohesion: 0.4
-Nodes (0): 
-
 ### Community 13 - "Community 13"
 Cohesion: 0.5
 Nodes (2): handle(), handler()
-
-### Community 14 - "Community 14"
-Cohesion: 0.5
-Nodes (0): 
-
-### Community 15 - "Community 15"
-Cohesion: 0.5
-Nodes (0): 
-
-### Community 16 - "Community 16"
-Cohesion: 0.5
-Nodes (0): 
 
 ### Community 17 - "Community 17"
 Cohesion: 0.67
@@ -211,322 +187,6 @@ Nodes (2): computePoll(), poll()
 ### Community 18 - "Community 18"
 Cohesion: 0.5
 Nodes (2): RichTextEditor(), cn()
-
-### Community 19 - "Community 19"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 20 - "Community 20"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 21 - "Community 21"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 22 - "Community 22"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 23 - "Community 23"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 24 - "Community 24"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 25 - "Community 25"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 26 - "Community 26"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 27 - "Community 27"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 28 - "Community 28"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 29 - "Community 29"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 30 - "Community 30"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 31 - "Community 31"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 32 - "Community 32"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 33 - "Community 33"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 34 - "Community 34"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 35 - "Community 35"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 36 - "Community 36"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 37 - "Community 37"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 38 - "Community 38"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 39 - "Community 39"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 40 - "Community 40"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 41 - "Community 41"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 42 - "Community 42"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 43 - "Community 43"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 44 - "Community 44"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 45 - "Community 45"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 46 - "Community 46"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 47 - "Community 47"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 48 - "Community 48"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 49 - "Community 49"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 50 - "Community 50"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 51 - "Community 51"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 52 - "Community 52"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 53 - "Community 53"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 54 - "Community 54"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 55 - "Community 55"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 56 - "Community 56"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 57 - "Community 57"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 58 - "Community 58"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 59 - "Community 59"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 60 - "Community 60"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 61 - "Community 61"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 62 - "Community 62"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 63 - "Community 63"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 64 - "Community 64"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 65 - "Community 65"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 66 - "Community 66"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 67 - "Community 67"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 68 - "Community 68"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 69 - "Community 69"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 70 - "Community 70"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 71 - "Community 71"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 72 - "Community 72"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 73 - "Community 73"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 74 - "Community 74"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 75 - "Community 75"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 76 - "Community 76"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 77 - "Community 77"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 78 - "Community 78"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 79 - "Community 79"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 80 - "Community 80"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 81 - "Community 81"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 82 - "Community 82"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 83 - "Community 83"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 84 - "Community 84"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 85 - "Community 85"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 86 - "Community 86"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 87 - "Community 87"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 88 - "Community 88"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 89 - "Community 89"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 90 - "Community 90"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 91 - "Community 91"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 92 - "Community 92"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 93 - "Community 93"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 94 - "Community 94"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 95 - "Community 95"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 96 - "Community 96"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 97 - "Community 97"
-Cohesion: 1.0
-Nodes (0): 
 
 ### Community 98 - "Community 98"
 Cohesion: 1.0
@@ -547,7 +207,7 @@ Nodes (1): Transcribe audio or video file.      Args:         file: Audio/video 
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 27`** (2 nodes): `LoginPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `sanitizeColor()`, `tags.ts`
+- **Thin community `Community 28`** (2 nodes): `tags.ts`, `sanitizeColor()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 29`** (2 nodes): `shareTranscript()`, `share.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -563,7 +223,7 @@ Nodes (1): Transcribe audio or video file.      Args:         file: Audio/video 
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 35`** (2 nodes): `ConfirmDialog()`, `confirm-dialog.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `poll()`, `transcription-progress.tsx`
+- **Thin community `Community 36`** (2 nodes): `transcription-progress.tsx`, `poll()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 37`** (2 nodes): `SearchBar()`, `search-bar.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -593,7 +253,7 @@ Nodes (1): Transcribe audio or video file.      Args:         file: Audio/video 
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 50`** (2 nodes): `PageTransition()`, `page-transition.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 51`** (2 nodes): `useProximity()`, `use-proximity.ts`
+- **Thin community `Community 51`** (2 nodes): `use-proximity.ts`, `useProximity()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 52`** (2 nodes): `useToast()`, `use-toast.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
