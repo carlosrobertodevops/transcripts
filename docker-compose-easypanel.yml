@@ -3,11 +3,11 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: transcripts
-      POSTGRES_PASSWORD: transcripts
-      POSTGRES_DB: transcripts
-    ports:
-      - "5433:5432"
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB required}
+    expose:
+      - "5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     shm_size: 256mb
@@ -64,10 +64,10 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
-      JWT_SECRET: "${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}"
-      JWT_REFRESH_SECRET: "${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}"
-      INTERNAL_API_KEY: "${INTERNAL_API_KEY:-dev-internal-key}"
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET required}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:?INTERNAL_API_KEY required}
       TRANSCRIPTION_PROVIDER: "${TRANSCRIPTION_PROVIDER:-local}"
       GROQ_API_KEY: "${GROQ_API_KEY:-}"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
@@ -102,8 +102,8 @@ services:
     mem_limit: 1500m
     tmpfs:
       - /tmp:size=512m
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - transcriber_cache:/root/.cache/huggingface
     healthcheck:

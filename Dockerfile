@@ -6,21 +6,26 @@
 ARG BUN_VERSION=1.3
 ARG PORT=3001
 
-FROM oven/bun:${BUN_VERSION} AS deps
+FROM oven/bun:${BUN_VERSION}-slim AS base
 WORKDIR /app
+
+FROM base AS deps
 COPY package.json bun.lock* ./
 RUN --mount=type=cache,target=/root/.bun/install/cache \
     bun install --frozen-lockfile || bun install
 
-FROM oven/bun:${BUN_VERSION} AS builder
-WORKDIR /app
+FROM base AS prod-deps
+COPY package.json bun.lock* ./
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile --production || bun install --production
+
+FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
-FROM oven/bun:${BUN_VERSION} AS migrate
-WORKDIR /app
+FROM base AS migrate
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json bun.lock* drizzle.config.ts tsconfig.json ./
 COPY drizzle ./drizzle
@@ -28,18 +33,19 @@ COPY src ./src
 ENV NODE_ENV=production
 CMD ["sh", "-c", "bun run db:migrate && (bun run src/db/seed.ts || true)"]
 
-FROM oven/bun:${BUN_VERSION}-slim AS runner
+FROM base AS runner
 ARG PORT
-WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=${PORT} \
     HOSTNAME=0.0.0.0
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && \
+    apt-get install -y --no-install-recommends -o APT::Keep-Downloaded-Packages=false \
     ffmpeg ca-certificates curl tini && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*.deb
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives /var/cache/apt/*
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
@@ -48,8 +54,6 @@ COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/src ./src
-RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun install --production --frozen-lockfile || bun install --production
 EXPOSE ${PORT}
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -fsS "http://localhost:${PORT}/api/health" || exit 1

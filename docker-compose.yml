@@ -46,9 +46,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
+      target: runner
       args:
         PORT: "3000"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     depends_on:
       db:
         condition: service_healthy
@@ -56,9 +63,9 @@ services:
         condition: service_completed_successfully
     environment:
       DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
-      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}
-      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET required}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:?INTERNAL_API_KEY required}
       TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -105,6 +112,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
+      target: runner
       args:
         PORT: "3000"
     restart: unless-stopped
@@ -119,7 +127,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
-      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:?INTERNAL_API_KEY required}
       APP_URL: http://app:3000
       NEXT_PUBLIC_APP_URL: http://app:3000
       TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
