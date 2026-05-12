@@ -336,13 +336,13 @@
   );
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: border-glow calc(3s - var(--proximity, 0) * 1.5s) linear infinite;
+  animation: border-glow calc(8s - var(--proximity, 0) * 2s) linear infinite;
   pointer-events: none;
   opacity: calc(var(--proximity, 0) * 0.95);
-  transition: opacity 0.25s ease, padding 0.25s ease;
+  transition: opacity 0.35s ease, padding 0.35s ease;
 }
 
-/* Segundo layer — streak reverso offset 180°, comet trail */
+/* Segundo layer — streak reverso offset 180°, comet trail (cyan flowlink) */
 .glass-border-animated::after {
   content: "";
   position: absolute;
@@ -353,18 +353,18 @@
     from calc(var(--border-angle) + 180deg),
     transparent 0%,
     transparent 2%,
-    color-mix(in srgb, var(--primary) 80%, transparent) 4%,
-    color-mix(in srgb, var(--primary) 70%, transparent) 7%,
-    color-mix(in srgb, var(--primary) 30%, transparent) 11%,
+    color-mix(in srgb, #5AC8FA 80%, transparent) 4%,
+    color-mix(in srgb, #5AC8FA 70%, transparent) 7%,
+    color-mix(in srgb, #5AC8FA 30%, transparent) 11%,
     transparent 18%,
     transparent 100%
   );
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: border-glow calc(2s - var(--proximity, 0) * 0.8s) linear infinite reverse;
+  animation: border-glow calc(6s - var(--proximity, 0) * 1.5s) linear infinite reverse;
   pointer-events: none;
   opacity: calc(var(--proximity, 0) * 0.7);
-  transition: opacity 0.25s ease;
+  transition: opacity 0.35s ease;
   filter: blur(0.4px);
 }
 
@@ -379,26 +379,26 @@
     from calc(var(--border-angle) + 180deg),
     transparent 0%,
     transparent 3%,
-    color-mix(in srgb, var(--primary) 70%, transparent) 5%,
-    color-mix(in srgb, var(--primary) 70%, transparent) 8%,
-    color-mix(in srgb, var(--primary) 30%, transparent) 12%,
+    color-mix(in srgb, #64D2FF 70%, transparent) 5%,
+    color-mix(in srgb, #64D2FF 70%, transparent) 8%,
+    color-mix(in srgb, #64D2FF 30%, transparent) 12%,
     transparent 18%,
     transparent 100%
   );
 }
 
-/* Hover — streak acelera e intensifica */
+/* Hover — streak suaviza e intensifica (durações reduzidas) */
 .glass-border-animated:hover::before,
 .glass-border-animated:focus-within::before {
   opacity: 0.85;
   padding: 0.75px;
-  animation-duration: 2s;
+  animation-duration: 6s;
 }
 
 .glass-border-animated:hover::after,
 .glass-border-animated:focus-within::after {
   opacity: 0.3;
-  animation-duration: 1.5s;
+  animation-duration: 4.5s;
 }
 
 /* Fallback para prefers-reduced-motion */
@@ -438,7 +438,7 @@
     var(--border) 100%
   ) 1;
   border-image-slice: 1;
-  animation: input-border-shimmer 2s linear infinite;
+  animation: input-border-shimmer 5s linear infinite;
   background-size: 200% 100%;
 }
 
@@ -636,39 +636,78 @@ a[href]:not([class*="btn"]):not([data-slot]):hover {
   border-color: var(--tag-border-dark);
 }
 
-/* ── Proximity Animation ── */
-@keyframes glass-border-pulse {
-  0%, 100% {
-    opacity: calc(0.25 + var(--proximity, 0) * 0.6);
-  }
-  50% {
-    opacity: calc(0.35 + var(--proximity, 0) * 0.5);
-  }
-}
-
-.glass-border-animated {
+/* ── Auth card — bigger radius + extra glow ── */
+.auth-card {
   position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-2xl);
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  background:
+    radial-gradient(ellipse 130% 90% at 50% 0%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 110% 80% at 50% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 65%),
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 78%, transparent), color-mix(in srgb, var(--card) 55%, transparent));
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, var(--primary) 8%, transparent) inset,
+    0 0 0 1px color-mix(in srgb, var(--primary) 5%, transparent),
+    0 30px 80px -30px color-mix(in srgb, var(--background) 80%, transparent),
+    0 12px 32px -16px color-mix(in srgb, var(--primary) 28%, transparent);
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
 }
 
-.glass-border-animated::before {
-  content: '';
+.auth-card:hover {
+  box-shadow:
+    0 1px 0 0 color-mix(in srgb, var(--primary) 12%, transparent) inset,
+    0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent),
+    0 30px 80px -30px color-mix(in srgb, var(--background) 70%, transparent),
+    0 18px 48px -16px color-mix(in srgb, var(--primary) 38%, transparent);
+}
+
+/* Brand mark wrapper for auth headers */
+.auth-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--primary) 60%, transparent), transparent 70%),
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 30%, transparent), color-mix(in srgb, var(--primary) 10%, transparent));
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--primary) 10%, transparent),
+    0 8px 24px -8px color-mix(in srgb, var(--primary) 50%, transparent),
+    inset 0 1px 0 0 color-mix(in srgb, white 15%, transparent);
+  color: var(--primary);
+}
+
+/* Button glow — extra shimmer on primary */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::after {
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.2) 0%, 
-    rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, white 25%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
   pointer-events: none;
-  opacity: calc(0.25 + var(--proximity, 0) * 0.6);
-  animation: glass-border-pulse calc(6s - var(--proximity, 0) * 4s) ease-in-out infinite;
-  -webkit-mask-image: 
-    linear-gradient(to right, black 1px, transparent 1px),
-    linear-gradient(to bottom, black 1px, transparent 1px),
-    linear-gradient(to right, black 1px, transparent 1px),
-    linear-gradient(to bottom, black 1px, transparent 1px);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  transition: background-position 0.8s ease;
+}
+
+.btn-glow:hover::after {
+  background-position: -200% 0;
 }
 
 /* ── Login Visual Panel — shimmer sweep ── */

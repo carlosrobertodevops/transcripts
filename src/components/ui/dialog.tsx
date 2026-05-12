@@ -14,8 +14,9 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
+    data-slot="dialog-overlay"
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-background/60 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -32,14 +33,15 @@ const DialogContent = React.forwardRef<
     <div className="fixed inset-0 z-50 flex items-center justify-center p-[16pt] pointer-events-none">
       <DialogPrimitive.Content
         ref={ref}
+        data-slot="dialog-content"
         className={cn(
-          "relative pointer-events-auto z-50 grid w-full max-w-2xl min-w-0 max-h-[calc(100vh-2rem)] overflow-y-auto gap-4 border border-border/50 bg-card/80 backdrop-blur-xl p-[16pt] shadow-lg duration-200 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg glass-border-animated",
+          "relative pointer-events-auto z-50 grid w-full max-w-2xl min-w-0 max-h-[calc(100vh-2rem)] overflow-y-auto gap-4 border border-border/50 bg-card/80 backdrop-blur-xl p-[20pt] shadow-2xl duration-200 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-2xl glass-border-animated",
           className
         )}
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        <DialogPrimitive.Close className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/40 bg-background/40 text-muted-foreground opacity-70 backdrop-blur-md ring-offset-background transition-all hover:bg-background/70 hover:text-foreground hover:opacity-100 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
