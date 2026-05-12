@@ -4,7 +4,7 @@
 
 **Transcripts** é uma aplicação web colaborativa para transcrição de mídia com IA. MVP suporta upload de áudio/vídeo, transcrição assíncrona em português brasileiro via Groq Whisper, compartilhamento entre usuários e notificações push. Usuários autenticam via JWT, fazem upload de mídia, acompanham progresso de transcrição e compartilham transcritos com colegas.
 
-Stack: Fullstack monorepo Next.js 15 (App Router, React 19) + Elysia 1.1 REST API (Bun runtime) + Drizzle ORM (PostgreSQL 15) + Docker Compose (app + db + worker).
+Stack: Fullstack monorepo Next.js 16 (App Router, React 19) + Elysia 1.x REST API (Bun runtime) + Drizzle ORM (PostgreSQL 16) + Worker Bun + Transcriber Python (FastAPI + faster-whisper) + Docker Compose com 4 variantes (padrão, local, easypanel, coolify).
 
 ## 2. Goals & Non-Goals
 
@@ -41,7 +41,7 @@ graph TB
     Drizzle["Drizzle ORM<br/>(Query Builder)"]
     PG["🐘 PostgreSQL 15<br/>(Relational)"]
     Storage["📁 Local Storage<br/>(./uploads/)"]
-    Worker["⚙️ Worker Loop<br/>(15s polling)"]
+    Worker["⚙️ Worker Loop<br/>(WORKER_INTERVAL_MS, padrão 3s)"]
     Groq["🤖 Groq API<br/>(Whisper-large-v3)"]
 
     Browser -->|Fetch /api/*| NextApp
@@ -80,7 +80,7 @@ sequenceDiagram
     Elysia->>PG: INSERT transcripts, media, transcriptionJobs (status=pending)
     Elysia->>NextApp: 201 {transcriptId, mediaId, job_id}
 
-    Note over Worker: Every 15 seconds
+    Note over Worker: A cada WORKER_INTERVAL_MS (padrão 3s)
     Worker->>Elysia: POST /api/jobs/run (x-internal-key header)
     Elysia->>PG: SELECT * FROM transcriptionJobs WHERE status='pending'
     loop For each pending job
@@ -277,7 +277,7 @@ sequenceDiagram
 ```
 1. Worker container inicia (docker-compose.yml service "worker")
    → Executa: bun run worker:loop
-   → src/workers/loop.ts: tick() a cada 15 segundos
+   → src/workers/loop.ts: tick() a cada WORKER_INTERVAL_MS (padrão 3000ms)
 
 2. Cada tick():
    POST /api/jobs/run { x-internal-key: INTERNAL_API_KEY header }
@@ -346,11 +346,11 @@ sequenceDiagram
 
 ### ADR-2: Worker Loop com Polling (não Queue)
 
-**Decisão:** Worker container faz POST `/api/jobs/run` a cada 15s.
+**Decisão:** Worker container faz POST `/api/jobs/run` a cada `WORKER_INTERVAL_MS` (padrão 3000ms).
 
 **Razão:** Simplicidade (sem Redis/RabbitMQ), não requer transações distribuídas, easy debug, logs centralizados.
 
-**Trade-offs:** Latência máxima 15s, ineficiente se muitos jobs pendentes. Escalável até ~100 jobs/15s com 1 worker.
+**Trade-offs:** Latência máxima ~3s, idempotência depende de status checks. Escalável até ~100 jobs/min com 1 worker e `limit=3` por tick.
 
 ---
 
@@ -632,8 +632,8 @@ app.use(authPlugin).onBeforeHandle(async ({ request }) => {
 │   └── styles/
 │       └── globals.css
 ├── src/workers/
-│   ├── loop.ts                     # 15s polling main loop
-│   └── tick.ts                     # Single job processing
+│   ├── loop.ts                     # polling main loop (WORKER_INTERVAL_MS, padrão 3s)
+│   └── tick.ts                     # Single job processing (exit code)
 ├── docker-compose.yml              # app + db + worker services
 ├── Dockerfile                      # Multi-stage bun build
 ├── drizzle/
@@ -710,14 +710,16 @@ bun test                             # Jest tests (futuro)
 ### Versões (Locked)
 
 - Node/Bun: v1.1.x (runner)
-- Next.js: 15.0.x (App Router)
+- Next.js: 16.x (App Router)
 - React: 19.x
-- Elysia: 1.1.x
+- Elysia: 1.x
 - Drizzle: 0.36.x
-- PostgreSQL: 15-alpine (Docker)
+- PostgreSQL: 16-alpine (Docker)
 - Tailwind CSS: 4.x
 - TypeScript: 5.x
 - Zod: 4.x
+- Python (transcriber): 3.12-slim
+- faster-whisper: latest
 
 ---
 

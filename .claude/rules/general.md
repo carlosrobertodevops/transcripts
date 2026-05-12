@@ -15,20 +15,31 @@
 ```bash
 bun install
 bun run dev
-docker compose up --build
 bunx drizzle-kit generate
 bunx drizzle-kit migrate
 bunx drizzle-kit studio
+
+# Compose variants
+docker compose up --build                                      # prod padrão
+docker compose -f docker-compose.local.yml up --build           # dev local + pgadmin
+docker compose -f docker-compose-easypanel.yml up --build       # Easypanel
+docker compose -f docker-compose-coolify.yml up --build         # Coolify VPS
+
+# Workers
+bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
+bun run worker:tick      # single-shot
 ```
 
 ## Estrutura Esperada
 
-- `src/app/` para rotas, layouts e páginas Next.js.
-- `src/components/ui/` para componentes ShadCN.
-- `src/server/` para API Elysia.
-- `src/db/` para client, schema e queries Drizzle.
-- `drizzle/` para migrations geradas.
-- `docker-compose.yml` para ambiente app + banco.
+- `src/app/` rotas, layouts, páginas Next.js (App Router 16).
+- `src/components/ui/` ShadCN new-york.
+- `src/server/` API Elysia (index, routes, services, plugins).
+- `src/db/` schema Drizzle + client + seed.
+- `src/workers/` loop + tick.
+- `transcriber/` FastAPI + faster-whisper (Python 3.12).
+- `drizzle/` migrations geradas.
+- `docker-compose*.yml` variantes de ambiente (padrão, local, easypanel, coolify).
 
 ## MCPs
 

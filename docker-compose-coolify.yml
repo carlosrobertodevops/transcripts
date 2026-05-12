@@ -1,0 +1,171 @@
+# docker-compose-coolify.yml
+# Deploy alvo: Coolify v4 (Docker Compose application type).
+#
+# Coolify magic env vars usadas:
+#   SERVICE_FQDN_APP_3000        -> FQDN gerado p/ app (rota Traefik :3000)
+#   SERVICE_FQDN_APP             -> mesmo FQDN, sem porta (uso em URLs publicas)
+#   SERVICE_PASSWORD_POSTGRES    -> senha auto-gerada
+#   SERVICE_USER_POSTGRES        -> user auto-gerado (override via .env)
+#   SERVICE_BASE64_64_JWT        -> 64 bytes base64 auto-gerado
+#   SERVICE_BASE64_64_REFRESH    -> idem
+#   SERVICE_BASE64_64_INTERNAL   -> idem
+#
+# Variaveis fornecidas pelo painel Coolify (preencher na UI):
+#   TRANSCRIPTION_PROVIDER, GROQ_API_KEY, OPENAI_API_KEY,
+#   WHISPER_MODEL, WHISPER_COMPUTE_TYPE, TRANSCRIBER_TIMEOUT_MS,
+#   WORKER_INTERVAL_MS, PGADMIN_EMAIL (opt), PGADMIN_PASSWORD (opt)
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${SERVICE_USER_POSTGRES:-transcripts}
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+      POSTGRES_DB: ${POSTGRES_DB:-transcripts}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    shm_size: 512mb
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=128MB"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${SERVICE_USER_POSTGRES:-transcripts} -d ${POSTGRES_DB:-transcripts}
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${SERVICE_USER_POSTGRES:-transcripts}:${SERVICE_PASSWORD_POSTGRES}@db:5432/${POSTGRES_DB:-transcripts}
+    command: ["bun", "run", "db:migrate"]
+
+  transcriber:
+    build:
+      context: ./transcriber
+      args:
+        WHISPER_MODEL: ${WHISPER_MODEL:-tiny}
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      WHISPER_MODEL: ${WHISPER_MODEL:-tiny}
+      WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
+    volumes:
+      - whisper_cache:/root/.cache/huggingface
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "curl -fsS http://localhost:8000/health || exit 1"
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
+    expose:
+      - "8000"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      transcriber:
+        condition: service_healthy
+    environment:
+      # === Coolify-exposed FQDN ===
+      SERVICE_FQDN_APP_3000: # <- Coolify resolve / cria dominio
+      NEXT_PUBLIC_APP_URL: ${SERVICE_FQDN_APP}
+      APP_URL: ${SERVICE_FQDN_APP}
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      NODE_ENV: production
+      # === DB ===
+      DATABASE_URL: postgres://${SERVICE_USER_POSTGRES:-transcripts}:${SERVICE_PASSWORD_POSTGRES}@db:5432/${POSTGRES_DB:-transcripts}
+      # === Auth secrets (auto-gen via Coolify) ===
+      JWT_SECRET: ${SERVICE_BASE64_64_JWT}
+      JWT_REFRESH_SECRET: ${SERVICE_BASE64_64_REFRESH}
+      INTERNAL_API_KEY: ${SERVICE_BASE64_64_INTERNAL}
+      # === Transcription provider ===
+      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # === Storage ===
+      STORAGE_DIR: /app/uploads
+    volumes:
+      - uploads:/app/uploads
+    expose:
+      - "3000"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "wget -qO- http://localhost:3000/api/health || exit 1"
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      app:
+        condition: service_healthy
+      transcriber:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${SERVICE_USER_POSTGRES:-transcripts}:${SERVICE_PASSWORD_POSTGRES}@db:5432/${POSTGRES_DB:-transcripts}
+      INTERNAL_API_KEY: ${SERVICE_BASE64_64_INTERNAL}
+      APP_URL: http://app:3000
+      NEXT_PUBLIC_APP_URL: ${SERVICE_FQDN_APP}
+      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      STORAGE_DIR: /app/uploads
+      WORKER_INTERVAL_MS: ${WORKER_INTERVAL_MS:-3000}
+    volumes:
+      - uploads:/app/uploads
+    command: ["bun", "run", "worker:loop"]
+
+volumes:
+  db_data:
+    name: transcripts_db_data
+  uploads:
+    name: transcripts_uploads
+  whisper_cache:
+    name: transcripts_whisper_cache

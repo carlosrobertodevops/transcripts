@@ -14,7 +14,7 @@ Rules:
 
 | Agent                       | Propósito                                                                      | Triggers                  | Escopo                                 | Modelo           |
 | --------------------------- | ------------------------------------------------------------------------------ | ------------------------- | -------------------------------------- | ---------------- |
-| `worker-loop-agent`         | Orquestrar ticks de 15s e invocar job runner para processar transcrições      | Timer 15s (setInterval)   | READ-ONLY jobs/transcription logic     | N/A (Bun service) |
+| `worker-loop-agent`         | Orquestrar ticks periódicos e invocar job runner para processar transcrições  | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic | N/A (Bun service) |
 | `job-runner-agent`          | Executar lote de jobs pendentes (pending → processing → done/failed)          | POST /api/jobs/run        | READ-WRITE DB (transcriptions, media) | N/A (Elysia route)|
 | `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md com codebase real | Manual (invocação direta) | READ-ONLY inspection + WRITE-ONLY docs | Claude Haiku 4.5 |
 
@@ -28,7 +28,7 @@ Rules:
 
 **Triggers:**
 
-- Timer setInterval(15s) em `src/workers/loop.ts`
+- `setInterval(WORKER_INTERVAL_MS, …)` em `src/workers/loop.ts` (padrão 3000ms, configurável via env)
 - Executável manual via `bun run worker:loop` (loop infinito) ou `bun run worker:tick` (single tick, exit code)
 
 **Escopo:**
@@ -52,8 +52,8 @@ Rules:
 
 - `POST /api/jobs/run` (endpoint Elysia em `src/server/routes/jobs.ts`)
 - Requer header `x-internal-key` para autenticação interna
-- Invocado por worker-loop-agent a cada 15s
-- Processa até `limit` jobs por chamada (padrão 3, configurável)
+- Invocado por worker-loop-agent a cada `WORKER_INTERVAL_MS` (padrão 3000ms)
+- Processa até `limit` jobs por chamada (padrão 3, máx 5)
 
 **Escopo:**
 
@@ -184,7 +184,7 @@ Agentes assumem:
 - **Time limit**: 15 minutos max por invocação (timeout padrão)
 - **File size**: Max 50MB por arquivo inspecionado
 - **Parallelismo**: Máx 5 agents rodando simultaneamente
-- **Worker tick**: 15s interval (fixo); processa até `limit` jobs por tick (padrão 3)
+- **Worker tick**: `WORKER_INTERVAL_MS` (padrão 3000ms); processa até `limit` jobs por tick (padrão 3, máx 5)
 
 ### Restrições Funcionais
 

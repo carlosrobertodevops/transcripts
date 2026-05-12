@@ -1,11 +1,11 @@
 # Graph Report - /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts  (2026-05-12)
 
 ## Corpus Check
-- 112 files · ~102,202 words
+- 112 files · ~104,248 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 278 nodes · 219 edges · 99 communities detected
+- 278 nodes · 217 edges · 99 communities detected
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -157,16 +157,16 @@ Cohesion: 0.22
 Nodes (2): formatDuration(), formatFileSize()
 
 ### Community 5 - "Community 5"
-Cohesion: 0.24
-Nodes (4): formatDuration(), formatSize(), handleUploadAndTranscribe(), onSubmit()
+Cohesion: 0.22
+Nodes (2): handleUploadAndTranscribe(), onSubmit()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.36
-Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
-
-### Community 7 - "Community 7"
 Cohesion: 0.31
 Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
+
+### Community 7 - "Community 7"
+Cohesion: 0.36
+Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
 
 ### Community 8 - "Community 8"
 Cohesion: 0.33
@@ -197,8 +197,8 @@ Cohesion: 0.5
 Nodes (0): 
 
 ### Community 15 - "Community 15"
-Cohesion: 0.67
-Nodes (2): formatDuration(), formatSize()
+Cohesion: 0.5
+Nodes (0): 
 
 ### Community 16 - "Community 16"
 Cohesion: 0.5

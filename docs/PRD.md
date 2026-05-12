@@ -196,8 +196,9 @@
 | **Auth**        | JWT (cookie httpOnly)                             |
 | **Transcrição** | Groq Whisper API (v1) / OpenAI Whisper (fallback) |
 | **Runtime**     | Bun (pkg manager, executor)                       |
-| **Hosting**     | Docker Compose (app + db)                         |
-| **Infra**       | [Pending: Vercel/Railway/Coolify]                 |
+| **Hosting**     | Docker Compose — 4 variantes (padrão, local, easypanel, coolify) |
+| **Infra**       | Coolify VPS (produção atual) + Easypanel (cloud) — ver `docs/COOLIFY_DEPLOY.md` |
+| **Transcriber** | Container Python 3.12 + FastAPI + faster-whisper (provider=local), `:8000` |
 
 ---
 

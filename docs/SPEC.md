@@ -334,7 +334,7 @@ Upload múltiplo. Valida mime `audio/*` ou `video/*`. Para cada arquivo cria `me
 
 #### `POST /api/jobs/run`
 
-Worker container chama a cada 15s.
+Worker container chama a cada `WORKER_INTERVAL_MS` (padrão 3000ms).
 
 - **Header**: `x-internal-key: $INTERNAL_API_KEY`
 - **Response 200**: `{ ok: true, processed: N }`
@@ -376,8 +376,9 @@ Worker container chama a cada 15s.
 - **Page size (transcripts)**: 30
 - **Notifications list**: 50
 - **JWT TTL**: access 7d, refresh 30d
-- **Worker tick**: 15s
-- **Job retries**: 3
+- **Worker tick**: `WORKER_INTERVAL_MS` (padrão 3000ms)
+- **Job retries**: 3 antes de marcar `failed`
+- **Jobs por tick**: até `limit` (padrão 3, máx 5)
 
 ---
 
@@ -427,7 +428,7 @@ curl -X POST http://localhost:3000/api/transcripts/$TID/share \
 
 ## Webhook / Worker Interno
 
-`POST /api/jobs/run` com header `x-internal-key`. O serviço `worker` no `docker-compose.yml` chama esse endpoint a cada 15 segundos. NÃO expor publicamente — em deploy use rede interna.
+`POST /api/jobs/run` com header `x-internal-key`. O serviço `worker` no `docker-compose*.yml` chama esse endpoint a cada `WORKER_INTERVAL_MS` (padrão 3000ms). NÃO expor publicamente — em deploy use rede interna. Em Coolify, o serviço fica sem `ports`/`expose` público.
 
 ---
 

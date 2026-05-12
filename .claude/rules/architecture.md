@@ -5,19 +5,9 @@
 
 ## Next.js UI
 
-- Use App Router.
-- Usar o figma-mcp com componentes ShadCN/UI em `src/components/ui` e estilize com Tailwind, com os links do layouts do figma:
-  - Login: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-1276&m=dev`
-  - AI: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-1053&m=dev`
-  - AI Onbording: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-1053&m=dev`
-  - AI Coach: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-936&m=dev`
-  - Plano de Treino: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-808&m=dev`
-  - Home: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-679&m=dev`
-  - Perfil: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-608&m=dev`
-  - Eveolução: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-410&m=dev`
-  - Evolução: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-212&m=dev`
-  - Plano de Treino: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-79&m=dev`
-  - Home: `https://www.figma.com/design/ljuq4iRj8Oa3OU9g47e1Ht/FIT.AI--Alunos---Estudos?node-id=3606-2&m=dev`
+- Use App Router (Next.js 16).
+- Componentes base em `src/components/ui` (ShadCN/UI new-york). Estilize com Tailwind v4.
+- Sem links Figma para este projeto. Caso surjam mockups, anexar nesta seção.
 - Server Components por padrao; use `"use client"` apenas quando houver estado, efeitos, eventos ou APIs do browser.
 - Use ShadCN/UI para componentes de base e Tailwind CSS para layout.
 - Componentes ShadCN devem usar composicao completa (`CardHeader`, `CardContent`, `DialogTitle`, etc.).
@@ -70,7 +60,14 @@
 
 ## Docker
 
-- `docker-compose.yml` deve conter `app` e `db`.
-- `app` deve depender de `db` com healthcheck.
-- `db` deve usar volume persistente.
-- Variáveis devem vir de `.env`; secrets reais não devem ser commitados.
+- 4 variantes de compose: `docker-compose.yml` (padrão), `docker-compose.local.yml` (dev), `docker-compose-easypanel.yml`, `docker-compose-coolify.yml`.
+- Serviços principais: `db` (postgres:16-alpine, volume persistente), `migrate` (one-shot Drizzle), `transcriber` (python:3.12-slim, :8000, whisper_cache), `app` (Next + Elysia, :3000, uploads volume), `worker` (loop). Dev adiciona `pgadmin` :5050.
+- Healthcheck chain: `db` → `migrate` → `transcriber` → `app` → `worker`.
+- Variáveis em `.env`/`.env.coolify`/`.env.easypanel`; secrets nunca commitados.
+- Coolify usa `expose` (não `ports`) e variáveis `SERVICE_FQDN_APP`, `SERVICE_USER_POSTGRES`, `SERVICE_BASE64_64_*` autogeradas.
+
+## Worker
+
+- `src/workers/loop.ts` faz `setInterval(WORKER_INTERVAL_MS, …)`. Padrão `3000` (3s). Anteriormente documentado como 15s — corrigido.
+- Tick chama `POST /api/jobs/run` com header `x-internal-key: $INTERNAL_API_KEY`.
+- `runPendingJobs` em `src/server/services/jobs.ts` processa até `limit` jobs (padrão 3). FFmpeg pré-processa vídeo → MP3 16kHz mono. Provider escolhido por `getProvider()`. Retry até 3x antes de marcar `failed`.

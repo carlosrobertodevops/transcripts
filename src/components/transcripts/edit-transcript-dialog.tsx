@@ -6,7 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +21,16 @@ import { LiveTranscription } from "@/components/transcripts/live-transcription";
 import { MediaTranscriptEditor } from "@/components/transcripts/media-transcript-editor";
 import { type TagRef } from "@/lib/highlight-tags";
 import { toast } from "sonner";
-import { Loader2, RotateCcw, Trash2, FileAudio, Music, FileVideo, X, Sparkles } from "lucide-react";
+import {
+  Loader2,
+  RotateCcw,
+  Trash2,
+  FileAudio,
+  Music,
+  FileVideo,
+  X,
+  Sparkles,
+} from "lucide-react";
 
 interface PendingFile {
   file: File;
@@ -81,7 +96,12 @@ interface EditTranscriptDialogProps {
   onSaved?: (updated: TranscriptLite) => void;
 }
 
-export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: EditTranscriptDialogProps) => {
+export const EditTranscriptDialog = ({
+  open,
+  setOpen,
+  transcript,
+  onSaved,
+}: EditTranscriptDialogProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
   const [segments, setSegments] = useState<SegmentItem[]>([]);
@@ -90,13 +110,21 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [liveActive, setLiveActive] = useState(false);
-  const [mediaDescDrafts, setMediaDescDrafts] = useState<Record<string, string>>({});
+  const [mediaDescDrafts, setMediaDescDrafts] = useState<
+    Record<string, string>
+  >({});
   const [savingMediaId, setSavingMediaId] = useState<string | null>(null);
   const [tagList, setTagList] = useState<TagRef[]>([]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { title: "", operationName: "", operationDate: "", transcriptionDate: "", analysis: "" },
+    defaultValues: {
+      title: "",
+      operationName: "",
+      operationDate: "",
+      transcriptionDate: "",
+      analysis: "",
+    },
   });
 
   const fetchTags = useCallback(async () => {
@@ -113,7 +141,9 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
 
   const fetchDetail = useCallback(async (id: string) => {
     try {
-      const res = await fetch(`/api/transcripts/${id}`, { credentials: "include" });
+      const res = await fetch(`/api/transcripts/${id}`, {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         const list: MediaItem[] = data.media ?? [];
@@ -133,8 +163,12 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
       form.reset({
         title: transcript.title,
         operationName: transcript.operationName ?? "",
-        operationDate: transcript.operationDate ? transcript.operationDate.slice(0, 10) : "",
-        transcriptionDate: transcript.transcriptionDate ? transcript.transcriptionDate.slice(0, 10) : "",
+        operationDate: transcript.operationDate
+          ? transcript.operationDate.slice(0, 10)
+          : "",
+        transcriptionDate: transcript.transcriptionDate
+          ? transcript.transcriptionDate.slice(0, 10)
+          : "",
         analysis: transcript.analysis ?? "",
       });
       setPendingFiles([]);
@@ -157,7 +191,9 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
   }, []);
 
   const updatePendingDesc = (index: number, value: string) => {
-    setPendingFiles((prev) => prev.map((p, i) => (i === index ? { ...p, description: value } : p)));
+    setPendingFiles((prev) =>
+      prev.map((p, i) => (i === index ? { ...p, description: value } : p)),
+    );
   };
 
   const onDropRejected = useCallback((rejections: FileRejection[]) => {
@@ -174,7 +210,8 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
     noKeyboard: false,
   });
 
-  const removePending = (i: number) => setPendingFiles((prev) => prev.filter((_, idx) => idx !== i));
+  const removePending = (i: number) =>
+    setPendingFiles((prev) => prev.filter((_, idx) => idx !== i));
 
   const handleUploadAndTranscribe = async () => {
     if (!transcript || pendingFiles.length === 0) return;
@@ -193,7 +230,9 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
         });
         if (!res.ok) throw new Error(`Falha ao enviar ${entry.file.name}`);
       }
-      toast.success(`${pendingFiles.length} arquivo(s) enviados — transcrição enfileirada`);
+      toast.success(
+        `${pendingFiles.length} arquivo(s) enviados — transcrição enfileirada`,
+      );
       setPendingFiles([]);
       setLiveActive(true);
       await fetchDetail(transcript.id);
@@ -237,7 +276,13 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
         body: JSON.stringify({ description: draft }),
       });
       if (!res.ok) throw new Error("falha");
-      setMediaList((prev) => prev.map((m) => (m.id === mediaId ? { ...m, description: draft.length > 0 ? draft : null } : m)));
+      setMediaList((prev) =>
+        prev.map((m) =>
+          m.id === mediaId
+            ? { ...m, description: draft.length > 0 ? draft : null }
+            : m,
+        ),
+      );
       toast.success("Descrição salva");
     } catch (err) {
       toast.error("Erro ao salvar descrição");
@@ -312,263 +357,306 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
       <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>Editar transcrição</DialogTitle>
-          <DialogDescription>Atualize dados, gerencie mídia e dispare transcrição</DialogDescription>
+          <DialogDescription>
+            Atualize dados, gerencie mídia e dispare transcrição
+          </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 gap-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
-        <div className="flex flex-col gap-4 min-w-0 min-h-0">
-          <div className="space-y-2">
-            <Label htmlFor="edit-title">Título *</Label>
-            <Input
-              id="edit-title"
-              placeholder="ex: Interceptação telemática — alvo TX-001 — sessão 03"
-              {...form.register("title")}
-            />
-            {form.formState.errors.title && (
-              <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="edit-operationName">Nome da operação (opcional)</Label>
-            <Input
-              id="edit-operationName"
-              placeholder="ex: Operação Sentinela — Protocolo CX-2026/04"
-              {...form.register("operationName")}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-operationDate">Data da operação</Label>
-              <Input id="edit-operationDate" type="date" {...form.register("operationDate")} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-transcriptionDate">Data da transcrição</Label>
-              <Input id="edit-transcriptionDate" type="date" {...form.register("transcriptionDate")} />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="edit-analysis">Análise (opcional)</Label>
-            <Controller
-              name="analysis"
-              control={form.control}
-              render={({ field }) => (
-                <RichTextEditor
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                  placeholder="Resumo, codinomes identificados, próximas ações..."
-                  className="min-h-[120px] max-h-[180px] overflow-y-auto"
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 min-h-0 gap-4"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+            <div className="flex flex-col gap-4 min-w-0 min-h-0">
+              <div className="space-y-2">
+                <Label htmlFor="edit-title">Título *</Label>
+                <Input
+                  id="edit-title"
+                  placeholder="ex: Interceptação telemática — alvo TX-001 — sessão 03"
+                  {...form.register("title")}
                 />
-              )}
-            />
-          </div>
-        </div>
+                {form.formState.errors.title && (
+                  <p className="text-xs text-destructive">
+                    {form.formState.errors.title.message}
+                  </p>
+                )}
+              </div>
 
-        <div className="flex flex-col gap-4 min-w-0 min-h-0">
-          <Label>Mídia ({mediaList.length})</Label>
-          <div className="flex flex-col gap-2 min-w-0 flex-1 min-h-0 overflow-y-auto">
-            <div
-              {...getRootProps()}
-              className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
-                isDragActive
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50 hover:bg-accent/30"
-              }`}
-            >
-              <input {...getInputProps()} />
-              <Music className="h-6 w-6 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {isDragActive
-                  ? "Solte os arquivos aqui..."
-                  : "Adicionar mídia — arraste ou clique"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                MP3, WAV, M4A, AAC, OGG, OPUS, MP4, MOV — até 500MB cada
-              </p>
-            </div>
-            {mediaList.length > 0 ? (
-              <ul className="space-y-2">
-                {mediaList.map((m) => {
-                  const draft = mediaDescDrafts[m.id] ?? "";
-                  const dirty = draft !== (m.description ?? "");
-                  return (
-                    <li
-                      key={m.id}
-                      className="space-y-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm min-w-0"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <FileAudio className="h-4 w-4 shrink-0 text-muted-foreground" />
-                        <div className="flex-1 min-w-0">
-                          <p className="truncate" title={m.filename}>{m.filename}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatSize(m.sizeBytes)} • {formatDuration(m.durationSeconds)}
-                          </p>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 shrink-0"
-                          onClick={() => handleRetranscribe(m.id)}
-                          disabled={retranscribingId === m.id}
-                          title="Refazer transcrição"
-                        >
-                          {retranscribingId === m.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <RotateCcw className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 shrink-0 text-destructive"
-                          onClick={() => handleDeleteMedia(m.id)}
-                          disabled={deletingId === m.id}
-                          title="Remover mídia"
-                        >
-                          {deletingId === m.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                      <Textarea
-                        value={draft}
-                        onChange={(e) =>
-                          setMediaDescDrafts((prev) => ({ ...prev, [m.id]: e.target.value }))
-                        }
-                        onBlur={() => dirty && handleSaveMediaDesc(m.id)}
-                        placeholder="Descrição desta mídia (opcional)"
-                        className="min-h-12 text-xs resize-none"
-                        disabled={savingMediaId === m.id}
-                      />
-                      {dirty && (
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 text-xs"
-                            onClick={() =>
-                              setMediaDescDrafts((prev) => ({ ...prev, [m.id]: m.description ?? "" }))
-                            }
-                          >
-                            Desfazer
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            className="h-6 text-xs"
-                            onClick={() => handleSaveMediaDesc(m.id)}
-                            disabled={savingMediaId === m.id}
-                          >
-                            {savingMediaId === m.id ? (
-                              <Loader2 className="h-3 w-3 animate-spin" />
-                            ) : (
-                              "Salvar"
-                            )}
-                          </Button>
-                        </div>
-                      )}
-                      {liveActive && transcript ? (
-                        <LiveTranscription
-                          transcriptId={transcript.id}
-                          mediaId={m.id}
-                          enabled={liveActive}
-                          tags={tagList}
-                          compact
-                        />
-                      ) : (
-                        <MediaTranscriptEditor
-                          mediaId={m.id}
-                          segments={segments.filter((s) => s.mediaId === m.id)}
-                          initialHtml={m.transcriptHtml}
-                          tags={tagList}
-                          onSaved={(html) =>
-                            setMediaList((prev) =>
-                              prev.map((mm) => (mm.id === m.id ? { ...mm, transcriptHtml: html } : mm))
-                            )
-                          }
-                        />
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p className="text-xs text-muted-foreground">Nenhuma mídia anexada.</p>
-            )}
+              <div className="space-y-2">
+                <Label htmlFor="edit-operationName">
+                  Nome da operação (opcional)
+                </Label>
+                <Input
+                  id="edit-operationName"
+                  placeholder="ex: Operação Sentinela — Protocolo CX-2026/04"
+                  {...form.register("operationName")}
+                />
+              </div>
 
-            {pendingFiles.length > 0 && (
-              <>
-                <ul className="space-y-2 max-h-72 overflow-auto min-w-0 w-full">
-                  {pendingFiles.map((entry, index) => {
-                    const file = entry.file;
-                    const isVideo = file.type.startsWith("video/");
-                    const Icon = isVideo ? FileVideo : Music;
-                    return (
-                      <li
-                        key={`${file.name}-${index}`}
-                        className="space-y-2 rounded-md border border-border bg-muted/30 px-2 py-2 text-sm min-w-0"
-                      >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                          <span className="flex-1 truncate min-w-0" title={file.name}>{file.name}</span>
-                          <span className="shrink-0 text-xs text-muted-foreground">
-                            {(file.size / (1024 * 1024)).toFixed(1)}MB
-                          </span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={() => removePending(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                        <Textarea
-                          value={entry.description}
-                          onChange={(e) => updatePendingDesc(index, e.target.value)}
-                          placeholder="Descrição desta mídia (opcional)"
-                          className="min-h-12 text-xs resize-none"
-                        />
-                      </li>
-                    );
-                  })}
-                </ul>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={handleUploadAndTranscribe}
-                  disabled={uploading}
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Enviando e enfileirando...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Transcrever {pendingFiles.length} arquivo(s)
-                    </>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-operationDate">Data da operação</Label>
+                  <Input
+                    id="edit-operationDate"
+                    type="date"
+                    {...form.register("operationDate")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-transcriptionDate">
+                    Data da transcrição
+                  </Label>
+                  <Input
+                    id="edit-transcriptionDate"
+                    type="date"
+                    {...form.register("transcriptionDate")}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="edit-analysis">Análise (opcional)</Label>
+                <Controller
+                  name="analysis"
+                  control={form.control}
+                  render={({ field }) => (
+                    <RichTextEditor
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      placeholder="Resumo, codinomes identificados, próximas ações..."
+                      className="min-h-[120px] max-h-[280px] overflow-y-auto"
+                    />
                   )}
-                </Button>
-              </>
-            )}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 min-w-0 min-h-0">
+              <Label>Mídia ({mediaList.length})</Label>
+              <div className="flex flex-col gap-2 min-w-0 flex-1 min-h-0 overflow-y-auto">
+                <div
+                  {...getRootProps()}
+                  className={`flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed p-4 text-center cursor-pointer transition-colors ${
+                    isDragActive
+                      ? "border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50 hover:bg-accent/30"
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <Music className="h-6 w-6 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {isDragActive
+                      ? "Solte os arquivos aqui..."
+                      : "Adicionar mídia — arraste ou clique"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    MP3, WAV, M4A, AAC, OGG, OPUS, MP4, MOV — até 500MB cada
+                  </p>
+                </div>
+                {mediaList.length > 0 ? (
+                  <ul className="space-y-2">
+                    {mediaList.map((m) => {
+                      const draft = mediaDescDrafts[m.id] ?? "";
+                      const dirty = draft !== (m.description ?? "");
+                      return (
+                        <li
+                          key={m.id}
+                          className="space-y-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm min-w-0"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FileAudio className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            <div className="flex-1 min-w-0">
+                              <p className="truncate" title={m.filename}>
+                                {m.filename}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatSize(m.sizeBytes)} •{" "}
+                                {formatDuration(m.durationSeconds)}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 shrink-0"
+                              onClick={() => handleRetranscribe(m.id)}
+                              disabled={retranscribingId === m.id}
+                              title="Refazer transcrição"
+                            >
+                              {retranscribingId === m.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <RotateCcw className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 shrink-0 text-destructive"
+                              onClick={() => handleDeleteMedia(m.id)}
+                              disabled={deletingId === m.id}
+                              title="Remover mídia"
+                            >
+                              {deletingId === m.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                          <Textarea
+                            value={draft}
+                            onChange={(e) =>
+                              setMediaDescDrafts((prev) => ({
+                                ...prev,
+                                [m.id]: e.target.value,
+                              }))
+                            }
+                            onBlur={() => dirty && handleSaveMediaDesc(m.id)}
+                            placeholder="Descrição desta mídia (opcional)"
+                            className="min-h-12 text-xs resize-none"
+                            disabled={savingMediaId === m.id}
+                          />
+                          {dirty && (
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() =>
+                                  setMediaDescDrafts((prev) => ({
+                                    ...prev,
+                                    [m.id]: m.description ?? "",
+                                  }))
+                                }
+                              >
+                                Desfazer
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() => handleSaveMediaDesc(m.id)}
+                                disabled={savingMediaId === m.id}
+                              >
+                                {savingMediaId === m.id ? (
+                                  <Loader2 className="h-3 w-3 animate-spin" />
+                                ) : (
+                                  "Salvar"
+                                )}
+                              </Button>
+                            </div>
+                          )}
+                          {liveActive && transcript ? (
+                            <LiveTranscription
+                              transcriptId={transcript.id}
+                              mediaId={m.id}
+                              enabled={liveActive}
+                              tags={tagList}
+                              compact
+                            />
+                          ) : (
+                            <MediaTranscriptEditor
+                              mediaId={m.id}
+                              segments={segments.filter(
+                                (s) => s.mediaId === m.id,
+                              )}
+                              initialHtml={m.transcriptHtml}
+                              tags={tagList}
+                              onSaved={(html) =>
+                                setMediaList((prev) =>
+                                  prev.map((mm) =>
+                                    mm.id === m.id
+                                      ? { ...mm, transcriptHtml: html }
+                                      : mm,
+                                  ),
+                                )
+                              }
+                            />
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Nenhuma mídia anexada.
+                  </p>
+                )}
+
+                {pendingFiles.length > 0 && (
+                  <>
+                    <ul className="space-y-2 max-h-72 overflow-auto min-w-0 w-full">
+                      {pendingFiles.map((entry, index) => {
+                        const file = entry.file;
+                        const isVideo = file.type.startsWith("video/");
+                        const Icon = isVideo ? FileVideo : Music;
+                        return (
+                          <li
+                            key={`${file.name}-${index}`}
+                            className="space-y-2 rounded-md border border-border bg-muted/30 px-2 py-2 text-sm min-w-0"
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                              <span
+                                className="flex-1 truncate min-w-0"
+                                title={file.name}
+                              >
+                                {file.name}
+                              </span>
+                              <span className="shrink-0 text-xs text-muted-foreground">
+                                {(file.size / (1024 * 1024)).toFixed(1)}MB
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => removePending(index)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            <Textarea
+                              value={entry.description}
+                              onChange={(e) =>
+                                updatePendingDesc(index, e.target.value)
+                              }
+                              placeholder="Descrição desta mídia (opcional)"
+                              className="min-h-12 text-xs resize-none"
+                            />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      className="w-full"
+                      onClick={handleUploadAndTranscribe}
+                      disabled={uploading}
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Enviando e enfileirando...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="mr-2 h-4 w-4" />
+                          Transcrever {pendingFiles.length} arquivo(s)
+                        </>
+                      )}
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-        </div>
 
           {transcript && liveActive && (
             <div className="sr-only">
@@ -586,7 +674,11 @@ export const EditTranscriptDialog = ({ open, setOpen, transcript, onSaved }: Edi
           )}
 
           <div className="flex gap-2 justify-end pt-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Cancelar
             </Button>
             <Button type="submit" disabled={submitting || uploading}>
