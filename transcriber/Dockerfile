@@ -21,10 +21,10 @@ WORKDIR /app
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    rm -f /etc/apt/apt.conf.d/docker-clean && \
     apt-get update && \
-    apt-get install -y --no-install-recommends -o APT::Keep-Downloaded-Packages=false \
-    ffmpeg ca-certificates curl tini && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives /var/cache/apt/*
+    apt-get install -y --no-install-recommends \
+    ffmpeg ca-certificates curl tini
 
 RUN groupadd --system --gid 1000 app && \
     useradd --system --uid 1000 --gid app --create-home --home-dir /home/app --shell /sbin/nologin app && \
