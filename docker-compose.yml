@@ -10,6 +10,17 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    shm_size: 512mb
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=128MB"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts"]
       interval: 5s
@@ -18,8 +29,11 @@ services:
 
   migrate:
     build:
-      context: Dockerfile.local
+      context: .
+      dockerfile: Dockerfile.local
       target: migrate
+      args:
+        PORT: "3000"
     restart: "no"
     depends_on:
       db:
@@ -30,7 +44,10 @@ services:
 
   app:
     build:
-      context: Dockerfile.local
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        PORT: "3000"
     restart: unless-stopped
     depends_on:
       db:
@@ -46,6 +63,8 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
       STORAGE_DIR: /app/uploads
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       NODE_ENV: production
@@ -55,30 +74,39 @@ services:
       - uploads:/app/uploads
 
   transcriber:
-    build: ./transcriber
+    build:
+      context: ./transcriber
+      args:
+        WHISPER_MODEL: ${WHISPER_MODEL:-base}
+        PRE_BAKE_MODEL: "true"
     restart: unless-stopped
     environment:
       LOG_LEVEL: INFO
-      WHISPER_MODEL: small
-      WHISPER_COMPUTE_TYPE: int8
+      WHISPER_MODEL: ${WHISPER_MODEL:-base}
+      WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      WHISPER_CPU_THREADS: ${WHISPER_CPU_THREADS:-0}
+      WHISPER_BEAM_SIZE: ${WHISPER_BEAM_SIZE:-3}
+      WHISPER_NUM_WORKERS: ${WHISPER_NUM_WORKERS:-1}
+      WHISPER_VAD_FILTER: "true"
+    tmpfs:
+      - /tmp:size=1g
     ports:
       - "8000:8000"
+    volumes:
+      - transcriber_cache:/root/.cache/huggingface
     healthcheck:
-      test:
-        [
-          "CMD",
-          "python",
-          "-c",
-          "import requests; requests.get('http://localhost:8000/health')",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
 
   worker:
     build:
-      context: Dockerfile.local
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        PORT: "3000"
     restart: unless-stopped
     depends_on:
       db:
@@ -99,6 +127,9 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       STORAGE_DIR: /app/uploads
       TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
+      WORKER_INTERVAL_MS: ${WORKER_INTERVAL_MS:-3000}
       NODE_ENV: production
     volumes:
       - uploads:/app/uploads
@@ -127,3 +158,4 @@ volumes:
   db_data:
   uploads:
   pgadmin_data:
+  transcriber_cache:

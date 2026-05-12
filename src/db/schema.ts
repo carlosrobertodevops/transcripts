@@ -95,6 +95,8 @@ export const transcriptionJobs = pgTable("transcription_jobs", {
   status: jobStatusEnum("status").default("pending").notNull(),
   attempts: integer("attempts").default(0),
   error: text("error"),
+  segmentCount: integer("segment_count").default(0).notNull(),
+  processingMs: integer("processing_ms"),
   startedAt: timestamp("started_at"),
   finishedAt: timestamp("finished_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

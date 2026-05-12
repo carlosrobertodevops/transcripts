@@ -2,6 +2,7 @@ export {};
 
 const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
 const KEY = process.env.INTERNAL_API_KEY!;
+const WORKER_INTERVAL_MS = Number(process.env.WORKER_INTERVAL_MS ?? 3000);
 
 async function tick() {
   try {
@@ -15,6 +16,6 @@ async function tick() {
   }
 }
 
-console.log("[worker] starting loop");
+console.log(`[worker] starting loop interval=${WORKER_INTERVAL_MS}ms`);
 await tick();
-setInterval(tick, 15000);
+setInterval(tick, WORKER_INTERVAL_MS);

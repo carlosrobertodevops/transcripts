@@ -8,6 +8,7 @@ import { notificationsRoutes } from "./routes/notifications";
 import { usersRoutes } from "./routes/users";
 import { jobsRoutes } from "./routes/jobs";
 import { tagsRoutes } from "./routes/tags";
+import { healthRoutes } from "./routes/health";
 import { errorPlugin } from "./plugins/error";
 import { authPlugin } from "./plugins/auth";
 
@@ -16,6 +17,7 @@ const app = new Elysia({
 })
   .use(cors())
   .use(errorPlugin)
+  .use(healthRoutes)
   .use(authPlugin)
   .use(authRoutes)
   .use(transcriptsRoutes)

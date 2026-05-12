@@ -50,9 +50,18 @@ export const LiveTranscription = ({
   const typeRef = useRef<NodeJS.Timeout | null>(null);
   const doneFiredRef = useRef(false);
 
+  const [currentPoll, setCurrentPoll] = useState<number>(pollIntervalMs);
+
   useEffect(() => {
     if (!enabled) return;
     doneFiredRef.current = false;
+
+    const computePoll = (list: LiveJob[]): number => {
+      if (list.length === 0) return 5000;
+      if (list.some((j) => j.status === "processing")) return 500;
+      if (list.some((j) => j.status === "pending")) return 2000;
+      return 5000;
+    };
 
     const poll = async () => {
       try {
@@ -80,18 +89,21 @@ export const LiveTranscription = ({
           doneFiredRef.current = true;
           onAllDone?.();
         }
+
+        const nextPoll = computePoll(next);
+        setCurrentPoll((prev) => (prev === nextPoll ? prev : nextPoll));
       } catch (err) {
         console.error("[live-transcription] poll", err);
       }
     };
 
     poll();
-    pollRef.current = setInterval(poll, pollIntervalMs);
+    pollRef.current = setInterval(poll, currentPoll);
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [enabled, transcriptId, pollIntervalMs, onAllDone, mediaId]);
+  }, [enabled, transcriptId, currentPoll, onAllDone, mediaId]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -161,8 +173,15 @@ export const LiveTranscription = ({
                 {text ? (
                   <HighlightedText text={text} tags={tags} />
                 ) : (
-                  <span className="text-muted-foreground italic">
-                    {job.status === "pending" ? "Aguardando processamento..." : "Aguardando segmentos..."}
+                  <span className="text-muted-foreground italic flex items-center gap-1.5">
+                    {job.status === "processing" && job.segmentCount === 0 && (
+                      <Loader2 className="h-3 w-3 animate-spin shrink-0" />
+                    )}
+                    {job.status === "pending"
+                      ? "Aguardando início..."
+                      : job.segmentCount > 0
+                        ? `${job.segmentCount} segmento${job.segmentCount === 1 ? "" : "s"} recebido${job.segmentCount === 1 ? "" : "s"}`
+                        : "Transcrevendo..."}
                   </span>
                 )}
                 {showCursor && text && (

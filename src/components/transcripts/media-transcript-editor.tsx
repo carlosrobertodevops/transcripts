@@ -81,9 +81,15 @@ export const MediaTranscriptEditor = ({
   };
 
   if (!hasContent) {
+    const count = segments.length;
+    const label =
+      count > 0
+        ? `${count} segmento${count === 1 ? "" : "s"} recebido${count === 1 ? "" : "s"}`
+        : "Transcrevendo...";
     return (
-      <p className="text-xs text-muted-foreground italic">
-        Aguardando segmentos...
+      <p className="text-xs text-muted-foreground italic flex items-center gap-1.5">
+        {count === 0 && <Loader2 className="h-3 w-3 animate-spin shrink-0" />}
+        {label}
       </p>
     );
   }

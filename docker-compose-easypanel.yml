@@ -10,6 +10,20 @@ services:
       - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    shm_size: 256mb
+    mem_limit: 768m
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=192MB"
+      - "-c"
+      - "effective_cache_size=512MB"
+      - "-c"
+      - "work_mem=8MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "max_connections=50"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts -p 5432"]
       interval: 5s
@@ -19,7 +33,10 @@ services:
   migrate:
     build:
       context: .
+      dockerfile: Dockerfile.easypanel
       target: migrate
+      args:
+        PORT: "3001"
     restart: "no"
     depends_on:
       db:
@@ -35,7 +52,11 @@ services:
       ]
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.easypanel
+      args:
+        PORT: "3001"
     restart: unless-stopped
     depends_on:
       db:
@@ -51,38 +72,53 @@ services:
       GROQ_API_KEY: "${GROQ_API_KEY:-}"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       TRANSCRIBER_URL: "http://transcriber:8000"
+      TRANSCRIPTION_PROVIDER_FALLBACK: "${TRANSCRIPTION_PROVIDER_FALLBACK:-}"
+      TRANSCRIBER_TIMEOUT_MS: "${TRANSCRIBER_TIMEOUT_MS:-90000}"
       STORAGE_DIR: "/app/uploads"
       NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost:3001}"
       NODE_ENV: production
+    mem_limit: 768m
     ports:
       - "3001:3001"
     volumes:
       - uploads:/app/uploads
 
   transcriber:
-    build: ./transcriber
+    build:
+      context: ./transcriber
+      args:
+        WHISPER_MODEL: tiny
+        PRE_BAKE_MODEL: "true"
     restart: unless-stopped
     environment:
       LOG_LEVEL: INFO
-      WHISPER_MODEL: small
+      WHISPER_MODEL: tiny
       WHISPER_COMPUTE_TYPE: int8
+      WHISPER_CPU_THREADS: "3"
+      WHISPER_BEAM_SIZE: "1"
+      WHISPER_NUM_WORKERS: "1"
+      WHISPER_VAD_FILTER: "true"
+      OMP_NUM_THREADS: "3"
+    mem_limit: 1500m
+    tmpfs:
+      - /tmp:size=512m
     ports:
       - "8000:8000"
+    volumes:
+      - transcriber_cache:/root/.cache/huggingface
     healthcheck:
-      test:
-        [
-          "CMD",
-          "python",
-          "-c",
-          "import requests; requests.get('http://localhost:8000/health')",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
 
   worker:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.easypanel
+      args:
+        PORT: "3001"
     restart: unless-stopped
     depends_on:
       db:
@@ -103,7 +139,11 @@ services:
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       STORAGE_DIR: "/app/uploads"
       TRANSCRIBER_URL: "http://transcriber:8000"
+      TRANSCRIPTION_PROVIDER_FALLBACK: "${TRANSCRIPTION_PROVIDER_FALLBACK:-}"
+      TRANSCRIBER_TIMEOUT_MS: "${TRANSCRIBER_TIMEOUT_MS:-90000}"
+      WORKER_INTERVAL_MS: "3000"
       NODE_ENV: production
+    mem_limit: 512m
     volumes:
       - uploads:/app/uploads
     command: ["bun", "run", "worker:loop"]
@@ -111,6 +151,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     restart: unless-stopped
+    profiles: ["debug"]
     depends_on:
       db:
         condition: service_healthy
@@ -121,6 +162,7 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
       PGADMIN_LISTEN_PORT: 80
       PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    mem_limit: 256m
     ports:
       - "5050:80"
     volumes:
@@ -131,3 +173,4 @@ volumes:
   db_data:
   uploads:
   pgadmin_data:
+  transcriber_cache:

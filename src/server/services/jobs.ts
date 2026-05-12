@@ -9,10 +9,83 @@ import {
   transcripts as transcriptsTable,
   notifications,
 } from "@/db/schema";
-import { getProvider } from "./transcription";
+import {
+  getProvider,
+  transcribeWithFallback,
+  type TranscriptionProvider,
+  type TranscriptionResult,
+  type TranscriptionSegment,
+} from "./transcription";
 import { storage } from "./storage";
 
-export async function runPendingJobs(limit: number = 3): Promise<void> {
+interface StreamCollectResult {
+  segments: TranscriptionSegment[];
+  insertedCount: number;
+}
+
+const STREAM_BATCH_SIZE = 5;
+
+const collectStream = async (
+  provider: TranscriptionProvider,
+  audioPath: string,
+  mediaId: string,
+  jobId: string,
+): Promise<StreamCollectResult> => {
+  if (typeof provider.transcribeStream !== "function") {
+    throw new Error("provider does not support streaming");
+  }
+  const segments: TranscriptionSegment[] = [];
+  let batch: TranscriptionSegment[] = [];
+  let insertedCount = 0;
+
+  const flush = async (): Promise<void> => {
+    if (batch.length === 0) return;
+    await db.insert(transcriptSegments).values(
+      batch.map((s) => ({
+        mediaId,
+        startMs: s.startMs,
+        endMs: s.endMs,
+        text: s.text,
+      })),
+    );
+    insertedCount += batch.length;
+    await db
+      .update(transcriptionJobs)
+      .set({ segmentCount: insertedCount })
+      .where(eq(transcriptionJobs.id, jobId));
+    batch = [];
+  };
+
+  for await (const seg of provider.transcribeStream(audioPath, "pt")) {
+    segments.push(seg);
+    batch.push(seg);
+    if (batch.length >= STREAM_BATCH_SIZE) {
+      await flush();
+    }
+  }
+  await flush();
+
+  return { segments, insertedCount };
+};
+
+const bulkInsertSegments = async (
+  segments: TranscriptionSegment[],
+  mediaId: string,
+): Promise<void> => {
+  if (segments.length === 0) return;
+  await db.transaction(async (tx) => {
+    await tx.insert(transcriptSegments).values(
+      segments.map((s) => ({
+        mediaId,
+        startMs: s.startMs,
+        endMs: s.endMs,
+        text: s.text,
+      })),
+    );
+  });
+};
+
+export const runPendingJobs = async (limit: number = 3): Promise<void> => {
   const pendingJobs = await db
     .select()
     .from(transcriptionJobs)
@@ -20,14 +93,18 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
     .limit(limit);
 
   for (const job of pendingJobs) {
+    const startedAtMs = Date.now();
     try {
-      // Mark as processing
       await db
         .update(transcriptionJobs)
-        .set({ status: "processing", attempts: (job.attempts ?? 0) + 1 })
+        .set({
+          status: "processing",
+          attempts: (job.attempts ?? 0) + 1,
+          startedAt: new Date(),
+          segmentCount: 0,
+        })
         .where(eq(transcriptionJobs.id, job.id));
 
-      // Get media
       const med = await db
         .select()
         .from(mediaTable)
@@ -39,17 +116,28 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
         throw new Error(`Media not found: ${job.mediaId ?? "(null)"}`);
       }
 
-      // Read file
       let audioPath = storage.resolve(med.storagePath ?? "");
 
-      // If video, pre-process to audio
       if (med.mime?.startsWith("video/")) {
         const tmpAudio = path.join(
           process.env.STORAGE_DIR || "./uploads",
-          `tmp_${Date.now()}.mp3`
+          `tmp_${Date.now()}.mp3`,
         );
 
-        const proc = Bun.spawn(["ffmpeg", "-y", "-i", audioPath, "-vn", "-acodec", "libmp3lame", "-ar", "16000", "-ac", "1", tmpAudio]);
+        const proc = Bun.spawn([
+          "ffmpeg",
+          "-y",
+          "-i",
+          audioPath,
+          "-vn",
+          "-acodec",
+          "libmp3lame",
+          "-ar",
+          "16000",
+          "-ac",
+          "1",
+          tmpAudio,
+        ]);
         const exitCode = await proc.exited;
 
         if (exitCode !== 0) {
@@ -59,38 +147,50 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
         audioPath = tmpAudio;
       }
 
-      // Transcribe
       const provider = getProvider();
-      const result = await provider.transcribe(audioPath, "pt");
-
       const mediaId = med.id;
-      // Insert segments
-      for (const segment of result.segments) {
-        await db.insert(transcriptSegments).values({
-          mediaId,
-          startMs: segment.startMs,
-          endMs: segment.endMs,
-          text: segment.text,
-        });
+      let result: TranscriptionResult;
+
+      if (typeof provider.transcribeStream === "function") {
+        const { segments } = await collectStream(provider, audioPath, mediaId, job.id);
+        const text = segments.map((s) => s.text).join(" ");
+        result = {
+          text,
+          segments,
+          durationSeconds: med.durationSeconds ?? 0,
+        };
+      } else {
+        result = await transcribeWithFallback(audioPath, "pt");
+        await bulkInsertSegments(result.segments, mediaId);
       }
 
-      // Update media duration
       await db
         .update(mediaTable)
         .set({ durationSeconds: result.durationSeconds })
         .where(eq(mediaTable.id, mediaId));
 
-      // Mark job done
+      const processingMs = Date.now() - startedAtMs;
+      const rtf =
+        result.durationSeconds && result.durationSeconds > 0
+          ? processingMs / 1000 / result.durationSeconds
+          : null;
+      console.log(
+        `[jobs] job=${job.id} processingMs=${processingMs} rtf=${rtf?.toFixed(2) ?? "n/a"} segments=${result.segments.length}`,
+      );
+
       await db
         .update(transcriptionJobs)
-        .set({ status: "done", finishedAt: new Date() })
+        .set({
+          status: "done",
+          finishedAt: new Date(),
+          processingMs,
+          segmentCount: result.segments.length,
+        })
         .where(eq(transcriptionJobs.id, job.id));
 
-      // Get transcript ID from media (transcriptionJobs has no transcriptId directly)
       const transcriptId = med.transcriptId ?? "";
       if (!transcriptId) continue;
 
-      // Get all media IDs for this transcript
       const mediaForTranscript = await db
         .select({ id: mediaTable.id })
         .from(mediaTable)
@@ -98,8 +198,7 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
 
       const mediaIds = mediaForTranscript.map((m) => m.id);
 
-      // Check if all jobs for all media in this transcript are done
-      let remainingJobs: typeof transcriptionJobs.$inferSelect[] = [];
+      let remainingJobs: (typeof transcriptionJobs.$inferSelect)[] = [];
 
       if (mediaIds.length > 0) {
         remainingJobs = await db
@@ -108,19 +207,17 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
           .where(
             and(
               inArray(transcriptionJobs.mediaId, mediaIds),
-              ne(transcriptionJobs.status, "done")
-            )
+              ne(transcriptionJobs.status, "done"),
+            ),
           );
       }
 
       if (remainingJobs.length === 0) {
-        // All jobs done, update transcript
         await db
           .update(transcriptsTable)
           .set({ status: "done" })
           .where(eq(transcriptsTable.id, transcriptId));
 
-        // Get transcript owner
         const transcript = await db
           .select()
           .from(transcriptsTable)
@@ -129,34 +226,35 @@ export async function runPendingJobs(limit: number = 3): Promise<void> {
           .then((rows) => rows[0]);
 
         if (transcript) {
-          // Create notification
           await db.insert(notifications).values({
             userId: transcript.ownerId,
             type: "transcription_done",
-            payload: JSON.stringify({ transcriptId }),
+            payload: { transcriptId },
           });
         }
       }
 
-      // Clean up temp audio if created
       if (audioPath !== storage.resolve(med.storagePath ?? "")) {
         try {
           await fs.unlink(audioPath);
-        } catch (e) {
-          // Ignore cleanup errors
+        } catch {
+          // ignore cleanup errors
         }
       }
     } catch (error) {
-      // Error handling
       const errorMsg = error instanceof Error ? error.message : String(error);
+      const processingMs = Date.now() - startedAtMs;
+      console.error(`[jobs] job=${job.id} failed processingMs=${processingMs} err=${errorMsg}`);
 
       await db
         .update(transcriptionJobs)
         .set({
           status: (job.attempts ?? 0) >= 3 ? "failed" : "pending",
           error: errorMsg,
+          processingMs,
         })
         .where(eq(transcriptionJobs.id, job.id));
     }
   }
-}
+};
+
