@@ -25,7 +25,7 @@ services:
       - "-c"
       - "max_connections=50"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts -p 5432"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -p 5432"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -42,13 +42,13 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
       NODE_ENV: production
     command:
       [
         "sh",
         "-lc",
-        "export DATABASE_URL='postgres://transcripts:transcripts@db:5432/transcripts' && echo DATABASE_URL=$DATABASE_URL && bun run db:migrate && (bun run src/db/seed.ts || true)",
+        "bun run db:migrate && (bun run src/db/seed.ts || true)",
       ]
 
   app:
@@ -120,6 +120,8 @@ services:
       args:
         PORT: "3001"
     restart: unless-stopped
+    healthcheck:
+      disable: true
     depends_on:
       db:
         condition: service_healthy
@@ -130,8 +132,8 @@ services:
       transcriber:
         condition: service_healthy
     environment:
-      DATABASE_URL: "postgres://transcripts:transcripts@db:5432/transcripts"
-      INTERNAL_API_KEY: "${INTERNAL_API_KEY:-dev-internal-key}"
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:?INTERNAL_API_KEY required}
       APP_URL: "http://app:3001"
       NEXT_PUBLIC_APP_URL: "http://app:3001"
       TRANSCRIPTION_PROVIDER: "${TRANSCRIPTION_PROVIDER:-local}"
@@ -156,8 +158,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_EMAIL:-admin@transcripts.dev}"
-      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASSWORD:-admin123}"
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:?PGADMIN_EMAIL required}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PGADMIN_PASSWORD required}
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
       PGADMIN_LISTEN_PORT: 80

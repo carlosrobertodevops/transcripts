@@ -116,6 +116,8 @@ services:
       args:
         PORT: "3000"
     restart: unless-stopped
+    healthcheck:
+      disable: true
     depends_on:
       db:
         condition: service_healthy
