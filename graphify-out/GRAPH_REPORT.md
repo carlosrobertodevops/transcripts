@@ -1,12 +1,12 @@
 # Graph Report - transcripts  (2026-05-12)
 
 ## Corpus Check
-- 112 files · ~129,703 words
+- 112 files · ~129,758 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 280 nodes · 220 edges · 99 communities detected
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 21 edges (avg confidence: 0.8)
+- 280 nodes · 221 edges · 99 communities detected
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -145,7 +145,7 @@ Cohesion: 0.18
 Nodes (10): bulkInsertSegments(), collectStream(), runPendingJobs(), createProvider(), getProvider(), GroqProvider, LocalWhisperProvider, OpenAIProvider (+2 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (5): Transcribe audio or video file with streaming NDJSON response.      Returns newl, Transcribe audio or video file (bulk response).      Args:         file: Audio/v, transcribe(), transcribe_stream(), LocalStorage
 
 ### Community 3 - "Community 3"
@@ -161,12 +161,12 @@ Cohesion: 0.22
 Nodes (2): handleUploadAndTranscribe(), onSubmit()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.36
-Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
-
-### Community 7 - "Community 7"
 Cohesion: 0.31
 Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
+
+### Community 7 - "Community 7"
+Cohesion: 0.36
+Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
 
 ### Community 8 - "Community 8"
 Cohesion: 0.33
@@ -365,5 +365,3 @@ _Questions this graph is uniquely positioned to answer:_
   _3 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.11 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
