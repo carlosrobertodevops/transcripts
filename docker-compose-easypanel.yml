@@ -106,11 +106,11 @@ services:
       OMP_NUM_THREADS: "3"
     mem_limit: 1500m
     tmpfs:
-      - /tmp:size=512m
+      - /tmp:size=512m,mode=1777
     expose:
       - "8000"
     volumes:
-      - transcriber_cache:/root/.cache/huggingface
+      - transcriber_cache:/home/app/.cache/huggingface
       - uploads:/app/uploads:ro
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]

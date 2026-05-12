@@ -128,11 +128,12 @@ export class LocalWhisperProvider implements TranscriptionProvider {
     this.transcriberUrl = process.env.TRANSCRIBER_URL || "";
   }
 
-  private buildFormData(absFilePath: string, lang: string): FormData {
-    const file = Bun.file(absFilePath);
+  private async buildFormData(absFilePath: string, lang: string): Promise<FormData> {
+    const buffer = await Bun.file(absFilePath).arrayBuffer();
+    const blob = new Blob([buffer], { type: "audio/mpeg" });
     const filename = absFilePath.split("/").pop() ?? "audio";
     const formData = new FormData();
-    formData.append("file", file as unknown as Blob, filename);
+    formData.append("file", blob, filename);
     formData.append("language", lang);
     return formData;
   }
@@ -145,7 +146,7 @@ export class LocalWhisperProvider implements TranscriptionProvider {
     const url = this.transcriberUrl.replace(/\/$/, "") + "/transcribe";
     const response = await fetch(url, {
       method: "POST",
-      body: this.buildFormData(absFilePath, lang),
+      body: await this.buildFormData(absFilePath, lang),
     });
 
     if (!response.ok) {
@@ -177,7 +178,7 @@ export class LocalWhisperProvider implements TranscriptionProvider {
     const url = this.transcriberUrl.replace(/\/$/, "") + "/transcribe/stream";
     const response = await fetch(url, {
       method: "POST",
-      body: this.buildFormData(absFilePath, lang),
+      body: await this.buildFormData(absFilePath, lang),
     });
 
     if (!response.ok || !response.body) {
