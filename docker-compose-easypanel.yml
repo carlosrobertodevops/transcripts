@@ -25,7 +25,8 @@ services:
       - "-c"
       - "max_connections=50"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -p 5432"]
+      test:
+        ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -p 5432"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -45,11 +46,7 @@ services:
       DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
       NODE_ENV: production
     command:
-      [
-        "sh",
-        "-lc",
-        "bun run db:migrate && (bun run src/db/seed.ts || true)",
-      ]
+      ["sh", "-lc", "bun run db:migrate && (bun run src/db/seed.ts || true)"]
 
   app:
     build:
@@ -77,13 +74,15 @@ services:
       STORAGE_DIR: "/app/uploads"
       NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost:3001}"
       NODE_ENV: production
+      PORT: 3001
     mem_limit: 1024m
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"
     volumes:
       - uploads:/app/uploads
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -fsS http://localhost:3001/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
