@@ -12,7 +12,7 @@ if (!url) {
   console.error("✗ EASYPANEL_DEPLOY_URL not set");
   console.error("  Adicionar em .env.deploy.local (gitignored):");
   console.error(
-    "  EASYPANEL_DEPLOY_URL=http://77.42.72.103:3000/api/compose/deploy/{token}",
+    "  EASYPANEL_DEPLOY_URL=http://http://65.109.164.19:3000/api/compose/deploy/{token}",
   );
   process.exit(1);
 }

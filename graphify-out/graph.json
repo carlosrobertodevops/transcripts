@@ -1115,7 +1115,7 @@
       "file_type": "code",
       "source_file": "src/components/ui/button.tsx",
       "source_location": "L1",
-      "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_button_tsx",
+      "id": "src_components_ui_button_tsx",
       "community": 85,
       "norm_label": "button.tsx"
     },
@@ -1178,7 +1178,7 @@
       "file_type": "code",
       "source_file": "src/components/ui/input.tsx",
       "source_location": "L1",
-      "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_input_tsx",
+      "id": "src_components_ui_input_tsx",
       "community": 90,
       "norm_label": "input.tsx"
     },
