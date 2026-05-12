@@ -111,6 +111,7 @@ services:
       - "8000"
     volumes:
       - transcriber_cache:/root/.cache/huggingface
+      - uploads:/app/uploads:ro
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
       interval: 15s

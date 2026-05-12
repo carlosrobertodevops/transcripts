@@ -129,25 +129,43 @@ async def transcribe_stream(file: UploadFile = File(...), language: str = Form("
     Returns:
         StreamingResponse with NDJSON format
     """
-
-    async def stream_generator():
-        tmp_path = None
+    # Read upload BEFORE returning StreamingResponse.
+    # FastAPI closes UploadFile after handler returns; reading it lazily inside
+    # the async generator raises "I/O operation on closed file".
+    tmp_path = None
+    try:
+        suffix = os.path.splitext(file.filename or "")[1] or ".bin"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            while True:
+                chunk = await file.read(1024 * 1024)
+                if not chunk:
+                    break
+                tmp.write(chunk)
+            tmp.flush()
+            os.fsync(tmp.fileno())
+            tmp_path = tmp.name
+    except Exception as e:
+        if tmp_path and os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Failed to read upload: {str(e)}"}
+        )
+    finally:
         try:
-            # Save uploaded file to temp location
-            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
-                content = await file.read()
-                tmp.write(content)
-                tmp_path = tmp.name
+            await file.close()
+        except Exception:
+            pass
 
-            # Transcribe with parameterized settings
+    async def stream_generator(path: str):
+        try:
             segments, info = model.transcribe(
-                tmp_path,
+                path,
                 language=language,
                 beam_size=BEAM_SIZE,
                 vad_filter=VAD_FILTER
             )
 
-            # Send metadata
             yield json.dumps({
                 "type": "meta",
                 "language": info.language,
@@ -155,7 +173,6 @@ async def transcribe_stream(file: UploadFile = File(...), language: str = Form("
                 "languageProbability": info.language_probability
             }) + "\n"
 
-            # Stream segments
             for segment in segments:
                 yield json.dumps({
                     "type": "segment",
@@ -164,7 +181,6 @@ async def transcribe_stream(file: UploadFile = File(...), language: str = Form("
                     "text": segment.text.strip()
                 }) + "\n"
 
-            # Send completion marker
             yield json.dumps({"type": "done"}) + "\n"
 
         except Exception as e:
@@ -173,12 +189,14 @@ async def transcribe_stream(file: UploadFile = File(...), language: str = Form("
                 "error": str(e)
             }) + "\n"
         finally:
-            # Cleanup temp file
-            if tmp_path and os.path.exists(tmp_path):
-                os.unlink(tmp_path)
+            if path and os.path.exists(path):
+                try:
+                    os.unlink(path)
+                except Exception:
+                    pass
 
     return StreamingResponse(
-        stream_generator(),
+        stream_generator(tmp_path),
         media_type="application/x-ndjson"
     )
 
