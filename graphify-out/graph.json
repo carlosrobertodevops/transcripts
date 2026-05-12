@@ -6,7 +6,7 @@
     {
       "label": "postcss.config.mjs",
       "file_type": "code",
-      "source_file": "postcss.config.mjs",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/postcss.config.mjs",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_postcss_config_mjs",
       "community": 54,
@@ -15,7 +15,7 @@
     {
       "label": "next-env.d.ts",
       "file_type": "code",
-      "source_file": "next-env.d.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/next-env.d.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_next_env_d_ts",
       "community": 55,
@@ -24,7 +24,7 @@
     {
       "label": "drizzle.config.ts",
       "file_type": "code",
-      "source_file": "drizzle.config.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/drizzle.config.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_drizzle_config_ts",
       "community": 56,
@@ -33,7 +33,7 @@
     {
       "label": "eslint.config.mjs",
       "file_type": "code",
-      "source_file": "eslint.config.mjs",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/eslint.config.mjs",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_eslint_config_mjs",
       "community": 57,
@@ -42,7 +42,7 @@
     {
       "label": "next.config.ts",
       "file_type": "code",
-      "source_file": "next.config.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/next.config.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_next_config_ts",
       "community": 58,
@@ -51,7 +51,7 @@
     {
       "label": "main.py",
       "file_type": "code",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_transcriber_main_py",
       "community": 2,
@@ -60,7 +60,7 @@
     {
       "label": "load_model()",
       "file_type": "code",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L18",
       "id": "main_load_model",
       "community": 2,
@@ -69,7 +69,7 @@
     {
       "label": "health()",
       "file_type": "code",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L25",
       "id": "main_health",
       "community": 2,
@@ -78,7 +78,7 @@
     {
       "label": "transcribe()",
       "file_type": "code",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L29",
       "id": "main_transcribe",
       "community": 2,
@@ -96,7 +96,7 @@
     {
       "label": "globals.d.ts",
       "file_type": "code",
-      "source_file": "src/types/globals.d.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/types/globals.d.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_types_globals_d_ts",
       "community": 59,
@@ -105,7 +105,7 @@
     {
       "label": "elysia.d.ts",
       "file_type": "code",
-      "source_file": "src/types/elysia.d.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/types/elysia.d.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_types_elysia_d_ts",
       "community": 60,
@@ -249,7 +249,7 @@
     {
       "label": "Page()",
       "file_type": "code",
-      "source_file": "src/app/(app)/notifications/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx",
       "source_location": "L4",
       "id": "page_page",
       "community": 0,
@@ -303,7 +303,7 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "src/app/(app)/dashboard/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/dashboard/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_dashboard_page_tsx",
       "community": 0,
@@ -312,7 +312,7 @@
     {
       "label": "DashboardPage()",
       "file_type": "code",
-      "source_file": "src/app/(app)/dashboard/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/dashboard/page.tsx",
       "source_location": "L4",
       "id": "page_dashboardpage",
       "community": 0,
@@ -321,7 +321,7 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "src/app/(app)/profile/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/profile/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_profile_page_tsx",
       "community": 0,
@@ -330,7 +330,7 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "src/app/(app)/notifications/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_notifications_page_tsx",
       "community": 0,
@@ -339,7 +339,7 @@
     {
       "label": "route.ts",
       "file_type": "code",
-      "source_file": "src/app/api/[...path]/route.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/api/[...path]/route.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_api_path_route_ts",
       "community": 13,
@@ -348,7 +348,7 @@
     {
       "label": "handler()",
       "file_type": "code",
-      "source_file": "src/app/api/[...path]/route.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/api/[...path]/route.ts",
       "source_location": "L3",
       "id": "route_handler",
       "community": 13,
@@ -375,7 +375,7 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "src/app/(auth)/register/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/register/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_register_page_tsx",
       "community": 25,
@@ -384,7 +384,7 @@
     {
       "label": "RegisterPage()",
       "file_type": "code",
-      "source_file": "src/app/(auth)/register/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/register/page.tsx",
       "source_location": "L8",
       "id": "page_registerpage",
       "community": 25,
@@ -393,7 +393,7 @@
     {
       "label": "page.tsx",
       "file_type": "code",
-      "source_file": "src/app/(auth)/login/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/login/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_login_page_tsx",
       "community": 26,
@@ -402,7 +402,7 @@
     {
       "label": "LoginPage()",
       "file_type": "code",
-      "source_file": "src/app/(auth)/login/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/login/page.tsx",
       "source_location": "L8",
       "id": "page_loginpage",
       "community": 26,
@@ -429,7 +429,7 @@
     {
       "label": "cors.ts",
       "file_type": "code",
-      "source_file": "src/server/plugins/cors.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/cors.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_plugins_cors_ts",
       "community": 61,
@@ -438,7 +438,7 @@
     {
       "label": "error.ts",
       "file_type": "code",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_plugins_error_ts",
       "community": 11,
@@ -447,7 +447,7 @@
     {
       "label": "AuthError",
       "file_type": "code",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L4",
       "id": "error_autherror",
       "community": 11,
@@ -456,7 +456,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L5",
       "id": "error_autherror_constructor",
       "community": 11,
@@ -465,7 +465,7 @@
     {
       "label": "NotFoundError",
       "file_type": "code",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L11",
       "id": "error_notfounderror",
       "community": 11,
@@ -474,7 +474,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L12",
       "id": "error_notfounderror_constructor",
       "community": 11,
@@ -501,7 +501,7 @@
     {
       "label": "notifications.ts",
       "file_type": "code",
-      "source_file": "src/server/routes/notifications.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/routes/notifications.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_routes_notifications_ts",
       "community": 64,
@@ -519,7 +519,7 @@
     {
       "label": "users.ts",
       "file_type": "code",
-      "source_file": "src/server/routes/users.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/routes/users.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_routes_users_ts",
       "community": 66,
@@ -528,7 +528,7 @@
     {
       "label": "index.ts",
       "file_type": "code",
-      "source_file": "src/server/routes/index.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/routes/index.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_routes_index_ts",
       "community": 67,
@@ -609,7 +609,7 @@
     {
       "label": "storage.ts",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_storage_ts",
       "community": 2,
@@ -618,7 +618,7 @@
     {
       "label": "LocalStorage",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L11",
       "id": "storage_localstorage",
       "community": 2,
@@ -627,7 +627,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L14",
       "id": "storage_localstorage_constructor",
       "community": 2,
@@ -636,7 +636,7 @@
     {
       "label": ".save()",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L18",
       "id": "storage_localstorage_save",
       "community": 2,
@@ -645,7 +645,7 @@
     {
       "label": ".read()",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L28",
       "id": "storage_localstorage_read",
       "community": 2,
@@ -654,7 +654,7 @@
     {
       "label": ".delete()",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L33",
       "id": "storage_localstorage_delete",
       "community": 2,
@@ -663,7 +663,7 @@
     {
       "label": ".resolve()",
       "file_type": "code",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L38",
       "id": "storage_localstorage_resolve",
       "community": 1,
@@ -672,7 +672,7 @@
     {
       "label": "share.ts",
       "file_type": "code",
-      "source_file": "src/server/services/share.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/share.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_share_ts",
       "community": 28,
@@ -681,7 +681,7 @@
     {
       "label": "shareTranscript()",
       "file_type": "code",
-      "source_file": "src/server/services/share.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/share.ts",
       "source_location": "L12",
       "id": "share_sharetranscript",
       "community": 28,
@@ -690,7 +690,7 @@
     {
       "label": "jobs.ts",
       "file_type": "code",
-      "source_file": "src/server/services/jobs.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/jobs.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_jobs_ts",
       "community": 1,
@@ -699,7 +699,7 @@
     {
       "label": "runPendingJobs()",
       "file_type": "code",
-      "source_file": "src/server/services/jobs.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/jobs.ts",
       "source_location": "L15",
       "id": "jobs_runpendingjobs",
       "community": 1,
@@ -708,7 +708,7 @@
     {
       "label": "notification.ts",
       "file_type": "code",
-      "source_file": "src/server/services/notification.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/notification.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_notification_ts",
       "community": 29,
@@ -717,7 +717,7 @@
     {
       "label": "createNotification()",
       "file_type": "code",
-      "source_file": "src/server/services/notification.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/notification.ts",
       "source_location": "L4",
       "id": "notification_createnotification",
       "community": 29,
@@ -726,7 +726,7 @@
     {
       "label": "transcription.ts",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_transcription_ts",
       "community": 1,
@@ -735,7 +735,7 @@
     {
       "label": "GroqProvider",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L18",
       "id": "transcription_groqprovider",
       "community": 1,
@@ -744,7 +744,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L22",
       "id": "transcription_groqprovider_constructor",
       "community": 1,
@@ -753,7 +753,7 @@
     {
       "label": ".transcribe()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L26",
       "id": "transcription_groqprovider_transcribe",
       "community": 1,
@@ -762,7 +762,7 @@
     {
       "label": "OpenAIProvider",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L66",
       "id": "transcription_openaiprovider",
       "community": 1,
@@ -771,7 +771,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L70",
       "id": "transcription_openaiprovider_constructor",
       "community": 1,
@@ -780,7 +780,7 @@
     {
       "label": ".transcribe()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L74",
       "id": "transcription_openaiprovider_transcribe",
       "community": 1,
@@ -789,7 +789,7 @@
     {
       "label": "LocalWhisperProvider",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L113",
       "id": "transcription_localwhisperprovider",
       "community": 1,
@@ -798,7 +798,7 @@
     {
       "label": ".constructor()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L117",
       "id": "transcription_localwhisperprovider_constructor",
       "community": 1,
@@ -807,7 +807,7 @@
     {
       "label": ".transcribe()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L121",
       "id": "transcription_localwhisperprovider_transcribe",
       "community": 1,
@@ -816,7 +816,7 @@
     {
       "label": "getProvider()",
       "file_type": "code",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L162",
       "id": "transcription_getprovider",
       "community": 1,
@@ -843,7 +843,7 @@
     {
       "label": "tabs.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/tabs.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/tabs.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_tabs_tsx",
       "community": 70,
@@ -861,7 +861,7 @@
     {
       "label": "popover.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/popover.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/popover.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_popover_tsx",
       "community": 72,
@@ -888,7 +888,7 @@
     {
       "label": "scroll-area.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/scroll-area.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/scroll-area.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_scroll_area_tsx",
       "community": 75,
@@ -897,7 +897,7 @@
     {
       "label": "label.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/label.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/label.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_label_tsx",
       "community": 76,
@@ -924,7 +924,7 @@
     {
       "label": "tooltip.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/tooltip.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/tooltip.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_tooltip_tsx",
       "community": 77,
@@ -933,7 +933,7 @@
     {
       "label": "switch.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/switch.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/switch.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_switch_tsx",
       "community": 78,
@@ -942,7 +942,7 @@
     {
       "label": "avatar.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/avatar.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/avatar.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_avatar_tsx",
       "community": 79,
@@ -960,7 +960,7 @@
     {
       "label": "badge.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/badge.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_badge_tsx",
       "community": 31,
@@ -969,7 +969,7 @@
     {
       "label": "Badge()",
       "file_type": "code",
-      "source_file": "src/components/ui/badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/badge.tsx",
       "source_location": "L33",
       "id": "badge_badge",
       "community": 31,
@@ -987,7 +987,7 @@
     {
       "label": "separator.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/separator.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/separator.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_separator_tsx",
       "community": 82,
@@ -996,7 +996,7 @@
     {
       "label": "button.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/button.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/button.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_button_tsx",
       "community": 83,
@@ -1005,7 +1005,7 @@
     {
       "label": "checkbox.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/checkbox.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/checkbox.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_checkbox_tsx",
       "community": 84,
@@ -1014,7 +1014,7 @@
     {
       "label": "dropdown-menu.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/dropdown-menu.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/dropdown-menu.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_dropdown_menu_tsx",
       "community": 85,
@@ -1041,7 +1041,7 @@
     {
       "label": "select.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/select.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/select.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_select_tsx",
       "community": 86,
@@ -1050,7 +1050,7 @@
     {
       "label": "textarea.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/textarea.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/textarea.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_textarea_tsx",
       "community": 87,
@@ -1059,7 +1059,7 @@
     {
       "label": "input.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/input.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/input.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_input_tsx",
       "community": 88,
@@ -1068,7 +1068,7 @@
     {
       "label": "skeleton.tsx",
       "file_type": "code",
-      "source_file": "src/components/ui/skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/skeleton.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_skeleton_tsx",
       "community": 33,
@@ -1077,7 +1077,7 @@
     {
       "label": "Skeleton()",
       "file_type": "code",
-      "source_file": "src/components/ui/skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/skeleton.tsx",
       "source_location": "L3",
       "id": "skeleton_skeleton",
       "community": 33,
@@ -1185,7 +1185,7 @@
     {
       "label": "confirm-dialog.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/confirm-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/confirm-dialog.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_confirm_dialog_tsx",
       "community": 34,
@@ -1194,7 +1194,7 @@
     {
       "label": "ConfirmDialog()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/confirm-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/confirm-dialog.tsx",
       "source_location": "L25",
       "id": "confirm_dialog_confirmdialog",
       "community": 34,
@@ -1320,7 +1320,7 @@
     {
       "label": "share-dialog.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_share_dialog_tsx",
       "community": 17,
@@ -1329,7 +1329,7 @@
     {
       "label": "fetchShares()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L49",
       "id": "share_dialog_fetchshares",
       "community": 17,
@@ -1338,7 +1338,7 @@
     {
       "label": "onSubmit()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L62",
       "id": "share_dialog_onsubmit",
       "community": 17,
@@ -1347,7 +1347,7 @@
     {
       "label": "handleRemove()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L86",
       "id": "share_dialog_handleremove",
       "community": 17,
@@ -1356,7 +1356,7 @@
     {
       "label": "search-bar.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/search-bar.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/search-bar.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_search_bar_tsx",
       "community": 36,
@@ -1365,7 +1365,7 @@
     {
       "label": "SearchBar()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/search-bar.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/search-bar.tsx",
       "source_location": "L13",
       "id": "search_bar_searchbar",
       "community": 36,
@@ -1392,7 +1392,7 @@
     {
       "label": "status-badge.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/status-badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/status-badge.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_status_badge_tsx",
       "community": 38,
@@ -1401,7 +1401,7 @@
     {
       "label": "StatusBadge()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/status-badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/status-badge.tsx",
       "source_location": "L37",
       "id": "status_badge_statusbadge",
       "community": 38,
@@ -1617,7 +1617,7 @@
     {
       "label": "transcript-editor.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/transcript-editor.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-editor.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_editor_tsx",
       "community": 39,
@@ -1626,7 +1626,7 @@
     {
       "label": "handleSave()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/transcript-editor.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-editor.tsx",
       "source_location": "L32",
       "id": "transcript_editor_handlesave",
       "community": 39,
@@ -1635,7 +1635,7 @@
     {
       "label": "transcript-skeleton.tsx",
       "file_type": "code",
-      "source_file": "src/components/transcripts/transcript-skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_skeleton_tsx",
       "community": 18,
@@ -1644,7 +1644,7 @@
     {
       "label": "TranscriptSkeleton()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/transcript-skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L6",
       "id": "transcript_skeleton_transcriptskeleton",
       "community": 18,
@@ -1653,7 +1653,7 @@
     {
       "label": "TranscriptGridSkeleton()",
       "file_type": "code",
-      "source_file": "src/components/transcripts/transcript-skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L32",
       "id": "transcript_skeleton_transcriptgridskeleton",
       "community": 18,
@@ -1698,7 +1698,7 @@
     {
       "label": "notification-list.tsx",
       "file_type": "code",
-      "source_file": "src/components/app/notification-list.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
       "community": 7,
@@ -1707,7 +1707,7 @@
     {
       "label": "handleMarkAsRead()",
       "file_type": "code",
-      "source_file": "src/components/app/notification-list.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L28",
       "id": "notification_list_handlemarkasread",
       "community": 7,
@@ -1716,7 +1716,7 @@
     {
       "label": "handleMarkAllAsRead()",
       "file_type": "code",
-      "source_file": "src/components/app/notification-list.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L45",
       "id": "notification_list_handlemarkallasread",
       "community": 7,
@@ -1725,7 +1725,7 @@
     {
       "label": "profile-form.tsx",
       "file_type": "code",
-      "source_file": "src/components/app/profile-form.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/profile-form.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_profile_form_tsx",
       "community": 40,
@@ -1734,7 +1734,7 @@
     {
       "label": "ProfileForm()",
       "file_type": "code",
-      "source_file": "src/components/app/profile-form.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/profile-form.tsx",
       "source_location": "L25",
       "id": "profile_form_profileform",
       "community": 40,
@@ -1743,7 +1743,7 @@
     {
       "label": "bg-grid.tsx",
       "file_type": "code",
-      "source_file": "src/components/app/bg-grid.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/bg-grid.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_bg_grid_tsx",
       "community": 41,
@@ -1752,7 +1752,7 @@
     {
       "label": "BgGrid()",
       "file_type": "code",
-      "source_file": "src/components/app/bg-grid.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/bg-grid.tsx",
       "source_location": "L1",
       "id": "bg_grid_bggrid",
       "community": 41,
@@ -1851,7 +1851,7 @@
     {
       "label": "theme-toggle.tsx",
       "file_type": "code",
-      "source_file": "src/components/app/theme-toggle.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/theme-toggle.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_theme_toggle_tsx",
       "community": 44,
@@ -1860,7 +1860,7 @@
     {
       "label": "ThemeToggle()",
       "file_type": "code",
-      "source_file": "src/components/app/theme-toggle.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/theme-toggle.tsx",
       "source_location": "L8",
       "id": "theme_toggle_themetoggle",
       "community": 44,
@@ -1869,7 +1869,7 @@
     {
       "label": "glass-card.tsx",
       "file_type": "code",
-      "source_file": "src/components/app/glass-card.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/glass-card.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_glass_card_tsx",
       "community": 45,
@@ -1878,7 +1878,7 @@
     {
       "label": "GlassCard()",
       "file_type": "code",
-      "source_file": "src/components/app/glass-card.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/glass-card.tsx",
       "source_location": "L7",
       "id": "glass_card_glasscard",
       "community": 45,
@@ -1932,7 +1932,7 @@
     {
       "label": "theme-provider.tsx",
       "file_type": "code",
-      "source_file": "src/components/providers/theme-provider.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/providers/theme-provider.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_providers_theme_provider_tsx",
       "community": 48,
@@ -1941,7 +1941,7 @@
     {
       "label": "ThemeProvider()",
       "file_type": "code",
-      "source_file": "src/components/providers/theme-provider.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/providers/theme-provider.tsx",
       "source_location": "L5",
       "id": "theme_provider_themeprovider",
       "community": 48,
@@ -1986,7 +1986,7 @@
     {
       "label": "use-toast.ts",
       "file_type": "code",
-      "source_file": "src/hooks/use-toast.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/hooks/use-toast.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_hooks_use_toast_ts",
       "community": 51,
@@ -1995,7 +1995,7 @@
     {
       "label": "useToast()",
       "file_type": "code",
-      "source_file": "src/hooks/use-toast.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/hooks/use-toast.ts",
       "source_location": "L3",
       "id": "use_toast_usetoast",
       "community": 51,
@@ -2004,7 +2004,7 @@
     {
       "label": "api-client.ts",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
       "community": 7,
@@ -2013,7 +2013,7 @@
     {
       "label": "api()",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L1",
       "id": "api_client_api",
       "community": 7,
@@ -2022,7 +2022,7 @@
     {
       "label": "apiGet()",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L23",
       "id": "api_client_apiget",
       "community": 7,
@@ -2031,7 +2031,7 @@
     {
       "label": "apiPost()",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L24",
       "id": "api_client_apipost",
       "community": 7,
@@ -2040,7 +2040,7 @@
     {
       "label": "apiPatch()",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L29",
       "id": "api_client_apipatch",
       "community": 7,
@@ -2049,7 +2049,7 @@
     {
       "label": "apiDelete()",
       "file_type": "code",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L34",
       "id": "api_client_apidelete",
       "community": 7,
@@ -2058,7 +2058,7 @@
     {
       "label": "jwt.ts",
       "file_type": "code",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_jwt_ts",
       "community": 0,
@@ -2067,7 +2067,7 @@
     {
       "label": "signAccess()",
       "file_type": "code",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L10",
       "id": "jwt_signaccess",
       "community": 0,
@@ -2076,7 +2076,7 @@
     {
       "label": "signRefresh()",
       "file_type": "code",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L20",
       "id": "jwt_signrefresh",
       "community": 0,
@@ -2085,7 +2085,7 @@
     {
       "label": "verifyToken()",
       "file_type": "code",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L30",
       "id": "jwt_verifytoken",
       "community": 0,
@@ -2175,7 +2175,7 @@
     {
       "label": "cn.ts",
       "file_type": "code",
-      "source_file": "src/lib/cn.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/cn.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_cn_ts",
       "community": 91,
@@ -2184,7 +2184,7 @@
     {
       "label": "utils.ts",
       "file_type": "code",
-      "source_file": "src/lib/utils.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/utils.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_utils_ts",
       "community": 15,
@@ -2193,7 +2193,7 @@
     {
       "label": "cn()",
       "file_type": "code",
-      "source_file": "src/lib/utils.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/utils.ts",
       "source_location": "L4",
       "id": "utils_cn",
       "community": 15,
@@ -2256,7 +2256,7 @@
     {
       "label": "zod.ts",
       "file_type": "code",
-      "source_file": "src/lib/zod.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/zod.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_zod_ts",
       "community": 92,
@@ -2337,7 +2337,7 @@
     {
       "label": "client.ts",
       "file_type": "code",
-      "source_file": "src/db/client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/db/client.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_db_client_ts",
       "community": 94,
@@ -2346,7 +2346,7 @@
     {
       "label": "loop.ts",
       "file_type": "code",
-      "source_file": "src/workers/loop.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/workers/loop.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_workers_loop_ts",
       "community": 53,
@@ -2355,7 +2355,7 @@
     {
       "label": "tick()",
       "file_type": "code",
-      "source_file": "src/workers/loop.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/workers/loop.ts",
       "source_location": "L6",
       "id": "loop_tick",
       "community": 53,
@@ -2364,7 +2364,7 @@
     {
       "label": "tick.ts",
       "file_type": "code",
-      "source_file": "src/workers/tick.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/workers/tick.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_workers_tick_ts",
       "community": 95,
@@ -2375,7 +2375,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L18",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_transcriber_main_py",
@@ -2387,7 +2387,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L25",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_transcriber_main_py",
@@ -2399,7 +2399,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L29",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_transcriber_main_py",
@@ -2411,7 +2411,7 @@
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "transcriber/main.py",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/transcriber/main.py",
       "source_location": "L30",
       "weight": 1.0,
       "_src": "main_rationale_30",
@@ -2615,7 +2615,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/(app)/profile/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/profile/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_profile_page_tsx",
@@ -2627,7 +2627,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/(app)/notifications/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/notifications/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_notifications_page_tsx",
@@ -2735,7 +2735,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/(app)/dashboard/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/dashboard/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_dashboard_page_tsx",
@@ -2771,7 +2771,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/api/[...path]/route.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/api/[...path]/route.ts",
       "source_location": "L3",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_api_path_route_ts",
@@ -2807,7 +2807,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/(auth)/register/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/register/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_register_page_tsx",
@@ -2819,7 +2819,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/(auth)/login/page.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(auth)/login/page.tsx",
       "source_location": "L8",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_login_page_tsx",
@@ -2843,7 +2843,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_plugins_error_ts",
@@ -2855,7 +2855,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L11",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_plugins_error_ts",
@@ -2867,7 +2867,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L5",
       "weight": 1.0,
       "_src": "error_autherror",
@@ -2879,7 +2879,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/plugins/error.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/plugins/error.ts",
       "source_location": "L12",
       "weight": 1.0,
       "_src": "error_notfounderror",
@@ -2939,7 +2939,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L11",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_storage_ts",
@@ -2951,7 +2951,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L14",
       "weight": 1.0,
       "_src": "storage_localstorage",
@@ -2963,7 +2963,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L18",
       "weight": 1.0,
       "_src": "storage_localstorage",
@@ -2975,7 +2975,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L28",
       "weight": 1.0,
       "_src": "storage_localstorage",
@@ -2987,7 +2987,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L33",
       "weight": 1.0,
       "_src": "storage_localstorage",
@@ -2999,7 +2999,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/storage.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/storage.ts",
       "source_location": "L38",
       "weight": 1.0,
       "_src": "storage_localstorage",
@@ -3023,7 +3023,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/share.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/share.ts",
       "source_location": "L12",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_share_ts",
@@ -3035,7 +3035,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/jobs.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/jobs.ts",
       "source_location": "L15",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_jobs_ts",
@@ -3083,7 +3083,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/notification.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/notification.ts",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_notification_ts",
@@ -3095,7 +3095,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L18",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_transcription_ts",
@@ -3107,7 +3107,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L66",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_transcription_ts",
@@ -3119,7 +3119,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L113",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_transcription_ts",
@@ -3131,7 +3131,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L162",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_transcription_ts",
@@ -3143,7 +3143,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L22",
       "weight": 1.0,
       "_src": "transcription_groqprovider",
@@ -3155,7 +3155,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L26",
       "weight": 1.0,
       "_src": "transcription_groqprovider",
@@ -3167,7 +3167,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L70",
       "weight": 1.0,
       "_src": "transcription_openaiprovider",
@@ -3179,7 +3179,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L74",
       "weight": 1.0,
       "_src": "transcription_openaiprovider",
@@ -3191,7 +3191,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L117",
       "weight": 1.0,
       "_src": "transcription_localwhisperprovider",
@@ -3203,7 +3203,7 @@
     {
       "relation": "method",
       "confidence": "EXTRACTED",
-      "source_file": "src/server/services/transcription.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/transcription.ts",
       "source_location": "L121",
       "weight": 1.0,
       "_src": "transcription_localwhisperprovider",
@@ -3251,7 +3251,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ui/badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/badge.tsx",
       "source_location": "L33",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_badge_tsx",
@@ -3275,7 +3275,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/ui/skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/skeleton.tsx",
       "source_location": "L3",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_skeleton_tsx",
@@ -3419,7 +3419,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/confirm-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/confirm-dialog.tsx",
       "source_location": "L25",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_confirm_dialog_tsx",
@@ -3551,7 +3551,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L49",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_share_dialog_tsx",
@@ -3563,7 +3563,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L62",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_share_dialog_tsx",
@@ -3575,7 +3575,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/share-dialog.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L86",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_share_dialog_tsx",
@@ -3587,7 +3587,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/search-bar.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/search-bar.tsx",
       "source_location": "L13",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_search_bar_tsx",
@@ -3611,7 +3611,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/status-badge.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/status-badge.tsx",
       "source_location": "L37",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_status_badge_tsx",
@@ -3911,7 +3911,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/transcript-editor.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-editor.tsx",
       "source_location": "L32",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_editor_tsx",
@@ -3923,7 +3923,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/transcript-skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L6",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_skeleton_tsx",
@@ -3935,7 +3935,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/transcripts/transcript-skeleton.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L32",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_skeleton_tsx",
@@ -3971,7 +3971,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/notification-list.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L28",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
@@ -3983,7 +3983,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/notification-list.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L45",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
@@ -4019,7 +4019,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/profile-form.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/profile-form.tsx",
       "source_location": "L25",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_profile_form_tsx",
@@ -4031,7 +4031,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/bg-grid.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/bg-grid.tsx",
       "source_location": "L1",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_bg_grid_tsx",
@@ -4127,7 +4127,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/theme-toggle.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/theme-toggle.tsx",
       "source_location": "L8",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_theme_toggle_tsx",
@@ -4139,7 +4139,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/app/glass-card.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/glass-card.tsx",
       "source_location": "L7",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_glass_card_tsx",
@@ -4175,7 +4175,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/components/providers/theme-provider.tsx",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/providers/theme-provider.tsx",
       "source_location": "L5",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_providers_theme_provider_tsx",
@@ -4211,7 +4211,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/hooks/use-toast.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/hooks/use-toast.ts",
       "source_location": "L3",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_hooks_use_toast_ts",
@@ -4223,7 +4223,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L1",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
@@ -4235,7 +4235,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L23",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
@@ -4247,7 +4247,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L24",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
@@ -4259,7 +4259,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L29",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
@@ -4271,7 +4271,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L34",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
@@ -4283,7 +4283,7 @@
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L23",
       "weight": 1.0,
       "_src": "api_client_apiget",
@@ -4295,7 +4295,7 @@
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L25",
       "weight": 1.0,
       "_src": "api_client_apipost",
@@ -4307,7 +4307,7 @@
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L30",
       "weight": 1.0,
       "_src": "api_client_apipatch",
@@ -4319,7 +4319,7 @@
     {
       "relation": "calls",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/api-client.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L35",
       "weight": 1.0,
       "_src": "api_client_apidelete",
@@ -4331,7 +4331,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L10",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_jwt_ts",
@@ -4343,7 +4343,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L20",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_jwt_ts",
@@ -4355,7 +4355,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/jwt.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/jwt.ts",
       "source_location": "L30",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_jwt_ts",
@@ -4511,7 +4511,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/lib/utils.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/utils.ts",
       "source_location": "L4",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_utils_ts",
@@ -4667,7 +4667,7 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/workers/loop.ts",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/workers/loop.ts",
       "source_location": "L6",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_workers_loop_ts",
