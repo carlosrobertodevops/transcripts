@@ -1,0 +1,33 @@
+name: Deploy (DO App Platform — reusable)
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+      env:
+        type: string
+        required: false
+        default: prod
+
+concurrency:
+  group: deploy-do-app-${{ inputs.env }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy DO App Platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+      - name: Trigger app deploy
+        run: |
+          doctl apps create-deployment \
+            "${{ secrets.DO_APP_ID }}" \
+            --force-rebuild \
+            --wait

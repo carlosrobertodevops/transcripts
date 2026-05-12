@@ -1,0 +1,28 @@
+name: Deploy Azure ACA
+
+on:
+  workflow_call: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: azure-aca
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Azure ACA
+        run: |
+          # TODO: Implement Azure Container Instances deployment
+          # Prerequisites: AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, AZURE_CONTAINER_NAME in secrets
+          # Steps:
+          # 1. Authenticate with Azure via OIDC (Federated Identity)
+          # 2. Deploy/update container group with latest images
+          # 3. Monitor deployment status
+          # 4. Verify health endpoint
+          echo "Deploying to Azure ACA..."
+          echo "Subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          echo "Resource Group: ${{ secrets.AZURE_RESOURCE_GROUP }}"

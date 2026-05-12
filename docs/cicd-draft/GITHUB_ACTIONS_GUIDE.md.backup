@@ -1,0 +1,316 @@
+# GitHub Actions — Padrões Modernos para Bun + Next.js + Docker Multi-Arch
+
+Referência rápida de padrões 2025/2026 testados em produção.
+
+---
+
+## 1. Setup Bun + Cache
+
+**Versão recomendada:** `oven-sh/setup-bun@v2`  
+**Cache automático:** `~/.bun/install/cache` + `node_modules`  
+**Lockfile:** `bun.lock` (hash para chave)
+
+```yaml
+- uses: oven-sh/setup-bun@v2
+  with:
+    bun-version: latest
+
+- uses: actions/cache@v4
+  id: bun-cache
+  with:
+    path: |
+      ~/.bun/install/cache
+      node_modules
+    key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+
+- if: steps.bun-cache.outputs.cache-hit != 'true'
+  run: bun install --frozen-lockfile
+```
+
+**Economia:** ~40s por run (cache hit).
+
+---
+
+## 2. Docker BuildKit Multi-Platform (amd64 + arm64)
+
+**Requisitos:**
+- `docker/setup-qemu-action@v3` (emulação ARM)
+- `docker/setup-buildx-action@v3` (BuildKit)
+- `docker/build-push-action@v6` (build + push)
+
+**Cache:** `type=gha` (GitHub Actions shared cache).
+
+```yaml
+- uses: docker/setup-qemu-action@v3
+
+- uses: docker/setup-buildx-action@v3
+
+- uses: docker/build-push-action@v6
+  with:
+    context: .
+    platforms: linux/amd64,linux/arm64
+    push: true
+    tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    cache-from: type=gha
+    cache-to: type=gha,mode=max
+```
+
+**Tempo:** ~5-10 min (amd64) + ~15-20 min (arm64 emulado).  
+**Cache:** Reutiliza layers entre runs.
+
+---
+
+## 3. Matrix Strategy — Parallelizar 4 Builds
+
+Buildar `app`, `worker`, `migrate`, `transcriber` em paralelo (max 4).
+
+```yaml
+strategy:
+  matrix:
+    image:
+      - { name: app, dockerfile: Dockerfile, context: . }
+      - { name: worker, dockerfile: Dockerfile.worker, context: . }
+      - { name: migrate, dockerfile: Dockerfile.migrate, context: . }
+      - { name: transcriber, dockerfile: transcriber/Dockerfile, context: transcriber }
+  max-parallel: 4
+
+steps:
+  - uses: docker/build-push-action@v6
+    with:
+      context: ${{ matrix.image.context }}
+      file: ${{ matrix.image.dockerfile }}
+      tags: ${{ env.REGISTRY }}/${{ matrix.image.name }}:${{ github.sha }}
+```
+
+**Economia:** Builds executam em paralelo (não sequencial).  
+**Falha:** Se uma imagem falhar, as outras continuam.
+
+---
+
+## 4. Reusable Workflows vs Composite Actions
+
+| Aspecto | Reusable | Composite |
+|---------|----------|-----------|
+| **Escopo** | Entre repos ou orquestração principal | Dentro do repo, steps reutilizáveis |
+| **Secrets** | ✓ Acesso completo | ✗ Limitado (via inputs) |
+| **Runners** | ✓ Diferentes runners por job | ✗ Herda do job pai |
+| **Quando usar** | Deploy multi-ambiente (6 targets) | Ações simples (login AWS, build, etc) |
+
+**Para seu projeto (6 destinos: dev/staging/prod × AWS/Azure/GCP):**  
+→ **Reusable workflow** como orquestrador principal  
+→ **Composite actions** para cada deploy target
+
+```yaml
+# Reusable caller
+jobs:
+  call-deploy:
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      environment: production
+    secrets:
+      aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+
+# Composite action (AWS)
+# .github/actions/deploy-aws/action.yml
+runs:
+  using: composite
+  steps:
+    - uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.role-arn }}
+    - run: aws ecs update-service ...
+      shell: bash
+```
+
+---
+
+## 5. Secrets Management — OIDC vs GitHub Secrets
+
+**Padrão moderno:** OIDC (OpenID Connect)  
+**Sem:** API keys, access tokens em repos  
+**Suportado:** AWS, Azure, Google Cloud, Vault
+
+```yaml
+jobs:
+  deploy:
+    permissions:
+      id-token: write    # ← Chave: assinar JWT
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+```
+
+**Setup:** Configurar OIDC provider no AWS/Azure (uma vez).  
+**Segurança:** JWT assinado por GitHub, sem rotação de secrets.
+
+---
+
+## 6. Drizzle Migrations — CI Validation
+
+Validar migrations contra banco ephemeral (Postgres service) **antes de merge**.
+
+```yaml
+services:
+  postgres:
+    image: postgres:16-alpine
+    env:
+      POSTGRES_DB: transcripts_test
+      POSTGRES_PASSWORD: postgres
+    options: >-
+      --health-cmd pg_isready
+      --health-interval 10s
+      --health-timeout 5s
+      --health-retries 5
+    ports:
+      - 5432:5432
+
+steps:
+  - run: bunx drizzle-kit migrate
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/transcripts_test
+  - run: bun run db:seed
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/transcripts_test
+```
+
+**Benefício:** Catch migration errors em CI, não em produção.
+
+---
+
+## 7. Eslint + Typecheck Matrix
+
+Parallelizar lint e type check (rápido, ~30s total).
+
+```yaml
+strategy:
+  matrix:
+    task:
+      - { name: lint, cmd: 'bun run lint' }
+      - { name: typecheck, cmd: 'bun run typecheck' }
+  fail-fast: true
+
+steps:
+  - run: ${{ matrix.task.cmd }}
+```
+
+**Falha rápida:** Se lint/typecheck falhar, pipeline inteiro falha.
+
+---
+
+## 8. Security Scanning — Trivy + Snyk
+
+### Trivy (CVE image scan)
+Rápido, built-in, integrado com SARIF (GitHub Security tab).
+
+```yaml
+- uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    format: sarif
+    output: trivy-results.sarif
+    severity: CRITICAL,HIGH
+
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: trivy-results.sarif
+    category: trivy
+```
+
+### Snyk (app code + dependencies)
+Mais profundo, requer token, integração com PRs.
+
+```yaml
+- uses: snyk/actions/docker@master
+  env:
+    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  with:
+    image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    args: --severity-threshold=high
+```
+
+**Recomendação:** Trivy em CI (rápido), Snyk em pull_request com token.
+
+---
+
+## 9. Complete Workflow Structure
+
+```
+CI/CD Pipeline (5 stages)
+├─ VALIDATE (30s)
+│  ├─ Lint
+│  └─ Type check
+├─ TEST (60s)
+│  ├─ Drizzle migrate
+│  └─ Seed DB
+├─ BUILD (20 min parallel)
+│  ├─ app (amd64 + arm64)
+│  ├─ worker (amd64 + arm64)
+│  ├─ migrate (amd64 + arm64)
+│  └─ transcriber (amd64 + arm64)
+├─ SECURITY (5 min)
+│  └─ Trivy scan
+└─ DEPLOY (5 min, apenas main)
+   └─ Push to ECR + Update ECS
+```
+
+**Total:** ~90 min (parallelizado).  
+**Cache hit:** ~30 min.
+
+---
+
+## 10. GitHub Secrets Required
+
+```
+AWS_ROLE_ARN                 # OIDC role para AWS
+AWS_ECR_REGISTRY             # ECR registry (ex: 123456789.dkr.ecr.us-east-1.amazonaws.com)
+SNYK_TOKEN                   # Opcional, para scanning avançado
+```
+
+**Environments:**
+- `production`: exigir aprovação manual antes de deploy
+
+---
+
+## 11. Ficheiros Incluídos
+
+- **`.github/workflows/ci-cd.yml`** — Pipeline pronto para usar (copia, ajusta `.env`)
+- **`.github/workflows/PATTERNS.yml`** — Referência de todos os padrões
+- **`.github/GITHUB_ACTIONS_GUIDE.md`** — Este guia
+
+---
+
+## Próximos Passos
+
+1. Configurar OIDC no AWS (uma vez):
+   ```bash
+   aws iam create-openid-connect-provider \
+     --url https://token.actions.githubusercontent.com \
+     --client-id-list sts.amazonaws.com
+   ```
+
+2. Adicionar secrets em GitHub:
+   - Settings → Environments → production
+   - Adicionar `AWS_ROLE_ARN`, `AWS_ECR_REGISTRY`
+
+3. Ajustar `ci-cd.yml`:
+   - Cluster ECS name (`chegii-production`)
+   - Service name (`chegii-app`)
+   - ECR registry
+
+4. Testar PR:
+   ```bash
+   git checkout -b test/ci
+   git push origin test/ci
+   # Abrir PR, ver workflow rodar
+   ```
+
+---
+
+**Referências:**
+- [GitHub Actions Docs](https://docs.github.com/en/actions)
+- [Docker Build Push Action](https://github.com/docker/build-push-action)
+- [Oven Bun Setup](https://github.com/oven-sh/setup-bun)
+- [Trivy Security Scanner](https://aquasecurity.github.io/trivy/)

@@ -1,0 +1,382 @@
+# GitHub Actions Patterns — Bun + Next.js + Docker Multi-Arch ARM64
+# Referência de snippets para construir workflows modernos
+
+# ============================================================================
+# 1. BUN SETUP + CACHE (oven-sh/setup-bun@v2)
+# ============================================================================
+# Versão recomendada: v2 (2024+)
+# Cache automático: ~/.bun/install/cache + node_modules
+# Suporta: bun.lock (lockfile oficial)
+
+setup_bun_with_cache: |
+  - uses: actions/checkout@v4
+  - uses: oven-sh/setup-bun@v2
+    with:
+      bun-version: latest
+  - uses: actions/cache@v4
+    id: bun-cache
+    with:
+      path: |
+        ~/.bun/install/cache
+        node_modules
+      key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+      restore-keys: |
+        ${{ runner.os }}-bun-
+  - run: bun install --frozen-lockfile
+  - run: bun run build
+
+# ============================================================================
+# 2. DOCKER BUILDX MULTI-ARCH (amd64 + arm64)
+# ============================================================================
+# Requisitos:
+#  - docker/setup-qemu-action@v3 (emulação ARM)
+#  - docker/setup-buildx-action@v3 (BuildKit)
+#  - docker/build-push-action@v6
+# Cache: gha (GitHub Actions) — compartilhado entre runners
+
+docker_buildx_multi_arch: |
+  - uses: docker/setup-qemu-action@v3
+  - uses: docker/setup-buildx-action@v3
+    with:
+      buildkitd-flags: --allow-insecure-entitlement security.insecure
+  - uses: docker/build-push-action@v6
+    with:
+      context: .
+      platforms: linux/amd64,linux/arm64
+      push: ${{ github.ref == 'refs/heads/main' }}
+      tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      cache-from: type=gha
+      cache-to: type=gha,mode=max
+
+# ============================================================================
+# 3. MATRIX STRATEGY — 4 IMAGENS EM PARALELO
+# ============================================================================
+# Builds em paralelo: app, worker, migrate, transcriber
+# Reutiliza step de setup para evitar DRY
+
+matrix_parallel_builds: |
+  strategy:
+    matrix:
+      image:
+        - { name: app, dockerfile: Dockerfile, context: . }
+        - { name: worker, dockerfile: Dockerfile.worker, context: . }
+        - { name: migrate, dockerfile: Dockerfile.migrate, context: . }
+        - { name: transcriber, dockerfile: transcriber/Dockerfile, context: transcriber }
+    max-parallel: 4
+  steps:
+    - uses: actions/checkout@v4
+    - uses: docker/setup-buildx-action@v3
+    - uses: docker/build-push-action@v6
+      with:
+        context: ${{ matrix.image.context }}
+        file: ${{ matrix.image.dockerfile }}
+        platforms: linux/amd64,linux/arm64
+        tags: ${{ env.REGISTRY }}/${{ matrix.image.name }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+# ============================================================================
+# 4. REUSABLE WORKFLOWS vs COMPOSITE ACTIONS
+# ============================================================================
+# Use REUSABLE quando: compartilhar entre repos, secrets, diferentes runners
+# Use COMPOSITE quando: reutilizar steps simples no mesmo repo, local
+
+# Padrão recomendado para 6 destinos (dev, staging, prod × AWS, Azure):
+# → Reusable workflow para orquestração principal
+# → Composite action para cada deploy target (reutiliza steps)
+
+reusable_workflow_caller: |
+  # .github/workflows/deploy.yml
+  on: [push]
+  jobs:
+    call-deploy:
+      uses: ./.github/workflows/deploy-reusable.yml
+      with:
+        environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'staging' }}
+        registry: ghcr.io
+      secrets:
+        aws_role_arn: ${{ secrets.AWS_ROLE_ARN }}
+        azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+
+reusable_workflow_definition: |
+  # .github/workflows/deploy-reusable.yml
+  on:
+    workflow_call:
+      inputs:
+        environment:
+          required: true
+          type: string
+        registry:
+          required: true
+          type: string
+      secrets:
+        aws_role_arn:
+          required: true
+        azure_client_id:
+          required: true
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      environment: ${{ inputs.environment }}
+      steps:
+        - uses: actions/checkout@v4
+        - uses: ./.github/actions/deploy-aws
+          if: ${{ inputs.environment == 'prod' }}
+          with:
+            role-arn: ${{ secrets.aws_role_arn }}
+        - uses: ./.github/actions/deploy-azure
+          if: ${{ inputs.environment == 'staging' }}
+          with:
+            client-id: ${{ secrets.azure_client_id }}
+
+composite_action_example: |
+  # .github/actions/deploy-aws/action.yml
+  name: Deploy to AWS
+  inputs:
+    role-arn:
+      required: true
+  runs:
+    using: composite
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.role-arn }}
+          aws-region: us-east-1
+      - run: aws ecr push $IMAGE_URI
+        shell: bash
+
+# ============================================================================
+# 5. SECRETS MANAGEMENT — GitHub Environments + OIDC
+# ============================================================================
+# Padrão moderno: OIDC (OpenID Connect)
+# Sem secrets em repos, sem rotação de chaves
+# Suportado: AWS, Azure, Google Cloud, Hashicorp Vault
+
+secrets_oidc_aws: |
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      environment: production
+      permissions:
+        id-token: write
+        contents: read
+      steps:
+        - uses: actions/checkout@v4
+        - uses: aws-actions/configure-aws-credentials@v4
+          with:
+            role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+            aws-region: us-east-1
+        - run: aws s3 sync . s3://$BUCKET
+
+secrets_oidc_azure: |
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      environment: production
+      permissions:
+        id-token: write
+        contents: read
+      steps:
+        - uses: actions/checkout@v4
+        - uses: azure/login@v2
+          with:
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        - run: az container create --resource-group rg --image $IMAGE
+
+# ============================================================================
+# 6. SECURITY SCANNING — Trivy + Snyk
+# ============================================================================
+# Trivy: image scan (CVE) — rápido, built-in
+# Snyk: application scan — mais profundo, requer token
+
+trivy_image_scan: |
+  - uses: aquasecurity/trivy-action@master
+    with:
+      image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      format: sarif
+      output: trivy-results.sarif
+  - uses: github/codeql-action/upload-sarif@v3
+    with:
+      sarif_file: trivy-results.sarif
+
+snyk_app_scan: |
+  - uses: snyk/actions/docker@master
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    with:
+      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      args: --severity-threshold=high
+
+# ============================================================================
+# 7. DRIZZLE MIGRATIONS — CI VALIDATION
+# ============================================================================
+# Setup: postgres service (ephemeral)
+# Validar: migrations rodam sem erros antes de merge
+
+drizzle_migrations_ci: |
+  services:
+    postgres:
+      image: postgres:16-alpine
+      env:
+        POSTGRES_DB: test_db
+        POSTGRES_PASSWORD: password
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
+      ports:
+        - 5432:5432
+  steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v2
+    - run: bun install --frozen-lockfile
+    - run: DATABASE_URL=postgres://postgres:password@localhost:5432/test_db bunx drizzle-kit migrate
+    - run: DATABASE_URL=postgres://postgres:password@localhost:5432/test_db bun run db:seed
+
+# ============================================================================
+# 8. ESLINT + TYPECHECK MATRIX
+# ============================================================================
+# Parallelizar: lint + type check (executam em segundos)
+# Falha rápida em ambos
+
+lint_typecheck_matrix: |
+  strategy:
+    matrix:
+      task:
+        - { name: lint, cmd: 'bun run lint' }
+        - { name: typecheck, cmd: 'bun run typecheck' }
+    fail-fast: true
+  steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v2
+    - uses: actions/cache@v4
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+    - run: bun install --frozen-lockfile
+    - run: ${{ matrix.task.cmd }}
+
+# ============================================================================
+# 9. COMPLETE WORKFLOW EXAMPLE (Production Ready)
+# ============================================================================
+
+complete_workflow: |
+  name: CI/CD Pipeline
+  on:
+    push:
+      branches: [main, develop]
+    pull_request:
+      branches: [main, develop]
+
+  env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
+  jobs:
+    validate:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+      steps:
+        - uses: actions/checkout@v4
+        - uses: oven-sh/setup-bun@v2
+        - uses: actions/cache@v4
+          with:
+            path: |
+              ~/.bun/install/cache
+              node_modules
+            key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+        - run: bun install --frozen-lockfile
+        - run: bun run lint
+        - run: bun run typecheck
+
+    test:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgres:16-alpine
+          env:
+            POSTGRES_DB: transcripts_test
+            POSTGRES_PASSWORD: postgres
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            - 5432:5432
+      permissions:
+        contents: read
+      steps:
+        - uses: actions/checkout@v4
+        - uses: oven-sh/setup-bun@v2
+        - uses: actions/cache@v4
+          with:
+            path: ~/.bun/install/cache
+            key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+        - run: bun install --frozen-lockfile
+        - run: DATABASE_URL=postgres://postgres:postgres@localhost:5432/transcripts_test bunx drizzle-kit migrate
+        - run: bun run test
+
+    build:
+      runs-on: ubuntu-latest
+      if: github.event_name == 'push'
+      needs: [validate, test]
+      permissions:
+        contents: read
+        packages: write
+        id-token: write
+      steps:
+        - uses: actions/checkout@v4
+        - uses: docker/setup-qemu-action@v3
+        - uses: docker/setup-buildx-action@v3
+        - uses: docker/login-action@v3
+          with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+        - uses: docker/build-push-action@v6
+          with:
+            context: .
+            platforms: linux/amd64,linux/arm64
+            push: true
+            tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
+
+    security:
+      runs-on: ubuntu-latest
+      if: github.event_name == 'push'
+      needs: build
+      permissions:
+        contents: read
+        security-events: write
+      steps:
+        - uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            format: sarif
+            output: trivy-results.sarif
+        - uses: github/codeql-action/upload-sarif@v3
+          with:
+            sarif_file: trivy-results.sarif
+
+    deploy:
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      needs: [build, security]
+      environment: production
+      permissions:
+        id-token: write
+        contents: read
+      steps:
+        - uses: actions/checkout@v4
+        - uses: aws-actions/configure-aws-credentials@v4
+          with:
+            role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+            aws-region: us-east-1
+        - run: aws ecr push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+

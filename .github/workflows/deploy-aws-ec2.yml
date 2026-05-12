@@ -1,0 +1,28 @@
+name: Deploy AWS EC2
+
+on:
+  workflow_call: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: aws-ec2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to AWS EC2
+        run: |
+          # TODO: Implement AWS EC2 deployment
+          # Prerequisites: AWS_EC2_INSTANCE_ID, AWS_REGION, AWS_ROLE_ARN in secrets
+          # Steps:
+          # 1. Assume IAM role via OIDC
+          # 2. Connect via EC2 Instance Connect or Systems Manager Session Manager
+          # 3. Pull latest images from GHCR
+          # 4. Restart services with docker-compose
+          echo "Deploying to AWS EC2..."
+          echo "Instance: ${{ secrets.AWS_EC2_INSTANCE_ID }}"
+          echo "Region: ${{ secrets.AWS_REGION }}"

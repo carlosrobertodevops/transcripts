@@ -1,0 +1,61 @@
+# syntax=docker/dockerfile:1.7
+# Dockerfile.easypanel — VPS ARM64 4GB RAM target.
+# Pinned BUN_VERSION + tini + aggressive cache mounts + memory-aware build/runtime.
+ARG BUN_VERSION=1.3
+ARG PORT=3001
+
+FROM oven/bun:${BUN_VERSION}-slim AS base
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json bun.lock* ./
+RUN --mount=type=cache,target=/root/.bun/install/cache,sharing=locked \
+    bun install --frozen-lockfile || bun install
+
+FROM base AS prod-deps
+COPY package.json bun.lock* ./
+RUN --mount=type=cache,target=/root/.bun/install/cache,sharing=locked \
+    bun install --frozen-lockfile --production || bun install --production
+
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    NODE_OPTIONS=--max-old-space-size=2048
+RUN bun run build
+
+FROM base AS migrate
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json bun.lock* drizzle.config.ts tsconfig.json ./
+COPY drizzle ./drizzle
+COPY src ./src
+ENV NODE_ENV=production
+CMD ["sh", "-c", "bun run db:migrate && (bun run src/db/seed.ts || true)"]
+
+FROM base AS runner
+ARG PORT
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=${PORT} \
+    HOSTNAME=0.0.0.0 \
+    NODE_OPTIONS=--max-old-space-size=512
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && \
+    apt-get install -y --no-install-recommends -o APT::Keep-Downloaded-Packages=false \
+    ffmpeg ca-certificates curl tini && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives /var/cache/apt/*
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/bun.lock* ./
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/drizzle ./drizzle
+COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
+COPY --from=builder /app/src ./src
+EXPOSE ${PORT}
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+  CMD curl -fsS "http://localhost:${PORT}/api/health" || exit 1
+ENTRYPOINT ["tini", "--"]
+CMD ["bun", "run", "start"]

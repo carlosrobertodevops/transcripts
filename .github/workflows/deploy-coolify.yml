@@ -1,0 +1,26 @@
+name: Deploy Coolify
+
+on:
+  workflow_call: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: coolify
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Coolify
+        run: |
+          # TODO: Implement Coolify deployment
+          # Prerequisites: COOLIFY_API_TOKEN, COOLIFY_PROJECT_ID in secrets
+          # Steps:
+          # 1. Trigger deployment via Coolify API
+          # 2. Poll deployment status
+          # 3. Verify health endpoint
+          echo "Deploying to Coolify..."
+          echo "Project ID: ${{ secrets.COOLIFY_PROJECT_ID }}"

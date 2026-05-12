@@ -1,0 +1,19 @@
+# Default owners — anything not matched below
+* @geniuscodemycombr
+
+# Infra
+/Dockerfile           @geniuscodemycombr
+/Dockerfile.*         @geniuscodemycombr
+/docker-compose*.yml  @geniuscodemycombr
+/transcriber/         @geniuscodemycombr
+/.github/             @geniuscodemycombr
+
+# Backend
+/src/server/          @geniuscodemycombr
+/src/workers/         @geniuscodemycombr
+/src/db/              @geniuscodemycombr
+/drizzle/             @geniuscodemycombr
+
+# Frontend
+/src/app/             @geniuscodemycombr
+/src/components/      @geniuscodemycombr

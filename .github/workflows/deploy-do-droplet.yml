@@ -1,0 +1,40 @@
+name: Deploy (DO Droplet — reusable)
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+      env:
+        type: string
+        required: false
+        default: prod
+
+concurrency:
+  group: deploy-do-droplet-${{ inputs.env }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: SSH deploy to DO Droplet
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: SSH compose pull + up
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DO_DROPLET_HOST }}
+          username: ${{ secrets.DO_DROPLET_USER || 'deploy' }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          envs: TAG
+          envs: |
+            TAG=${{ inputs.tag }}
+          script: |
+            set -euo pipefail
+            cd /srv/transcripts
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io \
+              -u ${{ github.actor }} --password-stdin
+            export TAG="${{ inputs.tag }}"
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f

@@ -1,0 +1,163 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: transcripts
+      POSTGRES_PASSWORD: transcripts
+      POSTGRES_DB: transcripts
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    shm_size: 512mb
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=128MB"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U transcripts -d transcripts"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      target: migrate
+      args:
+        PORT: "3000"
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
+      NODE_ENV: production
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        PORT: "3000"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me-32-chars-min}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me-32-chars}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
+      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
+      STORAGE_DIR: /app/uploads
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/uploads
+
+  transcriber:
+    build:
+      context: ./transcriber
+      args:
+        WHISPER_MODEL: ${WHISPER_MODEL:-base}
+        PRE_BAKE_MODEL: "true"
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: INFO
+      WHISPER_MODEL: ${WHISPER_MODEL:-base}
+      WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      WHISPER_CPU_THREADS: ${WHISPER_CPU_THREADS:-0}
+      WHISPER_BEAM_SIZE: ${WHISPER_BEAM_SIZE:-3}
+      WHISPER_NUM_WORKERS: ${WHISPER_NUM_WORKERS:-1}
+      WHISPER_VAD_FILTER: "true"
+    tmpfs:
+      - /tmp:size=1g
+    ports:
+      - "8000:8000"
+    volumes:
+      - transcriber_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      args:
+        PORT: "3000"
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      app:
+        condition: service_started
+      transcriber:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://transcripts:transcripts@db:5432/transcripts
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-dev-internal-key}
+      APP_URL: http://app:3000
+      NEXT_PUBLIC_APP_URL: http://app:3000
+      TRANSCRIPTION_PROVIDER: ${TRANSCRIPTION_PROVIDER:-local}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      STORAGE_DIR: /app/uploads
+      TRANSCRIBER_URL: http://transcriber:8000
+      TRANSCRIPTION_PROVIDER_FALLBACK: ${TRANSCRIPTION_PROVIDER_FALLBACK:-}
+      TRANSCRIBER_TIMEOUT_MS: ${TRANSCRIBER_TIMEOUT_MS:-60000}
+      WORKER_INTERVAL_MS: ${WORKER_INTERVAL_MS:-3000}
+      NODE_ENV: production
+    volumes:
+      - uploads:/app/uploads
+    command: ["bun", "run", "worker:loop"]
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@transcripts.dev}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_LISTEN_PORT: 80
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+
+volumes:
+  db_data:
+  uploads:
+  pgadmin_data:
+  transcriber_cache:

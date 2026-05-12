@@ -1,0 +1,69 @@
+name: Deploy (Orchestrator)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target
+        required: true
+        type: choice
+        options:
+          - easypanel
+          - coolify
+          - aws-ecs
+          - aws-ec2
+          - azure-aca
+          - do-droplet
+          - do-app
+          - oci-vm
+
+concurrency:
+  group: deploy-${{ github.ref }}-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  build-images:
+    name: Build & Push Images
+    uses: ./.github/workflows/images.yml
+
+  deploy:
+    name: Deploy to ${{ inputs.target }}
+    needs: build-images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to EasyPanel
+        if: inputs.target == 'easypanel'
+        uses: ./.github/workflows/deploy-easypanel.yml
+
+      - name: Deploy to Coolify
+        if: inputs.target == 'coolify'
+        uses: ./.github/workflows/deploy-coolify.yml
+
+      - name: Deploy to AWS ECS
+        if: inputs.target == 'aws-ecs'
+        uses: ./.github/workflows/deploy-aws-ecs.yml
+
+      - name: Deploy to AWS EC2
+        if: inputs.target == 'aws-ec2'
+        uses: ./.github/workflows/deploy-aws-ec2.yml
+
+      - name: Deploy to Azure ACA
+        if: inputs.target == 'azure-aca'
+        uses: ./.github/workflows/deploy-azure-aca.yml
+
+      - name: Deploy to DO Droplet
+        if: inputs.target == 'do-droplet'
+        uses: ./.github/workflows/deploy-do-droplet.yml
+
+      - name: Deploy to DO App
+        if: inputs.target == 'do-app'
+        uses: ./.github/workflows/deploy-do-app.yml
+
+      - name: Deploy to OCI VM
+        if: inputs.target == 'oci-vm'
+        uses: ./.github/workflows/deploy-oci-vm.yml

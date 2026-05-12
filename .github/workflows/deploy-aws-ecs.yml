@@ -1,0 +1,28 @@
+name: Deploy AWS ECS
+
+on:
+  workflow_call: {}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: aws-ecs
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to AWS ECS
+        run: |
+          # TODO: Implement AWS ECS deployment
+          # Prerequisites: AWS_ACCOUNT_ID, AWS_REGION, AWS_ROLE_ARN in secrets
+          # Steps:
+          # 1. Assume IAM role via OIDC
+          # 2. Update ECS task definition
+          # 3. Update ECS service
+          # 4. Poll deployment until stable
+          echo "Deploying to AWS ECS..."
+          echo "Account: ${{ secrets.AWS_ACCOUNT_ID }}"
+          echo "Region: ${{ secrets.AWS_REGION }}"
