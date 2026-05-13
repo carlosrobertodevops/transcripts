@@ -144,7 +144,7 @@
       "source_file": "src/app/layout.tsx",
       "source_location": "L1",
       "id": "src_app_layout_tsx",
-      "community": 23,
+      "community": 24,
       "norm_label": "layout.tsx"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "src/app/layout.tsx",
       "source_location": "L26",
       "id": "layout_rootlayout",
-      "community": 23,
+      "community": 24,
       "norm_label": "rootlayout()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L1",
       "id": "src_app_page_tsx",
-      "community": 24,
+      "community": 25,
       "norm_label": "page.tsx"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "src/app/page.tsx",
       "source_location": "L4",
       "id": "page_rootpage",
-      "community": 24,
+      "community": 25,
       "norm_label": "rootpage()"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "src/app/(app)/error.tsx",
       "source_location": "L1",
       "id": "src_app_app_error_tsx",
-      "community": 25,
+      "community": 26,
       "norm_label": "error.tsx"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "src/app/(app)/error.tsx",
       "source_location": "L7",
       "id": "error_apperror",
-      "community": 25,
+      "community": 26,
       "norm_label": "apperror()"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "src/app/(auth)/layout.tsx",
       "source_location": "L1",
       "id": "src_app_auth_layout_tsx",
-      "community": 26,
+      "community": 27,
       "norm_label": "layout.tsx"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "src/app/(auth)/layout.tsx",
       "source_location": "L3",
       "id": "layout_authlayout",
-      "community": 26,
+      "community": 27,
       "norm_label": "authlayout()"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "src/app/(auth)/register/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_register_page_tsx",
-      "community": 27,
+      "community": 28,
       "norm_label": "page.tsx"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "src/app/(auth)/register/page.tsx",
       "source_location": "L8",
       "id": "page_registerpage",
-      "community": 27,
+      "community": 28,
       "norm_label": "registerpage()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_auth_login_page_tsx",
-      "community": 28,
+      "community": 29,
       "norm_label": "page.tsx"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L8",
       "id": "page_loginpage",
-      "community": 28,
+      "community": 29,
       "norm_label": "loginpage()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src/server/routes/tags.ts",
       "source_location": "L1",
       "id": "src_server_routes_tags_ts",
-      "community": 29,
+      "community": 30,
       "norm_label": "tags.ts"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "src/server/routes/tags.ts",
       "source_location": "L13",
       "id": "tags_sanitizecolor",
-      "community": 29,
+      "community": 30,
       "norm_label": "sanitizecolor()"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "src/server/services/share.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_share_ts",
-      "community": 30,
+      "community": 31,
       "norm_label": "share.ts"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "src/server/services/share.ts",
       "source_location": "L12",
       "id": "share_sharetranscript",
-      "community": 30,
+      "community": 31,
       "norm_label": "sharetranscript()"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "src/server/services/notification.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_notification_ts",
-      "community": 31,
+      "community": 32,
       "norm_label": "notification.ts"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "src/server/services/notification.ts",
       "source_location": "L4",
       "id": "notification_createnotification",
-      "community": 31,
+      "community": 32,
       "norm_label": "createnotification()"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "src/components/ui/sonner.tsx",
       "source_location": "L1",
       "id": "src_components_ui_sonner_tsx",
-      "community": 32,
+      "community": 33,
       "norm_label": "sonner.tsx"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "src/components/ui/sonner.tsx",
       "source_location": "L6",
       "id": "sonner_toaster",
-      "community": 32,
+      "community": 33,
       "norm_label": "toaster()"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "src/components/ui/badge.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_badge_tsx",
-      "community": 33,
+      "community": 34,
       "norm_label": "badge.tsx"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "src/components/ui/badge.tsx",
       "source_location": "L33",
       "id": "badge_badge",
-      "community": 33,
+      "community": 34,
       "norm_label": "badge()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "src/components/ui/glass-card.tsx",
       "source_location": "L1",
       "id": "src_components_ui_glass_card_tsx",
-      "community": 34,
+      "community": 35,
       "norm_label": "glass-card.tsx"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "src/components/ui/glass-card.tsx",
       "source_location": "L31",
       "id": "glass_card_cn",
-      "community": 34,
+      "community": 35,
       "norm_label": "cn()"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "src/components/ui/skeleton.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_skeleton_tsx",
-      "community": 35,
+      "community": 36,
       "norm_label": "skeleton.tsx"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "src/components/ui/skeleton.tsx",
       "source_location": "L3",
       "id": "skeleton_skeleton",
-      "community": 35,
+      "community": 36,
       "norm_label": "skeleton()"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "src/components/transcripts/confirm-dialog.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_confirm_dialog_tsx",
-      "community": 36,
+      "community": 37,
       "norm_label": "confirm-dialog.tsx"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "src/components/transcripts/confirm-dialog.tsx",
       "source_location": "L25",
       "id": "confirm_dialog_confirmdialog",
-      "community": 36,
+      "community": 37,
       "norm_label": "confirmdialog()"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "src/components/transcripts/transcription-progress.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_transcription_progress_tsx",
-      "community": 37,
+      "community": 38,
       "norm_label": "transcription-progress.tsx"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "src/components/transcripts/transcription-progress.tsx",
       "source_location": "L41",
       "id": "transcription_progress_poll",
-      "community": 37,
+      "community": 38,
       "norm_label": "poll()"
     },
     {
@@ -1393,7 +1393,7 @@
       "label": "handleEditSaved()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L45",
+      "source_location": "L56",
       "id": "transcript_grid_handleeditsaved",
       "community": 9,
       "norm_label": "handleeditsaved()"
@@ -1402,7 +1402,7 @@
       "label": "confirmDelete()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L70",
+      "source_location": "L63",
       "id": "transcript_grid_confirmdelete",
       "community": 9,
       "norm_label": "confirmdelete()"
@@ -1411,7 +1411,7 @@
       "label": "fetchTranscripts()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L91",
+      "source_location": "L84",
       "id": "transcript_grid_fetchtranscripts",
       "community": 9,
       "norm_label": "fetchtranscripts()"
@@ -1420,7 +1420,7 @@
       "label": "handleDragEnd()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L119",
+      "source_location": "L112",
       "id": "transcript_grid_handledragend",
       "community": 9,
       "norm_label": "handledragend()"
@@ -1429,7 +1429,7 @@
       "label": "handleNewTranscript()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L147",
+      "source_location": "L140",
       "id": "transcript_grid_handlenewtranscript",
       "community": 9,
       "norm_label": "handlenewtranscript()"
@@ -1476,7 +1476,7 @@
       "source_file": "src/components/transcripts/search-bar.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_search_bar_tsx",
-      "community": 38,
+      "community": 39,
       "norm_label": "search-bar.tsx"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "src/components/transcripts/search-bar.tsx",
       "source_location": "L13",
       "id": "search_bar_searchbar",
-      "community": 38,
+      "community": 39,
       "norm_label": "searchbar()"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_file": "src/components/transcripts/media-dropzone.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_media_dropzone_tsx",
-      "community": 39,
+      "community": 40,
       "norm_label": "media-dropzone.tsx"
     },
     {
@@ -1503,7 +1503,7 @@
       "source_file": "src/components/transcripts/media-dropzone.tsx",
       "source_location": "L15",
       "id": "media_dropzone_mediadropzone",
-      "community": 39,
+      "community": 40,
       "norm_label": "mediadropzone()"
     },
     {
@@ -1512,7 +1512,7 @@
       "source_file": "src/components/transcripts/status-badge.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_status_badge_tsx",
-      "community": 40,
+      "community": 41,
       "norm_label": "status-badge.tsx"
     },
     {
@@ -1521,7 +1521,7 @@
       "source_file": "src/components/transcripts/status-badge.tsx",
       "source_location": "L37",
       "id": "status_badge_statusbadge",
-      "community": 40,
+      "community": 41,
       "norm_label": "statusbadge()"
     },
     {
@@ -1645,7 +1645,7 @@
       "label": "updatePendingDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L193",
+      "source_location": "L212",
       "id": "edit_transcript_dialog_updatependingdesc",
       "community": 5,
       "norm_label": "updatependingdesc()"
@@ -1654,7 +1654,7 @@
       "label": "removePending()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L213",
+      "source_location": "L232",
       "id": "edit_transcript_dialog_removepending",
       "community": 5,
       "norm_label": "removepending()"
@@ -1663,7 +1663,7 @@
       "label": "handleUploadAndTranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L216",
+      "source_location": "L235",
       "id": "edit_transcript_dialog_handleuploadandtranscribe",
       "community": 5,
       "norm_label": "handleuploadandtranscribe()"
@@ -1672,7 +1672,7 @@
       "label": "handleRetranscribe()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L247",
+      "source_location": "L266",
       "id": "edit_transcript_dialog_handleretranscribe",
       "community": 5,
       "norm_label": "handleretranscribe()"
@@ -1681,7 +1681,7 @@
       "label": "handleSaveMediaDesc()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L266",
+      "source_location": "L285",
       "id": "edit_transcript_dialog_handlesavemediadesc",
       "community": 5,
       "norm_label": "handlesavemediadesc()"
@@ -1690,7 +1690,7 @@
       "label": "handleDeleteMedia()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L295",
+      "source_location": "L314",
       "id": "edit_transcript_dialog_handledeletemedia",
       "community": 5,
       "norm_label": "handledeletemedia()"
@@ -1699,7 +1699,7 @@
       "label": "onSubmit()",
       "file_type": "code",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L314",
+      "source_location": "L333",
       "id": "edit_transcript_dialog_onsubmit",
       "community": 5,
       "norm_label": "onsubmit()"
@@ -1710,7 +1710,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L1",
       "id": "src_components_transcripts_media_transcript_editor_tsx",
-      "community": 6,
+      "community": 7,
       "norm_label": "media-transcript-editor.tsx"
     },
     {
@@ -1719,7 +1719,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L55",
       "id": "media_transcript_editor_handleapplytags",
-      "community": 6,
+      "community": 7,
       "norm_label": "handleapplytags()"
     },
     {
@@ -1728,7 +1728,7 @@
       "source_file": "src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L62",
       "id": "media_transcript_editor_handlesave",
-      "community": 6,
+      "community": 7,
       "norm_label": "handlesave()"
     },
     {
@@ -1736,17 +1736,26 @@
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-editor.tsx",
       "source_location": "L1",
-      "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_editor_tsx",
-      "community": 41,
+      "id": "src_components_transcripts_transcript_editor_tsx",
+      "community": 21,
       "norm_label": "transcript-editor.tsx"
+    },
+    {
+      "label": "handleCancel()",
+      "file_type": "code",
+      "source_file": "src/components/transcripts/transcript-editor.tsx",
+      "source_location": "L39",
+      "id": "transcript_editor_handlecancel",
+      "community": 21,
+      "norm_label": "handlecancel()"
     },
     {
       "label": "handleSave()",
       "file_type": "code",
       "source_file": "src/components/transcripts/transcript-editor.tsx",
-      "source_location": "L32",
+      "source_location": "L47",
       "id": "transcript_editor_handlesave",
-      "community": 41,
+      "community": 21,
       "norm_label": "handlesave()"
     },
     {
@@ -1755,7 +1764,7 @@
       "source_file": "src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_skeleton_tsx",
-      "community": 21,
+      "community": 22,
       "norm_label": "transcript-skeleton.tsx"
     },
     {
@@ -1764,7 +1773,7 @@
       "source_file": "src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L6",
       "id": "transcript_skeleton_transcriptskeleton",
-      "community": 21,
+      "community": 22,
       "norm_label": "transcriptskeleton()"
     },
     {
@@ -1773,7 +1782,7 @@
       "source_file": "src/components/transcripts/transcript-skeleton.tsx",
       "source_location": "L32",
       "id": "transcript_skeleton_transcriptgridskeleton",
-      "community": 21,
+      "community": 22,
       "norm_label": "transcriptgridskeleton()"
     },
     {
@@ -1827,7 +1836,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
-      "community": 7,
+      "community": 6,
       "norm_label": "notification-list.tsx"
     },
     {
@@ -1836,7 +1845,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L28",
       "id": "notification_list_handlemarkasread",
-      "community": 7,
+      "community": 6,
       "norm_label": "handlemarkasread()"
     },
     {
@@ -1845,7 +1854,7 @@
       "source_file": "src/components/app/notification-list.tsx",
       "source_location": "L45",
       "id": "notification_list_handlemarkallasread",
-      "community": 7,
+      "community": 6,
       "norm_label": "handlemarkallasread()"
     },
     {
@@ -2133,7 +2142,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
-      "community": 7,
+      "community": 6,
       "norm_label": "api-client.ts"
     },
     {
@@ -2142,7 +2151,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L1",
       "id": "api_client_api",
-      "community": 7,
+      "community": 6,
       "norm_label": "api()"
     },
     {
@@ -2151,7 +2160,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L23",
       "id": "api_client_apiget",
-      "community": 7,
+      "community": 6,
       "norm_label": "apiget()"
     },
     {
@@ -2160,7 +2169,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L24",
       "id": "api_client_apipost",
-      "community": 7,
+      "community": 6,
       "norm_label": "apipost()"
     },
     {
@@ -2169,7 +2178,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L29",
       "id": "api_client_apipatch",
-      "community": 7,
+      "community": 6,
       "norm_label": "apipatch()"
     },
     {
@@ -2178,7 +2187,7 @@
       "source_file": "src/lib/api-client.ts",
       "source_location": "L34",
       "id": "api_client_apidelete",
-      "community": 7,
+      "community": 6,
       "norm_label": "apidelete()"
     },
     {
@@ -2223,7 +2232,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L1",
       "id": "src_lib_highlight_tags_tsx",
-      "community": 6,
+      "community": 7,
       "norm_label": "highlight-tags.tsx"
     },
     {
@@ -2232,7 +2241,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L9",
       "id": "highlight_tags_escaperegexp",
-      "community": 6,
+      "community": 7,
       "norm_label": "escaperegexp()"
     },
     {
@@ -2241,7 +2250,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L11",
       "id": "highlight_tags_escapehtml",
-      "community": 6,
+      "community": 7,
       "norm_label": "escapehtml()"
     },
     {
@@ -2250,7 +2259,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L19",
       "id": "highlight_tags_buildpattern",
-      "community": 6,
+      "community": 7,
       "norm_label": "buildpattern()"
     },
     {
@@ -2259,7 +2268,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L26",
       "id": "highlight_tags_highlighttohtml",
-      "community": 6,
+      "community": 7,
       "norm_label": "highlighttohtml()"
     },
     {
@@ -2268,7 +2277,7 @@
       "source_file": "src/lib/highlight-tags.tsx",
       "source_location": "L41",
       "id": "highlight_tags_segmentstohighlightedhtml",
-      "community": 6,
+      "community": 7,
       "norm_label": "segmentstohighlightedhtml()"
     },
     {
@@ -2277,7 +2286,7 @@
       "source_file": "src/lib/utils-server.ts",
       "source_location": "L1",
       "id": "src_lib_utils_server_ts",
-      "community": 22,
+      "community": 23,
       "norm_label": "utils-server.ts"
     },
     {
@@ -2286,7 +2295,7 @@
       "source_file": "src/lib/utils-server.ts",
       "source_location": "L13",
       "id": "utils_server_setsessioncookies",
-      "community": 22,
+      "community": 23,
       "norm_label": "setsessioncookies()"
     },
     {
@@ -2295,7 +2304,7 @@
       "source_file": "src/lib/utils-server.ts",
       "source_location": "L33",
       "id": "utils_server_clearsessioncookies",
-      "community": 22,
+      "community": 23,
       "norm_label": "clearsessioncookies()"
     },
     {
@@ -3837,7 +3846,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/new-transcript-dialog.tsx",
-      "source_location": "L575",
+      "source_location": "L580",
       "weight": 1.0,
       "_src": "src_components_transcripts_new_transcript_dialog_tsx",
       "_tgt": "new_transcript_dialog_formatsize",
@@ -3945,7 +3954,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L45",
+      "source_location": "L56",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_grid_tsx",
       "_tgt": "transcript_grid_handleeditsaved",
@@ -3957,7 +3966,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L70",
+      "source_location": "L63",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_grid_tsx",
       "_tgt": "transcript_grid_confirmdelete",
@@ -3969,7 +3978,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L91",
+      "source_location": "L84",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_grid_tsx",
       "_tgt": "transcript_grid_fetchtranscripts",
@@ -3981,7 +3990,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L119",
+      "source_location": "L112",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_grid_tsx",
       "_tgt": "transcript_grid_handledragend",
@@ -3993,7 +4002,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-grid.tsx",
-      "source_location": "L147",
+      "source_location": "L140",
       "weight": 1.0,
       "_src": "src_components_transcripts_transcript_grid_tsx",
       "_tgt": "transcript_grid_handlenewtranscript",
@@ -4197,7 +4206,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L473",
+      "source_location": "L492",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_formatsize",
@@ -4221,7 +4230,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L193",
+      "source_location": "L212",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_updatependingdesc",
@@ -4233,7 +4242,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L213",
+      "source_location": "L232",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_removepending",
@@ -4245,7 +4254,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L216",
+      "source_location": "L235",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
@@ -4257,7 +4266,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L247",
+      "source_location": "L266",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handleretranscribe",
@@ -4269,7 +4278,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L266",
+      "source_location": "L285",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handlesavemediadesc",
@@ -4281,7 +4290,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L295",
+      "source_location": "L314",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_handledeletemedia",
@@ -4293,7 +4302,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L314",
+      "source_location": "L333",
       "weight": 1.0,
       "_src": "src_components_transcripts_edit_transcript_dialog_tsx",
       "_tgt": "edit_transcript_dialog_onsubmit",
@@ -4305,7 +4314,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/edit-transcript-dialog.tsx",
-      "source_location": "L334",
+      "source_location": "L353",
       "weight": 1.0,
       "_src": "edit_transcript_dialog_onsubmit",
       "_tgt": "edit_transcript_dialog_handleuploadandtranscribe",
@@ -4353,11 +4362,23 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/transcripts/transcript-editor.tsx",
-      "source_location": "L32",
+      "source_location": "L39",
       "weight": 1.0,
-      "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_editor_tsx",
+      "_src": "src_components_transcripts_transcript_editor_tsx",
+      "_tgt": "transcript_editor_handlecancel",
+      "source": "src_components_transcripts_transcript_editor_tsx",
+      "target": "transcript_editor_handlecancel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/transcripts/transcript-editor.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "src_components_transcripts_transcript_editor_tsx",
       "_tgt": "transcript_editor_handlesave",
-      "source": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_transcript_editor_tsx",
+      "source": "src_components_transcripts_transcript_editor_tsx",
       "target": "transcript_editor_handlesave",
       "confidence_score": 1.0
     },
