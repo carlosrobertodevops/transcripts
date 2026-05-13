@@ -1,21 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Mic } from "lucide-react";
+import { Plus, Mic, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { TranscriptCard } from "./transcript-card";
 import { SortableCard } from "./sortable-card";
 import { NewTranscriptDialog } from "./new-transcript-dialog";
 import { EditTranscriptDialog } from "./edit-transcript-dialog";
 import { ConfirmDialog } from "./confirm-dialog";
 import { SearchBar } from "./search-bar";
 import { toast } from "sonner";
+import dayjs from "dayjs";
 
 type Transcript = {
   id: string;
@@ -40,15 +47,121 @@ interface TranscriptGridProps {
   initial: Transcript[];
 }
 
-export function TranscriptGrid({ initial }: TranscriptGridProps) {
+type SortField =
+  | "position"
+  | "title"
+  | "operationName"
+  | "operationDate"
+  | "transcriptionDate"
+  | "status"
+  | "mediaCount"
+  | "createdAt"
+  | "updatedAt";
+
+type SortDir = "asc" | "desc";
+
+const SORT_OPTIONS: { value: SortField; label: string }[] = [
+  { value: "position", label: "Ordem manual" },
+  { value: "title", label: "Título" },
+  { value: "operationName", label: "Operação" },
+  { value: "operationDate", label: "Data da operação" },
+  { value: "transcriptionDate", label: "Data da transcrição" },
+  { value: "status", label: "Status" },
+  { value: "mediaCount", label: "Quantidade de mídias" },
+  { value: "createdAt", label: "Criação" },
+  { value: "updatedAt", label: "Atualização" },
+];
+
+const STATUS_LABEL: Record<Transcript["status"], string> = {
+  pending: "pendente",
+  processing: "processando",
+  done: "concluída concluida done",
+  failed: "falhou erro",
+};
+
+const STATUS_ORDER: Record<Transcript["status"], number> = {
+  processing: 0,
+  pending: 1,
+  done: 2,
+  failed: 3,
+};
+
+const stripHtml = (s: string | null | undefined): string => {
+  if (!s) return "";
+  return s
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+const buildHaystack = (t: Transcript): string => {
+  const parts: string[] = [
+    t.title,
+    t.operationName ?? "",
+    stripHtml(t.analysis),
+    STATUS_LABEL[t.status] ?? t.status,
+    (t.media ?? []).map((m) => m.filename).join(" "),
+  ];
+  if (t.operationDate) {
+    const d = dayjs(t.operationDate);
+    if (d.isValid()) {
+      parts.push(d.format("DD/MM/YYYY"));
+      parts.push(d.format("YYYY-MM-DD"));
+    } else {
+      parts.push(t.operationDate);
+    }
+  }
+  if (t.transcriptionDate) {
+    const d = dayjs(t.transcriptionDate);
+    if (d.isValid()) {
+      parts.push(d.format("DD/MM/YYYY"));
+      parts.push(d.format("YYYY-MM-DD"));
+    } else {
+      parts.push(t.transcriptionDate);
+    }
+  }
+  return parts.join(" ").toLowerCase();
+};
+
+const compareValues = (
+  a: Transcript,
+  b: Transcript,
+  field: SortField,
+): number => {
+  if (field === "position") return a.position - b.position;
+  if (field === "mediaCount")
+    return (a.media?.length ?? 0) - (b.media?.length ?? 0);
+  if (field === "status")
+    return STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+
+  if (
+    field === "operationDate" ||
+    field === "transcriptionDate" ||
+    field === "createdAt" ||
+    field === "updatedAt"
+  ) {
+    const av = a[field] ? new Date(a[field] as string).getTime() : 0;
+    const bv = b[field] ? new Date(b[field] as string).getTime() : 0;
+    return av - bv;
+  }
+
+  const av = (a[field] ?? "") as string;
+  const bv = (b[field] ?? "") as string;
+  return av.localeCompare(bv, "pt-BR", { sensitivity: "base" });
+};
+
+export const TranscriptGrid = ({ initial }: TranscriptGridProps) => {
   const router = useRouter();
   const [items, setItems] = useState<Transcript[]>(initial);
   const [query, setQuery] = useState("");
+  const [sortField, setSortField] = useState<SortField>("position");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [newDialogOpen, setNewDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [editingTranscript, setEditingTranscript] = useState<Transcript | null>(
-    null,
-  );
+  const [editingTranscript, setEditingTranscript] =
+    useState<Transcript | null>(null);
   const [deletingTranscript, setDeletingTranscript] =
     useState<Transcript | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -83,8 +196,9 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
   useEffect(() => {
     const fetchTranscripts = async () => {
       try {
-        setLoading(true);
-        const res = await fetch("/api/transcripts", { credentials: "include" });
+        const res = await fetch("/api/transcripts", {
+          credentials: "include",
+        });
         if (res.ok) {
           const data = await res.json();
           const list = Array.isArray(data) ? data : (data?.items ?? []);
@@ -92,24 +206,30 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
         }
       } catch (error) {
         console.error("Failed to fetch transcripts:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchTranscripts();
   }, []);
 
-  const filtered = items.filter((t) => {
-    const q = query.toLowerCase();
-    return (
-      t.title.toLowerCase().includes(q) ||
-      (t.operationName?.toLowerCase().includes(q) ?? false) ||
-      (t.analysis?.toLowerCase().includes(q) ?? false)
-    );
-  });
+  const filteredSorted = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? items.filter((t) => buildHaystack(t).includes(q))
+      : items;
+    if (sortField === "position" && sortDir === "asc") return filtered;
 
-  async function handleDragEnd(event: DragEndEvent) {
+    const sorted = [...filtered].sort((a, b) => compareValues(a, b, sortField));
+    return sortDir === "desc" ? sorted.reverse() : sorted;
+  }, [items, query, sortField, sortDir]);
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    if (sortField !== "position") {
+      toast.info(
+        "Reordenação manual disponível apenas com ordenação por 'Ordem manual'",
+      );
+      return;
+    }
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -135,13 +255,17 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
       console.error("Failed to reorder:", error);
       setItems(initial);
     }
-  }
+  };
 
-  function handleNewTranscript(t: Transcript) {
+  const handleNewTranscript = (t: Transcript) => {
     setItems((prev) => (prev.some((p) => p.id === t.id) ? prev : [t, ...prev]));
-  }
+  };
 
-  const isEmpty = filtered.length === 0 && items.length === 0;
+  const toggleSortDir = () => {
+    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+  };
+
+  const isEmpty = items.length === 0;
 
   return (
     <>
@@ -161,12 +285,57 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
             <SearchBar onChange={setQuery} />
-            <Button onClick={() => setNewDialogOpen(true)}>
-              <Plus className="mr-2 size-4" />
-              Nova transcrição
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Select
+                value={sortField}
+                onValueChange={(v) => setSortField(v as SortField)}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <ArrowUpDown className="size-4 mr-2 text-muted-foreground" />
+                  <SelectValue placeholder="Ordenar por..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={toggleSortDir}
+                title={sortDir === "asc" ? "Crescente" : "Decrescente"}
+                aria-label="Inverter direção de ordenação"
+              >
+                {sortDir === "asc" ? (
+                  <ArrowUp className="size-4" />
+                ) : (
+                  <ArrowDown className="size-4" />
+                )}
+              </Button>
+              <Button onClick={() => setNewDialogOpen(true)}>
+                <Plus className="mr-2 size-4" />
+                Nova transcrição
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>
+              Exibindo <strong className="text-foreground">{filteredSorted.length}</strong>{" "}
+              de <strong className="text-foreground">{items.length}</strong>{" "}
+              {items.length === 1 ? "transcrição" : "transcrições"}
+              {query && (
+                <span>
+                  {" "}
+                  para <span className="italic">"{query}"</span>
+                </span>
+              )}
+            </span>
           </div>
 
           <DndContext
@@ -174,11 +343,11 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={filtered.map((t) => t.id)}
+              items={filteredSorted.map((t) => t.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-fr">
-                {filtered.map((transcript) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
+                {filteredSorted.map((transcript) => (
                   <SortableCard
                     key={transcript.id}
                     id={transcript.id}
@@ -193,7 +362,7 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
             </SortableContext>
           </DndContext>
 
-          {query && filtered.length === 0 && (
+          {query && filteredSorted.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
               Nenhum resultado para "{query}"
             </div>
@@ -226,4 +395,4 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
       />
     </>
   );
-}
+};

@@ -373,7 +373,7 @@ export const EditTranscriptDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-4xl md:max-w-5xl lg:max-w-6xl h-auto max-h-[60vh] overflow-hidden flex flex-col gap-4">
+      <DialogContent className="max-w-2xl md:max-w-3xl lg:max-w-4xl h-[45vh] overflow-hidden flex flex-col gap-4">
         <DialogHeader>
           <DialogTitle>Editar transcrição</DialogTitle>
           <DialogDescription>
@@ -433,7 +433,7 @@ export const EditTranscriptDialog = ({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 flex-1 min-h-0">
                 <Label htmlFor="edit-analysis">Análise (opcional)</Label>
                 <Controller
                   name="analysis"
@@ -443,7 +443,8 @@ export const EditTranscriptDialog = ({
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       placeholder="Resumo, codinomes identificados, próximas ações..."
-                      className="min-h-[120px] max-h-[280px] overflow-y-auto"
+                      className="flex-1 min-h-[120px]"
+                      bodyClassName="h-full"
                     />
                   )}
                 />
