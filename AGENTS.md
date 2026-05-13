@@ -2,6 +2,38 @@
 
 This project has a graphify knowledge graph at graphify-out/.
 
+## Atentions
+
+- Don't over-explain, over-engineer, or add unrequested improvements.
+- When making widespread changes to a file, use one "Write” instead of many
+  sequential `Edit`calls. Speed matters.
+
+Don't fetch well-known websites (Apple, Google, Stripe, etc.) for design/
+JAPI inspiration if you already know the patterns. Just start working.
+
+## Interaction Rules
+
+"Again" or "re-run" means repeat the same workflow with the same approach never rebuild from scratch.
+For tasks >3 steps involving an external API or tool, outline your plan
+in 3-5 bullets and wait for approval before executing.
+Only make the specific edits requested. Never add face swaps, composite
+changes, extra refactors, or modifications that weren't asked for.
+
+- When iterating on creative work (thumbnails, designs, copy),
+  change only
+  what the user asked to change. Preserve everything else excty
+
+## Browser Automation
+
+Never focus/foreground browser tabs or windows during automation. Run
+browser tasks in the background.
+
+If Chrome MCP tools fail twice, stop retrying. Fall back to WebFetch/
+WebSearch or ask the user.
+
+Before browser-heavy sessions, kill stale Chrome processes and clear temp
+profiles if MCP is unresponsive.
+
 Rules:
 
 - Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
@@ -12,11 +44,11 @@ Rules:
 
 ## Catálogo de Agentes
 
-| Agent                       | Propósito                                                                      | Triggers                  | Escopo                                 | Modelo           |
-| --------------------------- | ------------------------------------------------------------------------------ | ------------------------- | -------------------------------------- | ---------------- |
-| `worker-loop-agent`         | Orquestrar ticks periódicos e invocar job runner para processar transcrições  | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic | N/A (Bun service) |
-| `job-runner-agent`          | Executar lote de jobs pendentes (pending → processing → done/failed)          | POST /api/jobs/run        | READ-WRITE DB (transcriptions, media) | N/A (Elysia route)|
-| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md com codebase real | Manual (invocação direta) | READ-ONLY inspection + WRITE-ONLY docs | Claude Haiku 4.5 |
+| Agent                       | Propósito                                                                      | Triggers                                   | Escopo                                 | Modelo             |
+| --------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- | ------------------ |
+| `worker-loop-agent`         | Orquestrar ticks periódicos e invocar job runner para processar transcrições   | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic     | N/A (Bun service)  |
+| `job-runner-agent`          | Executar lote de jobs pendentes (pending → processing → done/failed)           | POST /api/jobs/run                         | READ-WRITE DB (transcriptions, media)  | N/A (Elysia route) |
+| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md com codebase real | Manual (invocação direta)                  | READ-ONLY inspection + WRITE-ONLY docs | Claude Haiku 4.5   |
 
 ---
 

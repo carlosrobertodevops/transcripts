@@ -2,6 +2,38 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Atentions
+
+- Don't over-explain, over-engineer, or add unrequested improvements.
+- When making widespread changes to a file, use one "Write” instead of many
+  sequential `Edit`calls. Speed matters.
+
+Don't fetch well-known websites (Apple, Google, Stripe, etc.) for design/
+JAPI inspiration if you already know the patterns. Just start working.
+
+## Interaction Rules
+
+"Again" or "re-run" means repeat the same workflow with the same approach never rebuild from scratch.
+For tasks >3 steps involving an external API or tool, outline your plan
+in 3-5 bullets and wait for approval before executing.
+Only make the specific edits requested. Never add face swaps, composite
+changes, extra refactors, or modifications that weren't asked for.
+
+- When iterating on creative work (thumbnails, designs, copy),
+  change only
+  what the user asked to change. Preserve everything else excty
+
+## Browser Automation
+
+Never focus/foreground browser tabs or windows during automation. Run
+browser tasks in the background.
+
+If Chrome MCP tools fail twice, stop retrying. Fall back to WebFetch/
+WebSearch or ask the user.
+
+Before browser-heavy sessions, kill stale Chrome processes and clear temp
+profiles if MCP is unresponsive.
+
 ## Visão Geral
 
 SaaS de transcrição de mídia (áudio/vídeo) com dashboard web. Upload → fila assíncrona → provider Whisper (local Faster-Whisper, Groq, ou OpenAI) → transcrição editável com segmentos.
