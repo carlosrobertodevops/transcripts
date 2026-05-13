@@ -3,6 +3,7 @@ import { db } from "@/db/client";
 import { transcripts, media, shares, transcriptSegments } from "@/db/schema";
 import { authPlugin } from "../plugins/auth";
 import { createNotification } from "@/server/services/notification";
+import { storage } from "@/server/services/storage";
 import { eq, and, or, desc, asc, ilike, inArray, sql, isNull } from "drizzle-orm";
 
 export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
@@ -332,10 +333,22 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       return { error: "forbidden" };
     }
 
-    await db
-      .update(transcripts)
-      .set({ deletedAt: new Date() })
-      .where(eq(transcripts.id, params.id));
+    const mediaRows = await db
+      .select({ storagePath: media.storagePath })
+      .from(media)
+      .where(eq(media.transcriptId, params.id));
+
+    for (const m of mediaRows) {
+      if (m.storagePath) {
+        try {
+          await storage.delete(m.storagePath);
+        } catch (err) {
+          console.error("[transcripts] storage delete failed", m.storagePath, err);
+        }
+      }
+    }
+
+    await db.delete(transcripts).where(eq(transcripts.id, params.id));
 
     set.status = 204;
     return null;

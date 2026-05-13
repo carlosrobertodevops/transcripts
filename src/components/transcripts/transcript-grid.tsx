@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { Plus, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { TranscriptCard } from "./transcript-card";
 import { SortableCard } from "./sortable-card";
 import { NewTranscriptDialog } from "./new-transcript-dialog";
@@ -25,7 +28,12 @@ type Transcript = {
   position: number;
   createdAt: string;
   updatedAt: string;
-  media: Array<{ id: string; filename: string; mime: string; durationSeconds: number | null }>;
+  media: Array<{
+    id: string;
+    filename: string;
+    mime: string;
+    durationSeconds: number | null;
+  }>;
 };
 
 interface TranscriptGridProps {
@@ -38,31 +46,16 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
   const [query, setQuery] = useState("");
   const [newDialogOpen, setNewDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editingTranscript, setEditingTranscript] = useState<Transcript | null>(null);
-  const [deletingTranscript, setDeletingTranscript] = useState<Transcript | null>(null);
+  const [editingTranscript, setEditingTranscript] = useState<Transcript | null>(
+    null,
+  );
+  const [deletingTranscript, setDeletingTranscript] =
+    useState<Transcript | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const handleEditSaved = (updated: {
-    id: string;
-    title: string;
-    operationName: string | null;
-    operationDate: string | null;
-    transcriptionDate: string | null;
-    analysis: string | null;
-  }) => {
+  const handleEditSaved = (updated: Transcript) => {
     setItems((prev) =>
-      prev.map((t) =>
-        t.id === updated.id
-          ? {
-              ...t,
-              title: updated.title,
-              operationName: updated.operationName,
-              operationDate: updated.operationDate,
-              transcriptionDate: updated.transcriptionDate,
-              analysis: updated.analysis,
-            }
-          : t,
-      ),
+      prev.map((t) => (t.id === updated.id ? { ...t, ...updated } : t)),
     );
     setEditingTranscript(null);
   };
@@ -148,56 +141,65 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
     setItems((prev) => (prev.some((p) => p.id === t.id) ? prev : [t, ...prev]));
   }
 
-  if (filtered.length === 0 && items.length === 0) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-6">
-        <Mic className="size-16 text-muted-foreground" />
-        <div className="text-center">
-          <h2 className="text-xl font-semibold">Nenhuma transcrição ainda</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Comece criando sua primeira transcrição
-          </p>
-        </div>
-        <Button onClick={() => setNewDialogOpen(true)}>
-          <Plus className="mr-2 size-4" />
-          Nova transcrição
-        </Button>
-        <NewTranscriptDialog
-          open={newDialogOpen}
-          setOpen={setNewDialogOpen}
-          onCreated={handleNewTranscript}
-        />
-      </div>
-    );
-  }
+  const isEmpty = filtered.length === 0 && items.length === 0;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <SearchBar onChange={setQuery} />
-        <Button onClick={() => setNewDialogOpen(true)}>
-          <Plus className="mr-2 size-4" />
-          Nova transcrição
-        </Button>
-      </div>
-
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={filtered.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-fr">
-            {filtered.map((transcript) => (
-              <SortableCard
-                key={transcript.id}
-                id={transcript.id}
-                transcript={transcript}
-                onClick={() => setEditingTranscript(transcript)}
-                onOpen={() => router.push(`/transcripts/${transcript.id}`)}
-                onEdit={() => setEditingTranscript(transcript)}
-                onDelete={() => setDeletingTranscript(transcript)}
-              />
-            ))}
+    <>
+      {isEmpty ? (
+        <div className="min-h-screen flex flex-col items-center justify-center gap-6">
+          <Mic className="size-16 text-muted-foreground" />
+          <div className="text-center">
+            <h2 className="text-xl font-semibold">Nenhuma transcrição ainda</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Comece criando sua primeira transcrição
+            </p>
           </div>
-        </SortableContext>
-      </DndContext>
+          <Button onClick={() => setNewDialogOpen(true)}>
+            <Plus className="mr-2 size-4" />
+            Nova transcrição
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <SearchBar onChange={setQuery} />
+            <Button onClick={() => setNewDialogOpen(true)}>
+              <Plus className="mr-2 size-4" />
+              Nova transcrição
+            </Button>
+          </div>
+
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={filtered.map((t) => t.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-fr">
+                {filtered.map((transcript) => (
+                  <SortableCard
+                    key={transcript.id}
+                    id={transcript.id}
+                    transcript={transcript}
+                    onClick={() => setEditingTranscript(transcript)}
+                    onOpen={() => router.push(`/transcripts/${transcript.id}`)}
+                    onEdit={() => setEditingTranscript(transcript)}
+                    onDelete={() => setDeletingTranscript(transcript)}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+
+          {query && filtered.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              Nenhum resultado para "{query}"
+            </div>
+          )}
+        </div>
+      )}
 
       <NewTranscriptDialog
         open={newDialogOpen}
@@ -222,12 +224,6 @@ export function TranscriptGrid({ initial }: TranscriptGridProps) {
         onConfirm={confirmDelete}
         onCancel={() => !deleting && setDeletingTranscript(null)}
       />
-
-      {query && filtered.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          Nenhum resultado para "{query}"
-        </div>
-      )}
-    </div>
+    </>
   );
 }

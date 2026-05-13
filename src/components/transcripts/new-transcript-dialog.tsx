@@ -384,6 +384,7 @@ export const NewTranscriptDialog = ({
         transcriptionDate: data.transcriptionDate || null,
         analysis: data.analysis || null,
       });
+      let transcriptId: string;
       if (!createdTranscript) {
         const res = await fetch("/api/transcripts", {
           method: "POST",
@@ -394,8 +395,7 @@ export const NewTranscriptDialog = ({
         if (!res.ok) throw new Error("Falha ao criar transcrição");
         const transcript: Transcript = await res.json();
         setCreatedTranscript(transcript);
-        onCreated?.(transcript);
-        toast.success("Transcrição salva");
+        transcriptId = transcript.id;
       } else {
         const res = await fetch(`/api/transcripts/${createdTranscript.id}`, {
           method: "PATCH",
@@ -404,8 +404,19 @@ export const NewTranscriptDialog = ({
           body,
         });
         if (!res.ok) throw new Error("Falha ao salvar");
-        toast.success("Transcrição salva");
+        transcriptId = createdTranscript.id;
       }
+
+      const refetch = await fetch(`/api/transcripts/${transcriptId}`, {
+        credentials: "include",
+      });
+      if (refetch.ok) {
+        const full: Transcript = await refetch.json();
+        onCreated?.(full);
+      }
+
+      toast.success("Transcrição salva");
+      setOpen(false);
     } catch (error) {
       toast.error("Erro ao salvar transcrição");
       console.error(error);
@@ -445,15 +456,9 @@ export const NewTranscriptDialog = ({
         }}
       >
         <DialogHeader>
-          <DialogTitle>
-            {createdTranscript
-              ? `Editar: ${createdTranscript.title}`
-              : "Nova transcrição"}
-          </DialogTitle>
+          <DialogTitle>Nova transcrição</DialogTitle>
           <DialogDescription>
-            {createdTranscript
-              ? "Gerencie mídia, edite dados e acompanhe a transcrição ao vivo"
-              : "Preencha os dados, anexe mídia e transcreva ao vivo"}
+            Preencha os dados, anexe mídia e transcreva ao vivo
           </DialogDescription>
         </DialogHeader>
 
@@ -519,7 +524,7 @@ export const NewTranscriptDialog = ({
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       placeholder="Resumo, codinomes identificados, próximas ações..."
-                      className="min-h-[120px] max-h-[280px] overflow-y-auto"
+                      className="min-h-[120px] max-h-[380px] overflow-y-auto"
                     />
                   )}
                 />

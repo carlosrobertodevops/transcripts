@@ -44,11 +44,11 @@ Rules:
 
 ## Catálogo de Agentes
 
-| Agent                       | Propósito                                                                      | Triggers                                   | Escopo                                 | Modelo             |
-| --------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- | ------------------ |
-| `worker-loop-agent`         | Orquestrar ticks periódicos e invocar job runner para processar transcrições   | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic     | N/A (Bun service)  |
-| `job-runner-agent`          | Executar lote de jobs pendentes (pending → processing → done/failed)           | POST /api/jobs/run                         | READ-WRITE DB (transcriptions, media)  | N/A (Elysia route) |
-| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md com codebase real | Manual (invocação direta)                  | READ-ONLY inspection + WRITE-ONLY docs | Claude Haiku 4.5   |
+| Agent | Propósito | Triggers | Escopo | Modelo |
+|-------|-----------|----------|--------|--------|
+| `worker-loop-agent` | Orquestrar ticks periódicos e invocar job runner para processar transcrições | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic | N/A (Bun service) |
+| `job-runner-agent` | Executar lote de jobs pendentes (pending → processing → done/failed) | POST /api/jobs/run | READ-WRITE DB (transcriptions, media) | N/A (Elysia route) |
+| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, PRD.md, SDD.md, SPEC.md, DESIGN.md e .claude/rules/*.md com codebase real. Revisa código e detecta divergências. | Manual (invocação direta ou pós-merge). Usar quando stack/padrões mudarem ou antes de release | READ-ONLY código + graphify. WRITE-ONLY docs/rules | Claude Sonnet 4.5 (qualidade máxima) |
 
 ---
 
@@ -102,22 +102,29 @@ Rules:
 
 ### project-docs-synchronizer
 
-**Propósito:** Manter CLAUDE.md, AGENTS.md, SDD.md, SPEC.md, DESIGN.md sincronizados com codebase real (Bun + Next.js 16 + Elysia 1.1.27 + Drizzle ORM 0.36.4).
+**Propósito:** Revisar código real + sincronizar documentação canônica (CLAUDE.md, AGENTS.md, PRD.md, SDD.md, SPEC.md, DESIGN.md) e rules (.claude/rules/*.md) com estado atual do repositório. Detecta divergências, violations de regras, e gera Resumo Executivo com achados de revisão.
 
 **Triggers:**
 
-- Invocação manual quando stack, estrutura ou padrões mudam
-- Pós-refatoração arquitetural
+- Manual quando stack, estrutura ou padrões mudam
+- Pós-refatoração arquitetural ou merge de features
+- Antes de releases
 - Quando descobrir divergências (ex: doc menciona Prisma, código usa Drizzle)
+- Onboarding de novos contributors
 
 **Escopo:**
 
-- Inspeciona `/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/` (READ-ONLY)
-- Escreve apenas `/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/{CLAUDE,AGENTS,SDD,SPEC,DESIGN}.md` (WRITE-ONLY)
-- Verifica package.json, drizzle.config.ts, tsconfig.json, docker-compose.yml como fonte de verdade
-- Preserva seções `graphify`, `CLAUDE.md graphify`, estruturas pré-existentes
+- **Inspeciona** (READ-ONLY): 
+  - `src/app/`, `src/server/`, `src/db/schema.ts`, `src/workers/`, `transcriber/`
+  - `package.json`, `docker-compose*.yml`, `drizzle.config.ts`, `tsconfig.json`, `.env.example`
+  - `graphify-out/GRAPH_REPORT.md` (primário), `graphify-out/manifest.json` (frescor), `graphify-out/graph.json` (dependências)
+  - `.claude/rules/*.md` (general.md, architecture.md, ui.md, e novos)
+- **Escreve** (WRITE-ONLY):
+  - `CLAUDE.md`, `AGENTS.md`, `PRD.md`, `SDD.md`, `SPEC.md`, `DESIGN.md`
+  - `.claude/rules/*.md` (quando padrões estáveis no código justificarem)
+- **Preserva**: Seções customizadas existentes, links Figma, decisões de produto
 
-**Modelo:** Claude Haiku 4.5 (token-efficient text analysis)
+**Modelo:** Claude Sonnet 4.5 (qualidade máxima para revisão de arquitetura)
 
 ---
 

@@ -1,126 +1,143 @@
-# transcripts — Especificação Técnica
+# Technical Specification — Chegii Transcripts
 
-**Data:** 2026-05-08
+**Data:** 2026-05-13 | **Schema:** `src/db/schema.ts` | **Rotas:** `src/server/routes/*.ts`
 
-Documento técnico de especificação de API + modelos de dados para o SaaS `transcripts` (transcrição de mídia → texto PT-BR). Implementação na raiz do repositório (`src/`).
-
----
-
-## Convenções
-
-- **Base URL**: `/api`
-- **Autenticação**: Cookie `transcripts_session` (JWT HS256, 7 dias)
-- **Refresh**: Cookie `transcripts_refresh` (JWT HS256, 30 dias)
-- **Content-Type**: `application/json` (exceto upload, que é `multipart/form-data`)
-- **Charset**: UTF-8
-- **Validação**: Zod 4 (schemas em `src/lib/zod.ts`)
-- **Status codes**: `200 OK`, `201 Created`, `204 No Content`, `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`, `413 Payload Too Large`, `422 Unprocessable Entity`, `500 Internal Server Error`
-- **Formato de erro**:
-  ```json
-  { "error": "<code>", "message": "<opcional>", "details": {} }
-  ```
+SaaS transcrição: upload média → fila assíncrona → Whisper local/Groq/OpenAI → edição com segmentos editáveis.
 
 ---
 
-## Modelos de Dados
+## API Overview
 
-Schema real em `src/db/schema.ts`. PostgreSQL 16 + Drizzle ORM 0.36.
-
-### `users`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `email` | TEXT | NO | — | Único |
-| `passwordHash` | TEXT | NO | — | bcrypt 10 rounds |
-| `name` | TEXT | YES | — | Nome do usuário |
-| `avatarUrl` | TEXT | YES | — | URL do avatar |
-| `role` | ENUM `user_role` | NO | `'user'` | `user` \| `admin` |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
-| `updatedAt` | TIMESTAMP | NO | `now()` | |
-
-### `transcripts`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `ownerId` | UUID | NO | — | FK → `users.id` cascade |
-| `title` | TEXT | NO | — | |
-| `operationName` | TEXT | YES | — | Nome da operação |
-| `analysis` | TEXT | YES | — | Análise/resumo |
-| `status` | ENUM `transcript_status` | NO | `'pending'` | `pending` \| `processing` \| `done` \| `failed` |
-| `position` | INTEGER | NO | `0` | Ordem (DnD) |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
-| `updatedAt` | TIMESTAMP | NO | `now()` | |
-
-### `media`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `transcriptId` | UUID | NO | — | FK → `transcripts.id` cascade |
-| `filename` | TEXT | NO | — | Nome original |
-| `mime` | TEXT | NO | — | `audio/*` ou `video/*` |
-| `sizeBytes` | INTEGER | NO | — | |
-| `storagePath` | TEXT | NO | — | Caminho relativo no `STORAGE_DIR` |
-| `durationSeconds` | REAL | YES | — | Definido pelo worker |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
-
-### `transcriptionJobs`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `mediaId` | UUID | NO | — | FK → `media.id` cascade |
-| `provider` | TEXT | NO | — | `groq` \| `openai` |
-| `status` | ENUM `job_status` | NO | `'pending'` | `pending` \| `processing` \| `done` \| `failed` |
-| `attempts` | INTEGER | NO | `0` | Retries (max 3) |
-| `error` | TEXT | YES | — | Mensagem de falha |
-| `startedAt` | TIMESTAMP | YES | — | |
-| `finishedAt` | TIMESTAMP | YES | — | |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
-
-### `transcriptSegments`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `mediaId` | UUID | NO | — | FK → `media.id` cascade |
-| `startMs` | INTEGER | NO | — | |
-| `endMs` | INTEGER | NO | — | |
-| `text` | TEXT | NO | — | |
-
-### `shares`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `transcriptId` | UUID | NO | — | FK → `transcripts.id` cascade |
-| `ownerId` | UUID | NO | — | FK → `users.id` cascade |
-| `sharedWithUserId` | UUID | NO | — | FK → `users.id` cascade |
-| `canEdit` | BOOLEAN | NO | `true` | |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
-| **Único** | — | — | — | `(transcriptId, sharedWithUserId)` |
-
-### `notifications`
-
-| Coluna | Tipo | Nullable | Default | Descrição |
-| --- | --- | --- | --- | --- |
-| `id` | UUID | NO | `gen_random_uuid()` | PK |
-| `userId` | UUID | NO | — | FK → `users.id` cascade |
-| `type` | TEXT | NO | — | `transcription_done` \| `transcript_updated` \| `transcript_shared` |
-| `payload` | JSONB | YES | — | |
-| `readAt` | TIMESTAMP | YES | — | `null` = não lida |
-| `createdAt` | TIMESTAMP | NO | `now()` | |
+| Item | Valor |
+|------|-------|
+| **Base URL** | `/api` (Elysia via Next.js App Router catch-all) |
+| **Auth** | JWT em cookies `transcripts_access` (7d) + `transcripts_refresh` (30d) |
+| **Payload JWT** | `{ sub: user.id, email, role }` — **sempre ler `sub` como user ID** |
+| **Content-Type** | `application/json` (multipart/form-data para upload) |
+| **Validação** | Zod 4 (schemas em `src/lib/zod.ts`) |
+| **Status codes** | RFC 7231: 200, 201, 204, 400, 401, 403, 404, 409, 413, 422, 500 |
+| **Errors** | `{ error: "code" }` ou `{ error: "code", message: "..." }` |
 
 ---
 
-## Schemas Zod
+## Database Schema
 
-`src/lib/zod.ts`:
+PostgreSQL 16 + Drizzle ORM. Real file: `src/db/schema.ts`.
 
-```ts
-export const emailSchema = z.email();
+### Users
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `email` | text | NO | — | UNIQUE |
+| `passwordHash` | text | YES | — | bcrypt |
+| `name` | text | YES | — | |
+| `avatarUrl` | text | YES | — | |
+| `role` | enum | NO | 'user' | 'user' \| 'admin' |
+| `createdAt` | timestamp | NO | now() | |
+| `updatedAt` | timestamp | NO | now() | |
+
+### Transcripts
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `ownerId` | uuid | NO | — | FK → users, cascade |
+| `title` | text | NO | — | |
+| `operationName` | text | YES | — | |
+| `operationDate` | timestamp | YES | — | |
+| `transcriptionDate` | timestamp | YES | — | |
+| `analysis` | text | YES | — | |
+| `transcriptHtml` | text | YES | — | rendered segments |
+| `status` | enum | NO | 'pending' | pending \| processing \| done \| failed |
+| `position` | int | NO | 0 | custom order (DnD) |
+| `deletedAt` | timestamp | YES | — | soft delete |
+| `createdAt` | timestamp | NO | now() | |
+| `updatedAt` | timestamp | NO | now() | |
+
+### Media
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `transcriptId` | uuid | NO | — | FK → transcripts, cascade |
+| `filename` | text | NO | — | original name |
+| `mime` | text | NO | — | audio/\* or video/\* |
+| `sizeBytes` | int | YES | — | |
+| `storagePath` | text | YES | — | relative to STORAGE_DIR |
+| `durationSeconds` | float | YES | — | from worker |
+| `description` | text | YES | — | user-provided |
+| `transcriptHtml` | text | YES | — | rendered segments |
+| `createdAt` | timestamp | NO | now() | |
+
+### Transcription Jobs
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `mediaId` | uuid | NO | — | FK → media, cascade |
+| `provider` | text | NO | — | local \| groq \| openai |
+| `status` | enum | NO | 'pending' | pending \| processing \| done \| failed |
+| `attempts` | int | NO | 0 | retry counter (max 3) |
+| `error` | text | YES | — | error message on fail |
+| `segmentCount` | int | NO | 0 | # of segments created |
+| `processingMs` | int | YES | — | duration |
+| `startedAt` | timestamp | YES | — | |
+| `finishedAt` | timestamp | YES | — | |
+| `createdAt` | timestamp | NO | now() | |
+
+### Transcript Segments
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `mediaId` | uuid | NO | — | FK → media, cascade |
+| `startMs` | int | NO | — | milliseconds from start |
+| `endMs` | int | NO | — | milliseconds from start |
+| `text` | text | NO | — | segment transcription |
+
+### Shares
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `transcriptId` | uuid | NO | — | FK → transcripts, cascade |
+| `ownerId` | uuid | NO | — | FK → users (owner), cascade |
+| `sharedWithUserId` | uuid | NO | — | FK → users (recipient), cascade |
+| `canEdit` | boolean | NO | true | false = read-only |
+| `createdAt` | timestamp | NO | now() | |
+| **UNIQUE** | — | — | — | (transcriptId, sharedWithUserId) |
+
+### Notifications
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `userId` | uuid | NO | — | FK → users, cascade |
+| `type` | text | NO | — | transcript_updated, etc. |
+| `payload` | jsonb | YES | — | context (transcriptId, title, etc.) |
+| `readAt` | timestamp | YES | — | null = unread |
+| `createdAt` | timestamp | NO | now() | |
+
+### Tags
+
+| Column | Type | Nullable | Default | Notes |
+|--------|------|----------|---------|-------|
+| `id` | uuid | NO | random | PK |
+| `ownerId` | uuid | NO | — | FK → users, cascade |
+| `name` | text | NO | — | tag label |
+| `color` | text | NO | '#6366f1' | hex #rrggbb |
+| `createdAt` | timestamp | NO | now() | |
+| **UNIQUE** | — | — | — | (ownerId, name) |
+
+---
+
+## Zod Schemas
+
+File: `src/lib/zod.ts`
+
+```typescript
+export const emailSchema = z.string().email();
 export const passwordSchema = z.string().min(6).max(72);
 
 export const loginSchema = z.object({
@@ -144,7 +161,7 @@ export const transcriptUpdateSchema = transcriptCreateSchema.partial();
 
 export const reorderSchema = z.array(
   z.object({
-    id: z.uuid(),
+    id: z.string().uuid(),
     position: z.number().int().nonnegative(),
   })
 );
@@ -166,279 +183,609 @@ export const passwordChangeSchema = z.object({
 
 ### Auth (`src/server/routes/auth.ts`)
 
-#### `POST /api/auth/register`
+#### POST `/auth/register`
 
-Cria conta nova.
+**Request:**
+```json
+{ "name": "João Silva", "email": "joao@example.com", "password": "senha123" }
+```
 
-- **Body** (Zod `registerSchema`): `{ name, email, password }`
-- **Response 201**: `{ user: { id, email, name, role }, access }`
-- **Set-Cookie**: `transcripts_session` (7d), `transcripts_refresh` (30d) — `httpOnly samesite=lax`
-- **Erros**: `409 email_taken`, `422 validation`
-- **Auth**: não
+**Response (201):**
+```json
+{
+  "user": { "id": "uuid", "email": "joao@example.com", "name": "João Silva", "role": "user" },
+  "access": "jwt-token"
+}
+```
 
-#### `POST /api/auth/login`
+| Field | Validation |
+|-------|-----------|
+| name | 2–80 chars |
+| email | RFC 5322 |
+| password | 6–72 chars |
 
-- **Body** (Zod `loginSchema`): `{ email, password }`
-- **Response 200**: `{ user, access }`
-- **Set-Cookie**: idem register
-- **Erros**: `401 invalid_credentials`, `422 validation`
-- **Auth**: não
+**Set-Cookie:** `transcripts_access`, `transcripts_refresh` (httpOnly, sameSite=lax)
 
-#### `POST /api/auth/logout`
+**Errors:** `409 email_taken`, `422 validation`
 
-- **Response 200**: `{ ok: true }`
-- **Set-Cookie**: ambos cookies com `Max-Age=0`
-- **Auth**: opcional
+---
 
-#### `GET /api/auth/me`
+#### POST `/auth/login`
 
-- **Response 200**: `{ user: { id, email, name, role, avatarUrl, createdAt } }`
-- **Erros**: `401 unauthorized`
-- **Auth**: required
+**Request:**
+```json
+{ "email": "joao@example.com", "password": "senha123" }
+```
 
-#### `POST /api/auth/refresh`
+**Response (200):**
+```json
+{
+  "user": { "id": "uuid", "email": "joao@example.com", "name": "João Silva", "role": "user" },
+  "access": "jwt-token"
+}
+```
 
-- **Auth**: cookie `transcripts_refresh`
-- **Response 200**: `{ user, access }`
-- **Erros**: `401 invalid_refresh`
+**Set-Cookie:** same as register
+
+**Errors:** `401 invalid_credentials`
+
+---
+
+#### POST `/auth/logout`
+
+**Response (200):**
+```json
+{ "ok": true }
+```
+
+**Set-Cookie:** both cookies with `Max-Age=0`
+
+---
+
+#### GET `/auth/me`
+
+**Auth:** JWT required
+
+**Response (200):**
+```json
+{
+  "user": { "id": "uuid", "email": "joao@example.com", "name": "João Silva", "role": "user" }
+}
+```
+
+**Errors:** `401 unauthorized`
+
+---
+
+#### POST `/auth/refresh`
+
+**Auth:** cookie `transcripts_refresh`
+
+**Response (200):**
+```json
+{
+  "user": { "id": "uuid", "email": "joao@example.com", "name": "João Silva", "role": "user" }
+}
+```
+
+**Errors:** `401 invalid_refresh_token`
 
 ---
 
 ### Transcripts (`src/server/routes/transcripts.ts`)
 
-#### `GET /api/transcripts?q=&page=1`
+#### GET `/transcripts?q=...&page=1`
 
-Lista transcrições acessíveis (owner OR shared) ordenadas por `position asc, createdAt desc`.
+**Auth:** JWT required
 
-- **Query**: `q` (busca em `title`, `operationName`, `analysis`), `page` (default 1, size 30)
-- **Response 200**: `{ items: Transcript[], page, hasMore }` — cada item inclui `media[]`
-- **Auth**: required
+**Query params:**
+- `q` — search title/operationName/analysis
+- `page` — default 1, limit 30
 
-#### `POST /api/transcripts`
+**Response (200):**
+```json
+{
+  "items": [
+    {
+      "id": "uuid", "ownerId": "uuid", "title": "...", "operationName": "...",
+      "operationDate": "2026-05-10T...", "transcriptionDate": "2026-05-11T...",
+      "analysis": "...", "transcriptHtml": null,
+      "status": "processing", "position": 0, "deletedAt": null,
+      "createdAt": "...", "updatedAt": "...",
+      "media": [ /* media array */ ]
+    }
+  ],
+  "page": 1,
+  "hasMore": false
+}
+```
 
-- **Body** (Zod `transcriptCreateSchema`): `{ title, operationName?, analysis? }`
-- **Response 201**: `{ transcript }` com `position = max(position)+1`
-- **Auth**: required
+**Access:** owner OR shared user (soft-delete: `deletedAt IS NULL`)
 
-#### `GET /api/transcripts/:id`
+---
 
-- **Response 200**: `{ transcript, media: Media[], segments: Segment[] }`
-- **Erros**: `403 forbidden` (não é owner nem shared), `404 not_found`
-- **Auth**: required
+#### POST `/transcripts`
 
-#### `PATCH /api/transcripts/:id`
+**Auth:** JWT required
 
-- **Body** (Zod `transcriptUpdateSchema`): `{ title?, operationName?, analysis? }`
-- **Response 200**: `{ ok: true }`
-- **Side-effect**: cria `notifications` para todos `sharedWithUserId` (`type='transcript_updated'`)
-- **Permissão**: owner OR share com `canEdit=true`
-- **Erros**: `403`, `404`, `422`
+**Request:**
+```json
+{
+  "title": "Operação XYZ",
+  "operationName": "xyz-123",
+  "operationDate": "2026-05-10",
+  "transcriptionDate": "2026-05-11",
+  "analysis": "..."
+}
+```
 
-#### `PATCH /api/transcripts/reorder`
+**Response (201):**
+```json
+{
+  "id": "uuid", "ownerId": "uuid", "title": "Operação XYZ", "operationName": "xyz-123",
+  "operationDate": "2026-05-10T00:00:00.000Z", "transcriptionDate": "2026-05-11T00:00:00.000Z",
+  "analysis": "...", "transcriptHtml": null,
+  "status": "pending", "position": 1, "deletedAt": null,
+  "createdAt": "...", "updatedAt": "...",
+  "media": []
+}
+```
 
-- **Body** (Zod `reorderSchema`): `Array<{ id, position }>`
-- **Response 200**: `{ ok: true }`
-- **Transação**: Drizzle `db.transaction`
-- **Permissão**: cada id deve ser owned by `user.id`
+**Position:** auto-increments to `MAX(position)+1` for owner.
 
-#### `DELETE /api/transcripts/:id`
+**Errors:** `401 unauthorized`, `422 title_required`
 
-- **Response 204**
-- **Permissão**: owner OR `role='admin'`
-- **Cascade**: media, segments, jobs, shares (FK)
+---
+
+#### GET `/transcripts/:id`
+
+**Auth:** JWT required
+
+**Response (200):**
+```json
+{
+  "transcript": { /* full object */ },
+  "media": [ /* media array */ ],
+  "segments": [
+    { "id": "uuid", "mediaId": "uuid", "startMs": 0, "endMs": 5000, "text": "..." }
+  ]
+}
+```
+
+**Access:** owner OR shared user
+
+**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`
+
+---
+
+#### PATCH `/transcripts/:id`
+
+**Auth:** JWT required
+
+**Request:**
+```json
+{
+  "title": "...", "operationName": "...", "operationDate": "...",
+  "transcriptionDate": "...", "analysis": "...", "transcriptHtml": "..."
+}
+```
+
+All fields optional. Notifies shared users via `notifications` (type: `transcript_updated`).
+
+**Response (200):**
+```json
+{ "ok": true }
+```
+
+**Access:** owner OR shared user with `canEdit=true`
+
+**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`, `422 validation`
+
+---
+
+#### PATCH `/transcripts/reorder`
+
+**Auth:** JWT required
+
+**Request:**
+```json
+[
+  { "id": "uuid-1", "position": 0 },
+  { "id": "uuid-2", "position": 1 }
+]
+```
+
+**Response (200):**
+```json
+{ "ok": true }
+```
+
+**Validation:** each `id` must be owned by `user.id`. Transaction: Drizzle `db.transaction()`.
+
+**Errors:** `403 forbidden`, `401 unauthorized`
+
+---
+
+#### DELETE `/transcripts/:id`
+
+**Auth:** JWT required
+
+**Response (204)** (no content)
+
+**Access:** owner OR `role='admin'`
+
+**Cascade:** deletes media, jobs, segments, shares.
 
 ---
 
 ### Media (`src/server/routes/media.ts`)
 
-#### `POST /api/transcripts/:id/media`
+#### POST `/transcripts/:id/media`
 
-Upload múltiplo. Valida mime `audio/*` ou `video/*`. Para cada arquivo cria `media` + `transcriptionJobs(status='pending')` e atualiza `transcript.status='processing'`.
+**Auth:** JWT required (owner OR shared with `canEdit`)
 
-- **Body**: `multipart/form-data` campo `files` (múltiplo)
-- **Response 201**: `{ media: Media[], jobsQueued: N }`
-- **Limites**: 500 MB/arquivo
-- **Permissão**: owner OR share com `canEdit`
-- **Erros**: `400 invalid_mime`, `413 too_large`
+**Body:** `multipart/form-data`
 
-#### `DELETE /api/media/:id`
+| Field | Type | Notes |
+|-------|------|-------|
+| `files` | File[] | 1+ audio/video files |
+| `file` | File | alternative to `files` |
+| `description` / `descriptions` | string[] \| string | per-file descriptions (optional) |
 
-- **Response 204**
-- **Side-effect**: `storage.delete(storagePath)`
-- **Permissão**: owner
+**Validation:**
+- MIME: audio/* or video/* (or known extension)
+- Size: ≤500 MB per file
+- At least one file required
+
+**Response (201):**
+```json
+{
+  "media": [
+    {
+      "id": "uuid", "transcriptId": "uuid", "filename": "audio.mp3",
+      "mime": "audio/mpeg", "sizeBytes": 5242880,
+      "storagePath": "transcript-id/uuid-audio.mp3",
+      "durationSeconds": null, "description": "...",
+      "transcriptHtml": null, "createdAt": "..."
+    }
+  ],
+  "jobsQueued": 1
+}
+```
+
+**Side effects:**
+- Creates `transcriptionJobs` (status=pending) for each file
+- Updates transcript to status=processing (first upload)
+- Saves file to STORAGE_DIR
+
+**Errors:** `400 invalid_mime|no_files`, `401 unauthorized`, `403 forbidden`, `404 not_found`, `413 file_too_large`, `500 storage_failed`
+
+---
+
+#### PATCH `/media/:id`
+
+**Auth:** JWT required (owner of transcript OR shared with `canEdit`)
+
+**Request:**
+```json
+{ "description": "...", "filename": "...", "transcriptHtml": "..." }
+```
+
+**Response (200):**
+```json
+{
+  "id": "uuid", "transcriptId": "uuid", "filename": "novo-nome.mp3",
+  "mime": "audio/mpeg", "sizeBytes": 5242880, "storagePath": "...",
+  "durationSeconds": null, "description": "...", "transcriptHtml": "...",
+  "createdAt": "..."
+}
+```
+
+**Errors:** `400 no_updates`, `401 unauthorized`, `403 forbidden`, `404 not_found`
+
+---
+
+#### DELETE `/media/:id`
+
+**Auth:** JWT required (owner only)
+
+**Response (204)** (no content)
+
+**Side effects:** deletes file from storage. Cascade deletes jobs + segments.
+
+**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`
+
+---
+
+### Jobs (Internal, `src/server/routes/jobs.ts`)
+
+#### POST `/jobs/run`
+
+**Auth:** header `x-internal-key: $INTERNAL_API_KEY` (not JWT)
+
+Worker tick. Called by Bun worker service every `WORKER_INTERVAL_MS` (default 3s).
+
+**Response (200):**
+```json
+{ "ok": true }
+```
+
+**Behavior:** `runPendingJobs(5)` in `src/server/services/jobs.ts`:
+1. Fetches jobs with status=pending (limit 5)
+2. Marks processing, increments attempts
+3. Reads media file, ffmpeg pre-processes video → MP3 16kHz mono
+4. Calls `getProvider().transcribe()`
+5. Inserts `transcriptSegments` with {startMs, endMs, text}
+6. Marks job done, updates media.durationSeconds
+7. When all media done: marks transcript done, creates notification
+8. On error: retries up to 3x, then marks failed
+
+**Errors:** `401 invalid_internal_key`
+
+---
+
+#### GET `/transcripts/:id/jobs`
+
+**Auth:** JWT required (owner only)
+
+**Response (200):**
+```json
+{
+  "jobs": [
+    {
+      "id": "uuid", "mediaId": "uuid", "filename": "audio.mp3",
+      "status": "processing", "error": null,
+      "transcriptText": "...", "segmentCount": 12
+    }
+  ]
+}
+```
+
+Live polling for job status + accumulated segments.
+
+**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`
 
 ---
 
 ### Shares (`src/server/routes/shares.ts`)
 
-#### `POST /api/transcripts/:id/share`
+#### POST `/transcripts/:id/shares`
 
-- **Body** (Zod `shareSchema`): `{ email, canEdit }`
-- **Response 201**: `{ share }`
-- **Side-effect**: cria `notifications` (`type='transcript_shared'`)
-- **Erros**: `404 user_not_found`, `409 already_shared`
+**Auth:** JWT required (owner only)
 
-#### `GET /api/transcripts/:id/shares`
+**Request:**
+```json
+{ "email": "partner@example.com", "canEdit": true }
+```
 
-- **Response 200**: `{ shares: Array<{ id, sharedWithUserId, sharedWithEmail, sharedWithName, canEdit, createdAt }> }`
-- **Permissão**: owner
+**Response (201):**
+```json
+{
+  "share": {
+    "id": "uuid", "transcriptId": "uuid", "ownerId": "uuid",
+    "sharedWithUserId": "uuid", "canEdit": true, "createdAt": "..."
+  }
+}
+```
 
-#### `DELETE /api/shares/:id`
+**Errors:** `400 cannot_share_with_yourself`, `401 unauthorized`, `404 user_not_found|transcript_not_found`, `409 already_shared`
 
-- **Response 204**
-- **Permissão**: owner do transcript original
+---
+
+#### GET `/transcripts/:id/shares`
+
+**Auth:** JWT required (owner only)
+
+**Response (200):**
+```json
+{
+  "shares": [
+    { "id": "uuid", "transcriptId": "uuid", "ownerId": "uuid", "sharedWithUserId": "uuid", "canEdit": true, "createdAt": "..." }
+  ]
+}
+```
+
+---
+
+#### PATCH `/transcripts/:id/shares/:shareId`
+
+**Auth:** JWT required (owner only)
+
+**Request:**
+```json
+{ "canEdit": false }
+```
+
+**Response (200):**
+```json
+{
+  "share": { "id": "uuid", "transcriptId": "uuid", "ownerId": "uuid", "sharedWithUserId": "uuid", "canEdit": false, "createdAt": "..." }
+}
+```
+
+---
+
+#### DELETE `/transcripts/:id/shares/:shareId`
+
+**Auth:** JWT required (owner only)
+
+**Response (204)** (no content)
+
+**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`
 
 ---
 
 ### Notifications (`src/server/routes/notifications.ts`)
 
-#### `GET /api/notifications?unread=1`
+#### GET `/notifications?page=1`
 
-- **Response 200**: `Notification[]` (ordem `createdAt desc`, limit 50)
+**Auth:** JWT required
 
-#### `PATCH /api/notifications/:id/read`
+**Query:** `page` (default 1, limit 30)
 
-- **Response 200**: `{ notification: { id, readAt } }`
-
-#### `POST /api/notifications/read-all`
-
-- **Response 200**: `{ updated: N }`
-
----
-
-### Users (`src/server/routes/users.ts`)
-
-#### `GET /api/users/me`
-
-- **Response 200**: user sem `passwordHash`
-
-#### `PATCH /api/users/me`
-
-- **Body**: `{ name?, avatarUrl? }`
-- **Response 200**: user atualizado
-
-#### `POST /api/users/me/password`
-
-- **Body** (Zod `passwordChangeSchema`): `{ current, next }`
-- **Response 200**: `{ ok: true }`
-- **Erros**: `401 invalid_current`, `422`
-
-#### `DELETE /api/users/me`
-
-- **Response 204**
-- **Cascade**: deleta tudo que pertence ao user.
-
----
-
-### Jobs (interno, `src/server/routes/jobs.ts`)
-
-#### `POST /api/jobs/run`
-
-Worker container chama a cada `WORKER_INTERVAL_MS` (padrão 3000ms).
-
-- **Header**: `x-internal-key: $INTERNAL_API_KEY`
-- **Response 200**: `{ ok: true, processed: N }`
-- **Comportamento**: `runPendingJobs(5)` em `src/server/services/jobs.ts`:
-  1. Pega jobs `status='pending'` (limit 5)
-  2. Marca `processing`, `attempts++`
-  3. Lê `media`, ffmpeg pré-processa se vídeo
-  4. Chama `getProvider().transcribe(audioPath, 'pt')` (Groq Whisper-large-v3 default)
-  5. Insere `transcriptSegments`, atualiza `media.durationSeconds`
-  6. Marca job `done`. Quando todos jobs do transcript estão `done`: `transcript.status='done'` + `notifications(type='transcription_done')` para owner
-  7. Em erro: marca `failed` se `attempts>=3`, senão volta `pending` para retry
-- **Erros**: `401 invalid_internal_key`
-
----
-
-## Códigos de Erro Globais
-
-| Code | Status | Significado |
-| --- | --- | --- |
-| `unauthorized` | 401 | Sem cookie de sessão válido |
-| `forbidden` | 403 | Sem permissão (não é owner/share/admin) |
-| `not_found` | 404 | Recurso inexistente |
-| `validation` | 422 | Zod schema inválido (`details` no payload) |
-| `email_taken` | 409 | Registro com email já usado |
-| `invalid_credentials` | 401 | Login com email/senha errados |
-| `user_not_found` | 404 | Email de share não corresponde a user |
-| `already_shared` | 409 | Share duplicado |
-| `invalid_mime` | 400 | Upload com tipo inválido |
-| `too_large` | 413 | Arquivo > 500 MB |
-| `invalid_internal_key` | 401 | Worker sem header correto |
-
----
-
-## Limites
-
-- **Tamanho máx upload**: 500 MB por arquivo
-- **MIME aceitos**: `audio/*`, `video/*`
-- **Senha**: 6..72 caracteres (limite bcrypt)
-- **Page size (transcripts)**: 30
-- **Notifications list**: 50
-- **JWT TTL**: access 7d, refresh 30d
-- **Worker tick**: `WORKER_INTERVAL_MS` (padrão 3000ms)
-- **Job retries**: 3 antes de marcar `failed`
-- **Jobs por tick**: até `limit` (padrão 3, máx 5)
-
----
-
-## Exemplos cURL
-
-### Registro + login
-
-```bash
-curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Carla Souza","email":"carla@advsouza.com.br","password":"senha-forte-123"}' \
-  -c cookies.txt
-
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"carla@advsouza.com.br","password":"senha-forte-123"}' \
-  -c cookies.txt
-```
-
-### Criar transcrição + upload
-
-```bash
-curl -X POST http://localhost:3000/api/transcripts \
-  -H "Content-Type: application/json" \
-  -b cookies.txt \
-  -d '{"title":"Audiência 12/05 — Souza vs. Acme","operationName":"Acme/2026"}'
-
-# id retornado no JSON acima
-TID=...
-
-curl -X POST http://localhost:3000/api/transcripts/$TID/media \
-  -b cookies.txt \
-  -F "files=@audiencia.opus" \
-  -F "files=@anexo.mp4"
-```
-
-### Compartilhar
-
-```bash
-curl -X POST http://localhost:3000/api/transcripts/$TID/share \
-  -H "Content-Type: application/json" \
-  -b cookies.txt \
-  -d '{"email":"socio@advsouza.com.br","canEdit":true}'
+**Response (200):**
+```json
+{
+  "notifications": [
+    {
+      "id": "uuid", "userId": "uuid", "type": "transcript_updated",
+      "payload": { "transcriptId": "uuid", "title": "..." },
+      "readAt": null, "createdAt": "..."
+    }
+  ],
+  "page": 1,
+  "hasMore": false
+}
 ```
 
 ---
 
-## Webhook / Worker Interno
+#### PATCH `/notifications/:id/read`
 
-`POST /api/jobs/run` com header `x-internal-key`. O serviço `worker` no `docker-compose*.yml` chama esse endpoint a cada `WORKER_INTERVAL_MS` (padrão 3000ms). NÃO expor publicamente — em deploy use rede interna. Em Coolify, o serviço fica sem `ports`/`expose` público.
+**Auth:** JWT required
+
+**Response (200):**
+```json
+{
+  "notification": {
+    "id": "uuid", "userId": "uuid", "type": "transcript_updated",
+    "payload": { ... }, "readAt": "2026-05-11T10:35:00.000Z", "createdAt": "..."
+  }
+}
+```
 
 ---
 
-## Notas de Implementação
+#### POST `/notifications/read-all`
 
-- Plugin Elysia `auth` (`src/server/plugins/auth.ts`) injeta `user` no contexto via cookie `transcripts_session`.
-- Plugin `error` normaliza Zod → 422, throws → 500.
-- Plugin `cors` permite `NEXT_PUBLIC_APP_URL` + `localhost:3000`, com `credentials: true`.
-- Drizzle transações (`db.transaction(async tx => ...)`) usadas em reorder.
-- Cascade de FK em `media`, `transcriptionJobs`, `transcriptSegments`, `shares`, `notifications`.
-- Storage abstrato `StorageProvider` (`src/server/services/storage.ts`) com `LocalStorage` em `STORAGE_DIR=./uploads`. Trocar por S3 sem refactor de routes.
-- Provedores transcrição (`src/server/services/transcription.ts`): `GroqProvider` (default, `whisper-large-v3`, `language=pt`, `verbose_json`), `OpenAIProvider` (fallback, `whisper-1`).
-- ffmpeg via `Bun.spawn(["ffmpeg","-y","-i", input, "-vn","-acodec","libmp3lame","-ar","16000","-ac","1", out])` quando mime começa com `video/`.
+**Auth:** JWT required
+
+**Response (200):**
+```json
+{ "updated": 3 }
+```
+
+Marks all unread notifications as read.
+
+---
+
+### Tags (`src/server/routes/tags.ts`)
+
+#### GET `/tags`
+
+**Auth:** JWT required
+
+**Response (200):**
+```json
+{
+  "tags": [
+    {
+      "id": "uuid", "ownerId": "uuid", "name": "importante",
+      "color": "#ef4444", "occurrences": 42, "createdAt": "..."
+    }
+  ]
+}
+```
+
+**`occurrences`:** count of segments containing tag (word-boundary regex).
+
+---
+
+#### POST `/tags`
+
+**Auth:** JWT required
+
+**Request:**
+```json
+{ "name": "importante", "color": "#ef4444" }
+```
+
+**Validation:**
+- `name` — 1–64 chars (required)
+- `color` — hex #rrggbb (default #6366f1)
+- Unique: (ownerId, name)
+
+**Response (201):**
+```json
+{ "id": "uuid", "ownerId": "uuid", "name": "importante", "color": "#ef4444", "createdAt": "..." }
+```
+
+**Errors:** `401 unauthorized`, `409 duplicate`, `422 invalid_name`
+
+---
+
+#### PATCH `/tags/:id`
+
+**Auth:** JWT required (owner only)
+
+**Request:**
+```json
+{ "name": "crítico", "color": "#f97316" }
+```
+
+**Response (200):**
+```json
+{ "id": "uuid", "ownerId": "uuid", "name": "crítico", "color": "#f97316", "createdAt": "..." }
+```
+
+**Errors:** `400 no_updates`, `401 unauthorized`, `404 not_found`, `422 invalid_name`
+
+---
+
+#### DELETE `/tags/:id`
+
+**Auth:** JWT required (owner only)
+
+**Response (204)** (no content)
+
+---
+
+## Limits
+
+| Limit | Value |
+|-------|-------|
+| File size | 500 MB |
+| MIME types | audio/*, video/* |
+| Password length | 6–72 chars |
+| Page size (transcripts) | 30 |
+| Page size (notifications) | 30 |
+| JWT access TTL | 7 days |
+| JWT refresh TTL | 30 days |
+| Worker tick interval | 3000 ms (configurable) |
+| Job retries | 3 before failed |
+| Jobs per tick | max 5 |
+
+---
+
+## Enums
+
+### User Role
+```
+'user' | 'admin'
+```
+
+### Transcript Status
+```
+'pending' | 'processing' | 'done' | 'failed'
+```
+
+### Job Status
+```
+'pending' | 'processing' | 'done' | 'failed'
+```
+
+### Notification Types
+```
+'transcript_updated' | 'transcription_done'
+```
+
+---
+
+## Implementation Notes
+
+- **Auth plugin** (`src/server/plugins/auth.ts`): injects `user` from cookie; derive pattern.
+- **Error plugin** (`src/server/plugins/error.ts`): normalizes Zod → 422, throws → 500.
+- **CORS**: allows `NEXT_PUBLIC_APP_URL` + localhost:3000, credentials: true.
+- **Drizzle**: transactions used in reorder. Cascading FKs: media, jobs, segments, shares, notifications.
+- **Storage**: abstract `StorageProvider` (`src/server/services/storage.ts`). Default: LocalStorage (`STORAGE_DIR=./uploads`). Swap to S3 without route refactor.
+- **Transcription**: `getProvider()` returns GroqProvider (default, whisper-large-v3, language=pt) or OpenAIProvider (fallback). FFmpeg pre-processes video → MP3 16kHz mono on worker tick.

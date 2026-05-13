@@ -89,11 +89,30 @@ interface TranscriptLite {
   transcriptHtml?: string | null;
 }
 
+interface TranscriptFull {
+  id: string;
+  title: string;
+  operationName: string | null;
+  operationDate: string | null;
+  transcriptionDate: string | null;
+  analysis: string | null;
+  status: "pending" | "processing" | "done" | "failed";
+  position: number;
+  createdAt: string;
+  updatedAt: string;
+  media: Array<{
+    id: string;
+    filename: string;
+    mime: string;
+    durationSeconds: number | null;
+  }>;
+}
+
 interface EditTranscriptDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   transcript: TranscriptLite | null;
-  onSaved?: (updated: TranscriptLite) => void;
+  onSaved?: (updated: TranscriptFull) => void;
 }
 
 export const EditTranscriptDialog = ({
@@ -334,15 +353,15 @@ export const EditTranscriptDialog = ({
         await handleUploadAndTranscribe();
       }
 
-      toast.success("Transcrição atualizada!");
-      onSaved?.({
-        id: transcript.id,
-        title: data.title,
-        operationName: data.operationName || null,
-        operationDate: data.operationDate || null,
-        transcriptionDate: data.transcriptionDate || null,
-        analysis: data.analysis || null,
+      const refetch = await fetch(`/api/transcripts/${transcript.id}`, {
+        credentials: "include",
       });
+      if (refetch.ok) {
+        const full: TranscriptFull = await refetch.json();
+        onSaved?.(full);
+      }
+
+      toast.success("Transcrição atualizada!");
       setOpen(false);
     } catch (error) {
       toast.error("Erro ao salvar transcrição");

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Save, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   analysis: z.string().max(5000, "Análise não pode exceder 5000 caracteres"),
@@ -22,13 +23,27 @@ interface TranscriptEditorProps {
   onCancel?: () => void;
 }
 
-export function TranscriptEditor({ transcriptId, initialContent = "", onSave, onCancel }: TranscriptEditorProps) {
+export function TranscriptEditor({
+  transcriptId,
+  initialContent = "",
+  onSave,
+  onCancel,
+}: TranscriptEditorProps) {
+  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { analysis: initialContent },
   });
 
+  function handleCancel() {
+    if (onCancel) {
+      onCancel();
+      return;
+    }
+
+    router.back();
+  }
   async function handleSave(data: FormData) {
     setSaving(true);
     try {
@@ -60,10 +75,17 @@ export function TranscriptEditor({ transcriptId, initialContent = "", onSave, on
         className="min-h-48 resize-none"
       />
       {form.formState.errors.analysis && (
-        <p className="text-xs text-destructive">{form.formState.errors.analysis.message}</p>
+        <p className="text-xs text-destructive">
+          {form.formState.errors.analysis.message}
+        </p>
       )}
       <div className="flex gap-2 justify-end">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleCancel}
+          disabled={saving}
+        >
           <X className="size-4 mr-2" />
           Cancelar
         </Button>

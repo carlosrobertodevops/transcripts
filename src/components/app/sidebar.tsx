@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
@@ -15,56 +15,56 @@ import {
   Sun,
   AudioWaveform,
   Tag,
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useTheme } from 'next-themes'
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 
 export function Sidebar() {
-  const router = useRouter()
-  const { theme, setTheme } = useTheme()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
-      router.push('/login')
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/login");
     } catch (error) {
-      console.error('Erro ao sair:', error)
+      console.error("Erro ao sair:", error);
     }
-  }
+  };
 
   const navItems = [
     {
-      label: 'Dashboard',
-      href: '/dashboard',
+      label: "Dashboard",
+      href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      label: 'Transcrições',
-      href: '/transcripts',
+      label: "Transcrições",
+      href: "/transcripts",
       icon: FileText,
     },
     {
-      label: 'Tags',
-      href: '/tags',
+      label: "Tags",
+      href: "/tags",
       icon: Tag,
     },
     {
-      label: 'Notificações',
-      href: '/notifications',
+      label: "Notificações",
+      href: "/notifications",
       icon: Bell,
     },
     {
-      label: 'Perfil',
-      href: '/profile',
+      label: "Perfil",
+      href: "/profile",
       icon: User,
     },
-  ]
+  ];
 
   return (
     <aside
       className={`flex h-screen flex-col border-r border-primary/15 bg-sidebar/55 backdrop-blur-2xl transition-all duration-300 ${
-        isCollapsed ? 'w-20' : 'w-64'
+        isCollapsed ? "w-20" : "w-64"
       }`}
     >
       <div className="flex items-center justify-between gap-2 border-b border-primary/15 p-4">
@@ -73,7 +73,9 @@ export function Sidebar() {
             <AudioWaveform className="h-5 w-5 text-primary" />
           </div>
           {!isCollapsed && (
-            <h1 className="text-lg font-bold text-foreground truncate">transcripts</h1>
+            <h1 className="text-lg font-bold text-foreground truncate">
+              transcripts
+            </h1>
           )}
         </div>
         <Button
@@ -92,7 +94,7 @@ export function Sidebar() {
 
       <nav className="flex-1 space-y-2 p-4">
         {navItems.map((item) => {
-          const Icon = item.icon
+          const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href}>
               <Button
@@ -103,24 +105,24 @@ export function Sidebar() {
                 {!isCollapsed && <span className="ml-3">{item.label}</span>}
               </Button>
             </Link>
-          )
+          );
         })}
       </nav>
 
       <div className="border-t border-border/40 p-4 space-y-2">
         <Button
           variant="ghost"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="w-full justify-start text-muted-foreground hover:bg-primary/10 hover:text-primary"
         >
-          {theme === 'dark' ? (
+          {theme === "dark" ? (
             <Sun className="h-5 w-5" />
           ) : (
             <Moon className="h-5 w-5" />
           )}
           {!isCollapsed && (
             <span className="ml-3">
-              {theme === 'dark' ? 'Claro' : 'Escuro'}
+              {theme === "dark" ? "Claro" : "Escuro"}
             </span>
           )}
         </Button>
@@ -135,5 +137,5 @@ export function Sidebar() {
         </Button>
       </div>
     </aside>
-  )
+  );
 }
