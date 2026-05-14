@@ -10,6 +10,14 @@ import {
   type ExportFormat,
 } from "@/server/services/export";
 import { eq, and, or, desc, asc, ilike, inArray, sql, isNull } from "drizzle-orm";
+import {
+  canViewTranscript,
+  canEditTranscript,
+  canDeleteTranscript,
+  canCreateTranscript,
+  visibleOwnerRoles,
+} from "@/lib/permissions";
+import type { UserRole } from "@/lib/auth";
 
 export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
   .use(authPlugin)
@@ -25,7 +33,7 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
     const limit = 30;
     const offset = (page - 1) * limit;
 
-    // Acessíveis = ownerId=user.id OR id IN (shares where sharedWithUserId=user.id)
+    // Acessíveis = (próprios) OR (shared) OR (owner.role em visibleOwnerRoles, exceto super_admin peers)
     const sharedIds = await db
       .select({ transcriptId: shares.transcriptId })
       .from(shares)
@@ -33,9 +41,20 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const sharedTranscriptIds = sharedIds.map((s) => s.transcriptId);
 
+    const visibleRoles = visibleOwnerRoles({ id: user.id, role: user.role as UserRole });
+    const ownersAtVisibleRoles =
+      visibleRoles.length > 0
+        ? await db
+            .select({ id: users.id })
+            .from(users)
+            .where(inArray(users.role, visibleRoles as UserRole[]))
+        : [];
+    const visibleOwnerIds = ownersAtVisibleRoles.map((u) => u.id);
+
     const ownershipCondition = or(
       eq(transcripts.ownerId, user.id),
-      sharedTranscriptIds.length > 0 ? inArray(transcripts.id, sharedTranscriptIds) : undefined
+      sharedTranscriptIds.length > 0 ? inArray(transcripts.id, sharedTranscriptIds) : undefined,
+      visibleOwnerIds.length > 0 ? inArray(transcripts.ownerId, visibleOwnerIds) : undefined,
     );
 
     const searchCondition =
@@ -110,6 +129,11 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       return { error: "unauthorized" };
     }
 
+    if (!canCreateTranscript({ id: user.id, role: user.role as UserRole })) {
+      set.status = 403;
+      return { error: "forbidden" };
+    }
+
     const {
       title,
       operationName,
@@ -172,21 +196,32 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const t = transcript[0];
 
-    // Check acesso (owner ou share)
-    const isOwner = t.ownerId === user.id;
-    if (!isOwner) {
-      const share = await db
-        .select()
-        .from(shares)
-        .where(
-          and(eq(shares.transcriptId, params.id), eq(shares.sharedWithUserId, user.id))
-        )
-        .limit(1);
+    const ownerRow = await db
+      .select({ id: users.id, role: users.role })
+      .from(users)
+      .where(eq(users.id, t.ownerId))
+      .limit(1);
+    const owner = ownerRow[0]
+      ? { id: ownerRow[0].id, role: ownerRow[0].role as UserRole }
+      : { id: t.ownerId, role: "viewer" as UserRole };
 
-      if (share.length === 0) {
-        set.status = 403;
-        return { error: "forbidden" };
-      }
+    const shareRow = t.ownerId === user.id
+      ? null
+      : (await db
+          .select()
+          .from(shares)
+          .where(
+            and(eq(shares.transcriptId, params.id), eq(shares.sharedWithUserId, user.id))
+          )
+          .limit(1))[0] ?? null;
+
+    if (!canViewTranscript(
+      { id: user.id, role: user.role as UserRole },
+      owner,
+      shareRow ? { canEdit: shareRow.canEdit } : null,
+    )) {
+      set.status = 403;
+      return { error: "forbidden" };
     }
 
     const mediaList = await db
@@ -208,6 +243,11 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       transcript: t,
       media: mediaList,
       segments,
+      canEdit: canEditTranscript(
+        { id: user.id, role: user.role as UserRole },
+        owner,
+        shareRow ? { canEdit: shareRow.canEdit } : null,
+      ),
     };
   })
   .get("/:id/export", async (ctx: any) => {
@@ -236,22 +276,33 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
     }
     const t = rows[0];
 
-    const isOwner = t.ownerId === user.id;
-    if (!isOwner) {
-      const share = await db
-        .select()
-        .from(shares)
-        .where(
-          and(
-            eq(shares.transcriptId, params.id),
-            eq(shares.sharedWithUserId, user.id),
-          ),
-        )
-        .limit(1);
-      if (share.length === 0) {
-        set.status = 403;
-        return { error: "forbidden" };
-      }
+    const exportOwnerRow = await db
+      .select({ id: users.id, role: users.role })
+      .from(users)
+      .where(eq(users.id, t.ownerId))
+      .limit(1);
+    const exportOwner = exportOwnerRow[0]
+      ? { id: exportOwnerRow[0].id, role: exportOwnerRow[0].role as UserRole }
+      : { id: t.ownerId, role: "viewer" as UserRole };
+    const exportShare = t.ownerId === user.id
+      ? null
+      : (await db
+          .select()
+          .from(shares)
+          .where(
+            and(
+              eq(shares.transcriptId, params.id),
+              eq(shares.sharedWithUserId, user.id),
+            ),
+          )
+          .limit(1))[0] ?? null;
+    if (!canViewTranscript(
+      { id: user.id, role: user.role as UserRole },
+      exportOwner,
+      exportShare ? { canEdit: exportShare.canEdit } : null,
+    )) {
+      set.status = 403;
+      return { error: "forbidden" };
     }
 
     const mediaList = await db
@@ -322,7 +373,8 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const reorders = body as { id: string; position: number }[];
 
-    // Valida que cada id pertence ao user
+    // Reorder é per-owner: cada user gerencia a ordem de SUAS próprias transcrições.
+    // Não usa canEditTranscript pois roles superiores não têm "lista de transcrições alheias" reordenável.
     for (const { id } of reorders) {
       const t = await db
         .select()
@@ -364,25 +416,34 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
     }
 
     const t = transcript[0];
-    const isOwner = t.ownerId === user.id;
-
-    if (!isOwner) {
-      const share = await db
-        .select()
-        .from(shares)
-        .where(
-          and(
-            eq(shares.transcriptId, params.id),
-            eq(shares.sharedWithUserId, user.id),
-            eq(shares.canEdit, true)
+    const patchOwnerRow = await db
+      .select({ id: users.id, role: users.role })
+      .from(users)
+      .where(eq(users.id, t.ownerId))
+      .limit(1);
+    const patchOwner = patchOwnerRow[0]
+      ? { id: patchOwnerRow[0].id, role: patchOwnerRow[0].role as UserRole }
+      : { id: t.ownerId, role: "viewer" as UserRole };
+    const patchShare = t.ownerId === user.id
+      ? null
+      : (await db
+          .select()
+          .from(shares)
+          .where(
+            and(
+              eq(shares.transcriptId, params.id),
+              eq(shares.sharedWithUserId, user.id),
+            ),
           )
-        )
-        .limit(1);
+          .limit(1))[0] ?? null;
 
-      if (share.length === 0) {
-        set.status = 403;
-        return { error: "forbidden" };
-      }
+    if (!canEditTranscript(
+      { id: user.id, role: user.role as UserRole },
+      patchOwner,
+      patchShare ? { canEdit: patchShare.canEdit } : null,
+    )) {
+      set.status = 403;
+      return { error: "forbidden" };
     }
 
     const updates = body as {
@@ -448,8 +509,19 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
 
     const t = transcript[0];
 
-    // Only owner ou admin
-    if (t.ownerId !== user.id && user.role !== "admin") {
+    const delOwnerRow = await db
+      .select({ id: users.id, role: users.role })
+      .from(users)
+      .where(eq(users.id, t.ownerId))
+      .limit(1);
+    const delOwner = delOwnerRow[0]
+      ? { id: delOwnerRow[0].id, role: delOwnerRow[0].role as UserRole }
+      : { id: t.ownerId, role: "viewer" as UserRole };
+
+    if (!canDeleteTranscript(
+      { id: user.id, role: user.role as UserRole },
+      delOwner,
+    )) {
       set.status = 403;
       return { error: "forbidden" };
     }

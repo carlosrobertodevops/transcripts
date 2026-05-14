@@ -15,7 +15,7 @@ export const USER_ROLES = ["super_admin", "admin", "pro", "viewer"] as const;
 export const ROLE_LABELS: Record<UserRole, string> = {
   super_admin: "Super Admin",
   admin: "Admin",
-  pro: "Pro",
+  pro: "Editor",
   viewer: "Visualizador",
 };
 
@@ -90,4 +90,75 @@ export const canChangeRole = (actor: Actor, target: Target, newRole: UserRole): 
     return target.role !== "super_admin";
   }
   return false;
+};
+
+// --- Transcript permissions (T6) ---
+//
+// Hierarquia: super_admin > admin > pro > viewer.
+//  - Próprio dono → CRUD completo.
+//  - Mesmo tier (peer) → somente leitura.
+//  - Tier abaixo (mais permissivo manda) → CRUD completo.
+//  - Tier acima → bloqueado.
+//  - Viewer → nunca cria/edita/apaga; só visualiza próprio + shared.
+//  - Shares (sharedWithUserId) preservam acesso explícito (view; edit se canEdit).
+
+const RANK: Record<UserRole, number> = {
+  super_admin: 4,
+  admin: 3,
+  pro: 2,
+  viewer: 1,
+};
+
+export const roleRank = (role: UserRole): number => RANK[role] ?? 0;
+
+export interface TranscriptOwner {
+  id: string;
+  role: UserRole;
+}
+
+export interface ShareGrant {
+  canEdit: boolean | null;
+}
+
+export const canViewTranscript = (
+  actor: Actor,
+  owner: TranscriptOwner,
+  share?: ShareGrant | null,
+): boolean => {
+  if (actor.id === owner.id) return true;
+  if (share) return true;
+  if (actor.role === "viewer") return false;
+  return roleRank(actor.role) >= roleRank(owner.role);
+};
+
+export const canEditTranscript = (
+  actor: Actor,
+  owner: TranscriptOwner,
+  share?: ShareGrant | null,
+): boolean => {
+  if (actor.role === "viewer") return false;
+  if (actor.id === owner.id) return true;
+  if (share && share.canEdit) return true;
+  return roleRank(actor.role) > roleRank(owner.role);
+};
+
+export const canDeleteTranscript = (
+  actor: Actor,
+  owner: TranscriptOwner,
+): boolean => {
+  if (actor.role === "viewer") return false;
+  if (actor.id === owner.id) return true;
+  return roleRank(actor.role) > roleRank(owner.role);
+};
+
+export const canCreateTranscript = (actor: Actor): boolean =>
+  actor.role !== "viewer";
+
+// Roles cujos transcripts são visíveis ao actor (para filtrar listagem).
+// SuperAdmin vê todos; Admin vê admin+pro+viewer; Pro vê pro+viewer; Viewer só os próprios/shares.
+export const visibleOwnerRoles = (actor: Actor): UserRole[] => {
+  if (actor.role === "super_admin") return [...USER_ROLES];
+  if (actor.role === "admin") return ["admin", "pro", "viewer"];
+  if (actor.role === "pro") return ["pro", "viewer"];
+  return [];
 };

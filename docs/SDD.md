@@ -200,6 +200,26 @@ db (pg_isready) → migrate (one-shot) → transcriber (GET /health)
 
 ---
 
+### ADR-8: Role-Based Transcript Permissions (T6)
+
+**Decisão**: hierarquia `super_admin > admin > pro > viewer` controla acesso a transcrições. Mesmo tier → view-only. Tier inferior → CRUD. Tier superior → bloqueado. Viewer → read-only global (apenas próprio + shares).
+
+**Razão**:
+- **Modelo simples**: rank numérico (`roleRank`) elimina ifs aninhados.
+- **Centralizado**: helpers em `src/lib/permissions.ts` reutilizados em rotas e UI.
+- **Compat shares**: `shares.canEdit` continua governando override cross-tier.
+- **Display label**: enum value `pro` é mapeado para "Editor" em `ROLE_LABELS` para não quebrar migrations existentes (`0007_expand_user_roles.sql`).
+
+**Aplicação**:
+- `routes/transcripts.ts`: GET / filtra por `visibleOwnerRoles`; GET/PATCH/DELETE/:id usam `canView/canEdit/canDelete`; POST / usa `canCreateTranscript`.
+- `routes/media.ts`: POST/PATCH/DELETE/retranscribe usam `canEdit/canDelete` via `loadTranscriptContext`.
+- `routes/shares.ts`: POST/GET/PATCH/DELETE de shares condicionados a `canEditTranscript`.
+- UI: hook `useActorRole` (`src/lib/use-actor-role.ts`) → `canMutate` curto-circuito para Viewer.
+
+**Trade-off**: `GET /transcripts` lista agora pode incluir transcrições alheias para roles superiores — custo `IN (...)` proporcional a quantidade de owners visíveis. Mitigação futura: JOIN direto em `users.role` em vez de pré-buscar `visibleOwnerIds`.
+
+---
+
 ### ADR-7: Hash SHA-256 em `media.hash`
 
 **Decisão**: Cada upload calcula SHA-256 ao gravar arquivo em `STORAGE_DIR` e persiste em `media.hash` (migração `0008_add_media_hash.sql`).

@@ -237,6 +237,24 @@
 - **RF-61:** Inclui SHA-256 de cada mídia para auditoria.
 - **Implementação:** `/src/app/(app)/transcripts/[id]/print/{layout,page,print-view}.tsx`
 
+### 5.16 Permissões por Role (Transcrições)
+
+Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
+
+| Actor       | Próprio tier (peers) | Tier inferior | Tier superior | Viewer-owned |
+|-------------|----------------------|---------------|---------------|--------------|
+| SuperAdmin  | view-only            | CRUD          | —             | CRUD         |
+| Admin       | view-only            | CRUD (Pro/Viewer) | bloqueado | CRUD         |
+| Editor (pro)| view-only            | CRUD (Viewer) | bloqueado     | CRUD         |
+| Viewer      | view-only (próprio + shares) | — | bloqueado | view-only (próprio) |
+
+- **Dono** sempre tem CRUD nas próprias transcrições.
+- **Share** (`shares.canEdit`) preserva acesso explícito mesmo cruzando hierarquia.
+- **Viewer** nunca cria/edita/apaga; só visualiza.
+- **Display label**: enum `pro` é renderizado como "Editor" via `ROLE_LABELS`.
+- **Helpers**: `src/lib/permissions.ts` — `canViewTranscript`, `canEditTranscript`, `canDeleteTranscript`, `canCreateTranscript`, `visibleOwnerRoles`, `roleRank`.
+- **UI**: hook `useActorRole` em `src/lib/use-actor-role.ts` (`canMutate` curto-circuito para Viewer).
+
 ### 5.15 Admin
 
 - **RF-62:** Página `/admin/users` para administradores listarem/gerenciarem usuários.

@@ -182,6 +182,20 @@ export const passwordChangeSchema = z.object({
 
 ## Endpoints
 
+### Permissões por role (transcripts/media/shares)
+
+Aplicadas em `src/server/routes/{transcripts,media,shares}.ts` via helpers de `src/lib/permissions.ts`:
+
+| Helper | Regra |
+|--------|-------|
+| `canViewTranscript(actor, owner, share?)` | self ∨ share ∨ (actor !== "viewer" ∧ rank(actor) ≥ rank(owner)) |
+| `canEditTranscript(actor, owner, share?)` | actor !== "viewer" ∧ (self ∨ (share ∧ canEdit) ∨ rank(actor) > rank(owner)) |
+| `canDeleteTranscript(actor, owner)` | actor !== "viewer" ∧ (self ∨ rank(actor) > rank(owner)) |
+| `canCreateTranscript(actor)` | actor !== "viewer" |
+| `visibleOwnerRoles(actor)` | filtro de listagem (`GET /transcripts`) por role do owner |
+
+Rank: `super_admin=4 > admin=3 > pro=2 > viewer=1`.
+
 ### Export (`src/server/services/export.ts`)
 
 `GET /api/transcripts/:id/export?format=txt|html|doc|docx` → `200 OK` (binary attachment).

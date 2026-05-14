@@ -83,6 +83,17 @@ const TranscriptsPage = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<TranscriptRow | null>(null);
+  const [actorRole, setActorRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/users/me", { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setActorRole(d.role ?? null))
+      .catch(() => undefined);
+  }, []);
+
+  const canCreate = actorRole !== null && actorRole !== "viewer";
+  const canMutate = canCreate;
 
   const load = async () => {
     setLoading(true);
@@ -165,10 +176,12 @@ const TranscriptsPage = () => {
             Lista completa de transcrições — total {items.length}
           </p>
         </div>
-        <Button onClick={() => setNewOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova transcrição
-        </Button>
+        {canCreate ? (
+          <Button onClick={() => setNewOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova transcrição
+          </Button>
+        ) : null}
       </div>
 
       <div className="relative max-w-md">
@@ -245,19 +258,25 @@ const TranscriptsPage = () => {
                           <ExternalLink className="mr-2 h-4 w-4" />
                           Abrir
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEditClick(t)}>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Editar
-                        </DropdownMenuItem>
+                        {canMutate ? (
+                          <DropdownMenuItem onClick={() => handleEditClick(t)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Editar
+                          </DropdownMenuItem>
+                        ) : null}
                         <ExportSubmenu transcriptId={t.id} />
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => setConfirmDelete(t)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Remover
-                        </DropdownMenuItem>
+                        {canMutate ? (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => setConfirmDelete(t)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Remover
+                            </DropdownMenuItem>
+                          </>
+                        ) : null}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

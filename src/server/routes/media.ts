@@ -1,10 +1,49 @@
 import { Elysia } from "elysia";
 import { db } from "@/db/client";
-import { media, transcripts, transcriptionJobs, transcriptSegments, shares } from "@/db/schema";
+import { media, transcripts, transcriptionJobs, transcriptSegments, shares, users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { authPlugin } from "../plugins/auth";
 import { storage } from "@/server/services/storage";
 import crypto from "crypto";
+import {
+  canEditTranscript,
+  canDeleteTranscript,
+} from "@/lib/permissions";
+import type { UserRole } from "@/lib/auth";
+
+const loadTranscriptContext = async (
+  transcriptId: string,
+  userId: string,
+): Promise<{
+  transcript: typeof transcripts.$inferSelect | null;
+  owner: { id: string; role: UserRole } | null;
+  share: { canEdit: boolean | null } | null;
+}> => {
+  const t = await db
+    .select()
+    .from(transcripts)
+    .where(eq(transcripts.id, transcriptId))
+    .limit(1);
+  if (t.length === 0) return { transcript: null, owner: null, share: null };
+  const ownerRow = await db
+    .select({ id: users.id, role: users.role })
+    .from(users)
+    .where(eq(users.id, t[0].ownerId))
+    .limit(1);
+  const owner = ownerRow[0]
+    ? { id: ownerRow[0].id, role: ownerRow[0].role as UserRole }
+    : { id: t[0].ownerId, role: "viewer" as UserRole };
+  const share = t[0].ownerId === userId
+    ? null
+    : (await db
+        .select()
+        .from(shares)
+        .where(
+          and(eq(shares.transcriptId, transcriptId), eq(shares.sharedWithUserId, userId)),
+        )
+        .limit(1))[0] ?? null;
+  return { transcript: t[0], owner, share };
+};
 
 const sanitizeFilename = (name: string): string => {
   return name.replace(/[^a-z0-9._-]/gi, "_").slice(0, 255);
@@ -41,39 +80,20 @@ export const mediaRoutes = new Elysia()
       return { error: "unauthorized" };
     }
 
-    // Check access: owner OR share with canEdit
-    const transcript = await db
-      .select()
-      .from(transcripts)
-      .where(eq(transcripts.id, params.id))
-      .limit(1);
-
-    if (transcript.length === 0) {
+    const ctxLoad = await loadTranscriptContext(params.id, user.id);
+    if (!ctxLoad.transcript || !ctxLoad.owner) {
       set.status = 404;
       return { error: "not_found" };
     }
-
-    const t = transcript[0];
-    const isOwner = t.ownerId === user.id;
-
-    if (!isOwner) {
-      const share = await db
-        .select()
-        .from(shares)
-        .where(
-          and(
-            eq(shares.transcriptId, params.id),
-            eq(shares.sharedWithUserId, user.id),
-            eq(shares.canEdit, true)
-          )
-        )
-        .limit(1);
-
-      if (share.length === 0) {
-        set.status = 403;
-        return { error: "forbidden" };
-      }
+    if (!canEditTranscript(
+      { id: user.id, role: user.role as UserRole },
+      ctxLoad.owner,
+      ctxLoad.share ? { canEdit: ctxLoad.share.canEdit } : null,
+    )) {
+      set.status = 403;
+      return { error: "forbidden" };
     }
+    const t = ctxLoad.transcript;
 
     let files: File[] = [];
     if (body && typeof body === "object") {
@@ -205,35 +225,18 @@ export const mediaRoutes = new Elysia()
     }
 
     const m = mediaRecord[0];
-    const transcript = await db
-      .select()
-      .from(transcripts)
-      .where(eq(transcripts.id, m.transcriptId))
-      .limit(1);
-
-    if (transcript.length === 0) {
+    const patchCtx = await loadTranscriptContext(m.transcriptId, user.id);
+    if (!patchCtx.transcript || !patchCtx.owner) {
       set.status = 404;
       return { error: "not_found" };
     }
-
-    const isOwner = transcript[0].ownerId === user.id;
-    if (!isOwner) {
-      const share = await db
-        .select()
-        .from(shares)
-        .where(
-          and(
-            eq(shares.transcriptId, m.transcriptId),
-            eq(shares.sharedWithUserId, user.id),
-            eq(shares.canEdit, true)
-          )
-        )
-        .limit(1);
-
-      if (share.length === 0) {
-        set.status = 403;
-        return { error: "forbidden" };
-      }
+    if (!canEditTranscript(
+      { id: user.id, role: user.role as UserRole },
+      patchCtx.owner,
+      patchCtx.share ? { canEdit: patchCtx.share.canEdit } : null,
+    )) {
+      set.status = 403;
+      return { error: "forbidden" };
     }
 
     const updates = body as {
@@ -288,14 +291,15 @@ export const mediaRoutes = new Elysia()
 
     const m = mediaRecord[0];
 
-    // Check ownership (only owner can delete)
-    const transcript = await db
-      .select()
-      .from(transcripts)
-      .where(eq(transcripts.id, m.transcriptId))
-      .limit(1);
-
-    if (transcript.length === 0 || transcript[0].ownerId !== user.id) {
+    const delCtx = await loadTranscriptContext(m.transcriptId, user.id);
+    if (!delCtx.transcript || !delCtx.owner) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+    if (!canDeleteTranscript(
+      { id: user.id, role: user.role as UserRole },
+      delCtx.owner,
+    )) {
       set.status = 403;
       return { error: "forbidden" };
     }
@@ -332,14 +336,16 @@ export const mediaRoutes = new Elysia()
 
     const m = mediaRecord[0];
 
-    // Check ownership (only owner can retranscribe)
-    const transcript = await db
-      .select()
-      .from(transcripts)
-      .where(eq(transcripts.id, m.transcriptId))
-      .limit(1);
-
-    if (transcript.length === 0 || transcript[0].ownerId !== user.id) {
+    const retransCtx = await loadTranscriptContext(m.transcriptId, user.id);
+    if (!retransCtx.transcript || !retransCtx.owner) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+    if (!canEditTranscript(
+      { id: user.id, role: user.role as UserRole },
+      retransCtx.owner,
+      retransCtx.share ? { canEdit: retransCtx.share.canEdit } : null,
+    )) {
       set.status = 403;
       return { error: "forbidden" };
     }
