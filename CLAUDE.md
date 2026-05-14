@@ -180,7 +180,7 @@ Para Coolify, ver `.env.coolify` e `docs/COOLIFY_DEPLOY.md` — usa `SERVICE_FQD
 - **Drag-and-drop**: `@dnd-kit/*` em `transcript-grid` (reorder `transcripts.position`).
 - **Export docs**: `docx` lib para gerar `.docx`/`.doc`; HTML/TXT montados via `buildHtml()` (god node em graphify).
 - **Hash de mídia**: `media.hash` SHA-256 calculado em `src/server/services/storage.ts` ao salvar; backfill via `src/scripts/backfill-media-hash.ts`. Hash aparece em todos os formatos exportados.
-- **Permissões por role (T6)**: hierarquia `super_admin > admin > pro (label "Editor") > viewer`. Mesmo tier: view-only. Tier inferior: CRUD completo. Tier superior: bloqueado. Viewer: read-only (próprio + shares). Helpers em `src/lib/permissions.ts`: `canViewTranscript`, `canEditTranscript`, `canDeleteTranscript`, `canCreateTranscript`, `visibleOwnerRoles`, `roleRank`. Aplicados em `routes/transcripts.ts`, `routes/media.ts`, `routes/shares.ts`. UI usa hook `useActorRole` (`src/lib/use-actor-role.ts`).
+- **Permissões por role (T6)**: hierarquia `super_admin > admin > pro (label "Editor") > viewer`. Mesmo tier: view-only. Tier inferior: CRUD completo. Tier superior: bloqueado. Viewer: read-only (próprio + shares). Helpers em `src/lib/permissions.ts`: `canViewTranscript`, `canEditTranscript`, `canDeleteTranscript` (super_admin pode apagar transcrição de qualquer user, até outro super_admin), `canCreateTranscript`, `visibleOwnerRoles`, `roleRank`. Aplicados em `routes/transcripts.ts`, `routes/media.ts`, `routes/shares.ts`. UI usa hook `useActorRole` (`src/lib/use-actor-role.ts`).
 
 ## Git
 

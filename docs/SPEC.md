@@ -194,7 +194,20 @@ Aplicadas em `src/server/routes/{transcripts,media,shares}.ts` via helpers de `s
 | `canCreateTranscript(actor)`              | actor !== "viewer"                                                          |
 | `visibleOwnerRoles(actor)`                | filtro de listagem (`GET /transcripts`) por role do owner                   |
 
-Rank: `super_admin=4 > admin=3 > pro=2 > viewer=1`.
+**Rank:** `super_admin=4 > admin=3 > pro=2 > viewer=1`.
+
+**Matriz DELETE (transcripts + media):**
+
+| Actor role | Owner role | DELETE permitido? | Justificativa |
+|---|---|---|---|
+| super_admin | qualquer | ✅ | pode apagar qualquer transcript/mídia |
+| admin | admin | ✅ | pode apagar próprios |
+| admin | pro \| viewer | ✅ | rank(admin=3) > rank(owner) |
+| admin | super_admin | ❌ | rank(admin=3) < rank(super_admin=4) |
+| pro | pro | ✅ | pode apagar próprios |
+| pro | viewer | ✅ | rank(pro=2) > rank(viewer=1) |
+| pro | admin \| super_admin | ❌ | rank(pro=2) < rank(owner) |
+| viewer | qualquer | ❌ | viewer pode apenas ler (canView=true, canEdit=false, canDelete=false) |
 
 ### Export (`src/server/services/export.ts`)
 
@@ -510,11 +523,24 @@ All fields optional. Notifies shared users via `notifications` (type: `transcrip
 
 **Auth:** JWT required
 
-**Response (204)** (no content)
+**Response (204)** (no content) ou erro.
 
-**Access:** owner OR `role='admin'`
+**Authorization:** via `canDeleteTranscript(actor, owner)` em `src/lib/permissions.ts`:
+- ✅ actor `super_admin` (qualquer owner)
+- ✅ actor `admin` + owner rank ≤ admin (admin, pro, viewer)
+- ✅ actor `pro` + owner rank < pro (viewer only)
+- ✅ actor qualquer + self (próprio transcript)
+- ❌ viewer (sempre 403)
+- ❌ rank inferior tentando apagar rank superior
 
-**Cascade:** deletes media, jobs, segments, shares.
+**Side effects:**
+- Cascade delete: media, transcription_jobs, transcript_segments, shares, notifications.
+- Soft-delete: marca `transcript.deletedAt = NOW()`.
+
+**Errors:**
+- `401 unauthorized` — sem JWT
+- `403 forbidden` — actor sem permissão (viewer ou rank insuficiente)
+- `404 not_found` — transcript inexistente ou já deletado
 
 ---
 
@@ -603,13 +629,28 @@ All fields optional. Notifies shared users via `notifications` (type: `transcrip
 
 #### DELETE `/media/:id`
 
-**Auth:** JWT required (owner only)
+**Auth:** JWT required
 
-**Response (204)** (no content)
+**Response (204)** (no content) ou erro.
 
-**Side effects:** deletes file from storage. Cascade deletes jobs + segments.
+**Authorization:** via `canDeleteTranscript(actor, transcriptOwner)` em `src/lib/permissions.ts`:
+- Mesma regra de DELETE `/transcripts/:id`: verifica permissão do actor sobre o **owner do transcript** que contém a mídia, não da mídia em si.
+- ✅ actor `super_admin` (apaga mídia de qualquer transcript)
+- ✅ actor `admin` + owner rank ≤ admin
+- ✅ actor `pro` + owner rank < pro (viewer only)
+- ✅ actor qualquer + self (próprio transcript)
+- ❌ viewer (sempre 403)
+- ❌ rank insuficiente
 
-**Errors:** `401 unauthorized`, `403 forbidden`, `404 not_found`
+**Side effects:**
+- Deleta arquivo do storage (`STORAGE_DIR`).
+- Cascade delete: transcription_jobs, transcript_segments.
+- Atualiza `transcript.status` se necessário (e.g., se era único arquivo e virando vazio).
+
+**Errors:**
+- `401 unauthorized` — sem JWT
+- `403 forbidden` — actor sem permissão (viewer ou rank insuficiente)
+- `404 not_found` — mídia inexistente ou transcript não encontrado
 
 ---
 

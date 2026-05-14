@@ -314,7 +314,30 @@ const canEditTranscript = (actor: Actor, transcript: Transcript): boolean => {
   const ownerRank = ROLE_RANK[transcript.ownerRole];
   return actorRank < ownerRank; // lower rank = higher tier = more power
 };
+
+const canDeleteTranscript = (actor: Actor, owner: TranscriptOwner): boolean => {
+  if (actor.role === "viewer") return false;
+  if (actor.role === "super_admin") return true; // ← Privilégio assimétrico: DELETE irrestrito
+  if (actor.id === owner.id) return true;
+  return roleRank(actor.role) > roleRank(owner.role);
+};
 ```
+
+**Decisão: DELETE assimétrico para super_admin**
+
+**Context:** Modelo inicial aplicava regra simétrica `rank > owner.rank` em VIEW/EDIT/DELETE. Resultado: super_admin não conseguia apagar transcript de outro super_admin (ambos no tier 0), bloqueando moderação operacional.
+
+**Decision:** Short-circuit em `canDeleteTranscript` — super_admin consegue DELETE em qualquer transcrição, independentemente do dono.
+
+**Alternatives considered:**
+- (A) Aumentar rank único de super_admin para acima de si mesmo — quebra modelo de tiers.
+- (B) Permitir DELETE só para owner — bloqueia controle administrativo (compliance, auditoria).
+- (C) Short-circuit em `canDeleteTranscript` ← **Escolhida** — minimal, simétrica para VIEW/EDIT.
+
+**Trade-offs:**
+- Super_admin = pequeno conjunto auditável (validar admin list regularmente).
+- Sem audit log automático ainda (mitigação: implementar logs de deleção em fase futura).
+- Deleção acidental cross-account possível; UI deve incluir confirmação forte (`"Deletar permanentemente: [Título]?"`).
 
 **Trade-off:** 18 checks (6 roles × 3 operações). Mitigado com testes Unit + E2E.
 
@@ -458,7 +481,7 @@ docker compose -f docker-compose-coolify.yml up --build
 
 > **TODO:** Rate limiting em endpoints sensíveis (`POST /api/transcripts`, `DELETE /api/users/:id`).
 
-> **TODO:** Audit log para operações admin (quem mudou role, quando).
+> **TODO:** Audit log para operações admin (quem mudou role, quando). **CRÍTICO para T6 DELETE:** Rastrear deleções cross-account por super_admin (who, when, mediaId, ownerUserId).
 
 ---
 

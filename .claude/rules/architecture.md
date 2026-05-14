@@ -84,6 +84,7 @@
 - **Mesmo tier**: view-only. **Tier inferior**: CRUD completo. **Tier superior**: bloqueado.
 - `viewer`: read-only (próprio + shares via token).
 - Helpers em `src/lib/permissions.ts`: `canViewTranscript()`, `canEditTranscript()`, `canDeleteTranscript()`, `canCreateTranscript()`, `visibleOwnerRoles()`, `roleRank()`.
+- **Super Admin privilégio especial em `canDeleteTranscript`**: pode apagar transcrição de qualquer usuário, inclusive de outro super_admin. Uso: moderação/cleanup. View/Edit mantêm regra padrão (`rank > owner.rank`).
 - UI hook: `useActorRole()` em `src/lib/use-actor-role.ts`. Aplicar checagens em `routes/transcripts.ts`, `routes/media.ts`, `routes/shares.ts`.
 
 ## Worker

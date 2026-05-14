@@ -183,12 +183,20 @@ export const TranscriptGrid = ({ initial }: TranscriptGridProps) => {
         method: "DELETE",
         credentials: "include",
       });
-      if (!res.ok && res.status !== 204) throw new Error("Falha ao apagar");
+      if (!res.ok && res.status !== 204) {
+        let detail = "";
+        try {
+          const body = await res.json();
+          detail = body?.error ? `: ${body.error}` : "";
+        } catch {}
+        throw new Error(`Falha ao apagar (HTTP ${res.status}${detail})`);
+      }
       setItems((prev) => prev.filter((t) => t.id !== deletingTranscript.id));
       toast.success("Transcrição removida");
       setDeletingTranscript(null);
     } catch (error) {
-      toast.error("Erro ao apagar transcrição");
+      const msg = error instanceof Error ? error.message : "Erro ao apagar transcrição";
+      toast.error(msg);
       console.error(error);
     } finally {
       setDeleting(false);

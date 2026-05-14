@@ -241,17 +241,18 @@
 
 Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
 
-| Actor        | Próprio tier (peers)         | Tier inferior     | Tier superior | Viewer-owned        |
-| ------------ | ---------------------------- | ----------------- | ------------- | ------------------- |
-| SuperAdmin   | view-only                    | CRUD              | —             | CRUD                |
-| Admin        | view-only                    | CRUD (Pro/Viewer) | bloqueado     | CRUD                |
-| Editor (pro) | view-only                    | CRUD (Viewer)     | bloqueado     | CRUD                |
-| Viewer       | view-only (próprio + shares) | —                 | bloqueado     | view-only (próprio) |
+| Actor        | Próprio tier (peers)         | Tier inferior     | Tier superior              | Viewer-owned        |
+| ------------ | ---------------------------- | ----------------- | -------------------------- | ------------------- |
+| SuperAdmin   | view-only                    | CRUD              | **CRUD (exclusão total)**  | CRUD                |
+| Admin        | view-only                    | CRUD (Pro/Viewer) | bloqueado                  | CRUD                |
+| Editor (pro) | view-only                    | CRUD (Viewer)     | bloqueado                  | CRUD                |
+| Viewer       | view-only (próprio + shares) | —                 | bloqueado                  | view-only (próprio) |
 
 - **Dono** sempre tem CRUD nas próprias transcrições.
 - **Share** (`shares.canEdit`) preserva acesso explícito mesmo cruzando hierarquia.
 - **Viewer** nunca cria/edita/apaga; só visualiza.
 - **Display label**: enum `pro` é renderizado como "Editor" via `ROLE_LABELS`.
+- **Super Admin — Privilégio de Exclusão Total**: SuperAdmin pode apagar transcrição de **qualquer outro usuário**, incluindo outro SuperAdmin. Trata-se de privilégio máximo de moderação e cleanup (ex.: remoção de conteúdo abusivo, dados comprometidos). Implementação: `canDeleteTranscript()` em `src/lib/permissions.ts` curto-circuita e retorna `true` se `actor.role === "super_admin"`, independentemente da propriedade ou rank do alvo.
 - **Helpers**: `src/lib/permissions.ts` — `canViewTranscript`, `canEditTranscript`, `canDeleteTranscript`, `canCreateTranscript`, `visibleOwnerRoles`, `roleRank`.
 - **UI**: hook `useActorRole` em `src/lib/use-actor-role.ts` (`canMutate` curto-circuito para Viewer).
 
@@ -567,3 +568,4 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 - [x] Roadmap v0.2-v0.4 preservado
 - [x] Personas e métricas preservadas do PRD anterior
 - [x] Rigor: nenhuma feature inventada — tudo vem do código
+- [x] **Super Admin privilégio de exclusão total documentado (5.16)**

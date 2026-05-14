@@ -694,27 +694,46 @@ Executa antes de inserir segmentos para limpar dados de retries anteriores.
 
 **Contexto**: Controle de acesso a transcrições.
 
-**Decisão**: Hierarquia `super_admin > admin > pro > viewer` governa acesso.
+**Decisão**: Hierarquia `super_admin > admin > pro > viewer` governa acesso com regras **assimétricas** para deleção.
 
-**Regra**:
+**Regras (Genéricas)**:
 - Mesmo tier → view-only
 - Tier inferior → CRUD completo
 - Tier superior → bloqueado
 - Viewer → read-only global (próprio + shares)
 
+**Regra Especial (Deleção)**:
+- `canDeleteTranscript`: Super_admin tem privilégio **irrestrito** sobre qualquer transcript alheio (sem depender de rank).
+  ```typescript
+  if (actor.role === "super_admin") return true;  // Sempre pode deletar
+  if (actor.id === owner.id) return true;         // Dono sempre pode
+  return roleRank(actor.role) > roleRank(owner.role);  // Tier inferior pode
+  ```
+- **Justificativa**: Necessidade de moderação e cleanup cross-account por administradores.
+- **Contraste**: `canEditTranscript` e `canViewTranscript` mantêm regra simétrica `roleRank(actor) > roleRank(owner)` (sem privilégio super_admin estendido).
+
+**Rank**:
+- super_admin = 4
+- admin = 3
+- pro = 2
+- viewer = 1
+
 **Razão**:
 - **Modelo simples**: Rank numérico (`roleRank`) elimina ifs aninhados.
 - **Centralizado**: Helpers em `src/lib/permissions.ts` reutilizados em rotas e UI.
 - **Compat shares**: `shares.canEdit` governa override cross-tier.
+- **Moderação assimétrica**: super_admin não precisa ser dono para deletar (cleanup/compliance).
 
 **Aplicação**:
-- `routes/transcripts.ts`: GET filtra por `visibleOwnerRoles`; CRUD usa `canView/canEdit/canDelete`
-- `routes/media.ts`: POST/PATCH/DELETE via `canEdit`
+- `src/lib/permissions.ts`: `canViewTranscript()`, `canEditTranscript()`, `canDeleteTranscript()`
+- `routes/transcripts.ts`: GET filtra por `visibleOwnerRoles`; PATCH/DELETE via `canEdit/canDelete`
+- `routes/media.ts`: POST/PATCH/DELETE via `canEdit` (herdado de transcript)
 - `routes/shares.ts`: POST/GET/PATCH/DELETE condicionados a `canEditTranscript`
 - UI: hook `useActorRole` (`src/lib/use-actor-role.ts`)
 
 **Trade-offs**:
 - `GET /transcripts` para admins pode incluir transcrições alheias (cost `IN (...)` proporcional a visibleOwnerIds)
+- Super_admin pode deletar transcripts sem consentimento do dono (feature, não bug)
 
 ---
 
