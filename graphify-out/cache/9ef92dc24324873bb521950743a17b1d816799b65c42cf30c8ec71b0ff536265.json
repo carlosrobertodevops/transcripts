@@ -1,1 +1,1 @@
-{"nodes": [{"id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_workers_tick_ts", "label": "tick.ts", "file_type": "code", "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/workers/tick.ts", "source_location": "L1"}], "edges": [], "raw_calls": []}
+{"nodes": [{"id": "src_workers_tick_ts", "label": "tick.ts", "file_type": "code", "source_file": "src/workers/tick.ts", "source_location": "L1"}], "edges": [], "raw_calls": []}
