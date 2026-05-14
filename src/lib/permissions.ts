@@ -147,6 +147,7 @@ export const canDeleteTranscript = (
   owner: TranscriptOwner,
 ): boolean => {
   if (actor.role === "viewer") return false;
+  if (actor.role === "super_admin") return true;
   if (actor.id === owner.id) return true;
   return roleRank(actor.role) > roleRank(owner.role);
 };
