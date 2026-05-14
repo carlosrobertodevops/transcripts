@@ -8,11 +8,11 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode
 }) {
-  await requireUser()
+  const user = await requireUser()
 
   return (
     <div className="flex h-screen bg-transparent">
-      <Sidebar />
+      <Sidebar userRole={user.role} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-auto">

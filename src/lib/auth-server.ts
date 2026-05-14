@@ -6,13 +6,14 @@ import { db } from "@/db/client";
 import { users, transcripts, shares, media, transcriptSegments, notifications } from "@/db/schema";
 import { verifyToken } from "./jwt";
 import { eq, or, and, inArray, sql, isNull } from "drizzle-orm";
+import type { UserRole } from "./auth";
 
 export interface User {
   id: string;
   email: string;
   name: string | null;
   avatarUrl: string | null;
-  role: string;
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,7 +41,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
     .where(eq(users.id, payload.sub))
     .limit(1);
 
-  return result.length > 0 ? result[0] : null;
+  if (result.length === 0) return null;
+  return result[0] as User;
 };
 
 export const requireUser = async (): Promise<User> => {

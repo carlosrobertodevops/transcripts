@@ -26,7 +26,24 @@ export const authPlugin = new Elysia({ name: "auth-plugin" })
     },
     requireAdmin(handler: any) {
       return onBeforeHandle(async ({ user, set }: { user: Session | null; set: any }) => {
-        if (!user || user.role !== "admin") {
+        if (!user || (user.role !== "super_admin" && user.role !== "admin")) {
+          set.status = 403;
+          throw new AuthError("Forbidden");
+        }
+      });
+    },
+    requireSuperAdmin(handler: any) {
+      return onBeforeHandle(async ({ user, set }: { user: Session | null; set: any }) => {
+        if (!user || user.role !== "super_admin") {
+          set.status = 403;
+          throw new AuthError("Forbidden");
+        }
+      });
+    },
+    requireManager(handler: any) {
+      return onBeforeHandle(async ({ user, set }: { user: Session | null; set: any }) => {
+        const managerRoles = ["super_admin", "admin", "pro"];
+        if (!user || !managerRoles.includes(user.role)) {
           set.status = 403;
           throw new AuthError("Forbidden");
         }

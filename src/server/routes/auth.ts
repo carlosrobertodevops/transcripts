@@ -39,7 +39,7 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
           name,
           email,
           passwordHash: hashedPassword,
-          role: "user",
+          role: "viewer",
         })
         .returning({ id: users.id, email: users.email, name: users.name, role: users.role });
 
