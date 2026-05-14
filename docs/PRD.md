@@ -109,14 +109,17 @@
 - **RF-15:** Editar descrição de mídia após upload
 - **RF-16:** Deletar mídia (cascata: job + segments)
 - **RF-17:** Obter HTML transcrito da mídia (campo `transcriptHtml`)
+- **RF-17.1:** Calcular SHA-256 (`media.hash`) ao gravar arquivo; persistir junto à metadata para integridade e dedup. Backfill via `bun run src/scripts/backfill-media-hash.ts`.
+- **RF-17.2:** Retranscrever mídia individualmente sem reupload (`POST /media/:id/retranscribe`).
 - **Endpoints:**
   - `POST /transcripts/:id/media` — upload múltiplo
-  - `PUT /media/:id` — editar descrição
+  - `PATCH /media/:id` — editar descrição
   - `DELETE /media/:id` — deletar mídia
-  - `GET /media/:id` — obter metadata + transcrição
-- **Schema:** `media(id, transcriptId, filename, mime, sizeBytes, storagePath, durationSeconds, description, transcriptHtml, createdAt)`
+  - `POST /media/:id/retranscribe` — recriar job de transcrição
+- **Schema:** `media(id, transcriptId, filename, mime, sizeBytes, storagePath, durationSeconds, description, transcriptHtml, hash, createdAt)` — `hash` SHA-256 nullable (legacy), populado em novos uploads.
 - **Storage:** filesystem via `STORAGE_DIR` (padrão `./uploads`), Docker volume `/app/uploads`
-- **Implementação:** `/src/server/routes/media.ts`
+- **Implementação:** `/src/server/routes/media.ts` · `/src/server/services/storage.ts`
+- **Migração:** `drizzle/0008_add_media_hash.sql`
 
 ### 5.4 Fila de Transcrição (Worker + Provider)
 
@@ -220,6 +223,45 @@
 - **RF-55:** Editar nome e email
 - **RF-56:** Alterar senha (validação: força mínima)
 
+### 5.13 Exportação de Transcrição
+
+- **RF-57:** Exportar transcrição completa em `txt`, `html`, `doc` ou `docx` (lib `docx`).
+- **RF-58:** Documento exportado inclui: título, operação, datas, análise (rich-text), tabela de mídias com **SHA-256 (`media.hash`)**, segmentos com timestamps, owner.
+- **RF-59:** Filename gerado por `buildExportFilename(transcript, format)`.
+- **Endpoint:** `GET /transcripts/:id/export?format=txt|html|doc|docx`
+- **Implementação:** `/src/server/services/export.ts` (`exportTranscript`, `buildExportFilename`)
+
+### 5.14 Print View
+
+- **RF-60:** Página `/transcripts/:id/print` com layout dedicado a impressão (sem chrome do app).
+- **RF-61:** Inclui SHA-256 de cada mídia para auditoria.
+- **Implementação:** `/src/app/(app)/transcripts/[id]/print/{layout,page,print-view}.tsx`
+
+### 5.16 Permissões por Role (Transcrições)
+
+Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
+
+| Actor       | Próprio tier (peers) | Tier inferior | Tier superior | Viewer-owned |
+|-------------|----------------------|---------------|---------------|--------------|
+| SuperAdmin  | view-only            | CRUD          | —             | CRUD         |
+| Admin       | view-only            | CRUD (Pro/Viewer) | bloqueado | CRUD         |
+| Editor (pro)| view-only            | CRUD (Viewer) | bloqueado     | CRUD         |
+| Viewer      | view-only (próprio + shares) | — | bloqueado | view-only (próprio) |
+
+- **Dono** sempre tem CRUD nas próprias transcrições.
+- **Share** (`shares.canEdit`) preserva acesso explícito mesmo cruzando hierarquia.
+- **Viewer** nunca cria/edita/apaga; só visualiza.
+- **Display label**: enum `pro` é renderizado como "Editor" via `ROLE_LABELS`.
+- **Helpers**: `src/lib/permissions.ts` — `canViewTranscript`, `canEditTranscript`, `canDeleteTranscript`, `canCreateTranscript`, `visibleOwnerRoles`, `roleRank`.
+- **UI**: hook `useActorRole` em `src/lib/use-actor-role.ts` (`canMutate` curto-circuito para Viewer).
+
+### 5.15 Admin
+
+- **RF-62:** Página `/admin/users` para administradores listarem/gerenciarem usuários.
+- **RF-63:** Macro `requireAdmin` em rotas Elysia restritas (`src/server/plugins/auth.ts`).
+- **Schema:** enum `user_role` estendido em `drizzle/0007_expand_user_roles.sql`.
+- **Implementação:** `/src/app/(app)/admin/users/page.tsx` · `/src/server/routes/users.ts`
+
 ---
 
 ## 6. Escopo OUT (Roadmap Futuro)
@@ -292,6 +334,11 @@
 | **Transcriber**     | Container Python 3.12 + FastAPI + faster-whisper    |
 | **Icons**           | Lucide React                                         |
 | **Toast**           | Sonner                                               |
+| **Rich text**       | TipTap (`@tiptap/react`, `starter-kit`, `extension-link`) |
+| **Drag-and-drop**   | `@dnd-kit/core`, `@dnd-kit/sortable`                 |
+| **Export**          | `docx` (txt/html/doc/docx)                           |
+| **Hash**            | SHA-256 (Node `crypto`) em `media.hash`              |
+| **Deploy script**   | `scripts/deploy-easypanel.ts` (`bun run deploy`)     |
 
 ---
 
@@ -426,13 +473,14 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 
 | Funcionalidade       | Arquivo                              | Endpoints                                         |
 | -------------------- | ------------------------------------ | ------------------------------------------------- |
-| **Auth**             | `/src/server/routes/auth.ts`         | POST /register, /login, /logout, GET /me, /refresh |
-| **Transcrições**     | `/src/server/routes/transcripts.ts`  | GET /, POST /, GET/:id, PUT/:id, DELETE/:id, reorder |
-| **Mídia**            | `/src/server/routes/media.ts`        | POST /transcripts/:id/media, PUT/:id, DELETE/:id |
-| **Compartilhamento** | `/src/server/routes/shares.ts`       | POST/GET/:transcriptId/shares, PATCH/:shareId, DELETE/:shareId |
-| **Notificações**     | `/src/server/routes/notifications.ts` | GET /, PATCH/:id, DELETE/:id                     |
-| **Jobs/Transcrição** | `/src/server/routes/jobs.ts`         | GET /, POST /run, POST /:id/retry                |
-| **Tags**             | `/src/server/routes/tags.ts`         | GET, POST, DELETE (CRUD básico)                  |
+| **Auth**             | `/src/server/routes/auth.ts`         | POST /register, /login, /logout, GET /me, POST /refresh |
+| **Transcrições**     | `/src/server/routes/transcripts.ts`  | GET /, POST /, GET/:id, PATCH/:id, DELETE/:id, PATCH /reorder, **GET /:id/export** |
+| **Mídia**            | `/src/server/routes/media.ts`        | POST /transcripts/:id/media, PATCH/:id, DELETE/:id, **POST /:id/retranscribe** |
+| **Compartilhamento** | `/src/server/routes/shares.ts`       | GET /shares, DELETE /:shareId (nested em transcripts) |
+| **Notificações**     | `/src/server/routes/notifications.ts` | GET /, POST /read-all                            |
+| **Jobs/Transcrição** | `/src/server/routes/jobs.ts`         | POST /jobs/run, GET /transcripts/:id/jobs        |
+| **Tags**             | `/src/server/routes/tags.ts`         | GET /, POST /, PATCH/:id, DELETE/:id             |
+| **Users / Admin**    | `/src/server/routes/users.ts`        | GET /me, DELETE /me, endpoints admin (`requireAdmin`) |
 | **Health**           | `/src/server/routes/health.ts`       | GET /health (readiness)                          |
 
 ### Schema
@@ -441,7 +489,7 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 | -------------------- | -------------------- | -------------------------------------------------- |
 | **users**            | `/src/db/schema.ts`  | id, email, name, avatarUrl, role, createdAt       |
 | **transcripts**      | —                    | id, ownerId, title, operationName, analysis, status, position, deletedAt |
-| **media**            | —                    | id, transcriptId, filename, mime, storagePath, durationSeconds, description, transcriptHtml |
+| **media**            | —                    | id, transcriptId, filename, mime, sizeBytes, storagePath, durationSeconds, description, transcriptHtml, **hash** (SHA-256) |
 | **transcriptionJobs** | —                    | id, mediaId, provider, status, attempts, error, segmentCount, processingMs |
 | **transcriptSegments** | —                    | id, mediaId, startMs, endMs, text                 |
 | **shares**           | —                    | id, transcriptId, ownerId, sharedWithUserId, canEdit |
@@ -461,6 +509,8 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 | **Perfil**                | `/src/app/(app)/profile/page.tsx`   | client    | auth    |
 | **Notificações**          | `/src/app/(app)/notifications/page.tsx` | client | auth    |
 | **Tags**                  | `/src/app/(app)/tags/page.tsx`      | client    | auth    |
+| **Admin Users**           | `/src/app/(app)/admin/users/page.tsx` | client  | admin   |
+| **Print View**            | `/src/app/(app)/transcripts/[id]/print/page.tsx` | client/print | auth |
 
 ### Componentes (Domain)
 
@@ -481,7 +531,10 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 | **Jobs/Transcrição** | `/src/server/services/jobs.ts`       | runPendingJobs, createTranscriptionJob, retryJob |
 | **Transcription**   | `/src/server/services/transcription.ts` | getProvider, transcribeMedia, parseSegments |
 | **Notification**    | `/src/server/services/notification.ts` | createNotification, markRead, delete           |
-| **Storage**         | `/src/server/services/storage.ts`    | saveFile, deleteFile, getMetadata              |
+| **Storage**         | `/src/server/services/storage.ts`    | saveFile (+ SHA-256), deleteFile, getMetadata  |
+| **Export**          | `/src/server/services/export.ts`     | exportTranscript (txt/html/doc/docx), buildExportFilename, buildHtml |
+| **Share**           | `/src/server/services/share.ts`      | createShare, revokeShare                       |
+| **User**            | `/src/server/services/user.ts`       | listUsers (admin), updateProfile, deleteAccount |
 
 ### Worker
 

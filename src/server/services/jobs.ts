@@ -95,7 +95,7 @@ export const runPendingJobs = async (limit: number = 3): Promise<void> => {
   for (const job of pendingJobs) {
     const startedAtMs = Date.now();
     try {
-      await db
+      const claimed = await db
         .update(transcriptionJobs)
         .set({
           status: "processing",
@@ -103,7 +103,17 @@ export const runPendingJobs = async (limit: number = 3): Promise<void> => {
           startedAt: new Date(),
           segmentCount: 0,
         })
-        .where(eq(transcriptionJobs.id, job.id));
+        .where(
+          and(
+            eq(transcriptionJobs.id, job.id),
+            eq(transcriptionJobs.status, "pending"),
+          ),
+        )
+        .returning({ id: transcriptionJobs.id });
+
+      if (claimed.length === 0) {
+        continue;
+      }
 
       const med = await db
         .select()
@@ -115,6 +125,10 @@ export const runPendingJobs = async (limit: number = 3): Promise<void> => {
       if (!med) {
         throw new Error(`Media not found: ${job.mediaId ?? "(null)"}`);
       }
+
+      await db
+        .delete(transcriptSegments)
+        .where(eq(transcriptSegments.mediaId, med.id));
 
       let audioPath = storage.resolve(med.storagePath ?? "");
 

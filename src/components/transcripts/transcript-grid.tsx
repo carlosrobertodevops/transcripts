@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Mic, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useActorRole } from "@/lib/use-actor-role";
 import {
   Select,
   SelectContent,
@@ -154,6 +155,7 @@ const compareValues = (
 };
 
 export const TranscriptGrid = ({ initial }: TranscriptGridProps) => {
+  const { canMutate } = useActorRole();
   const router = useRouter();
   const [items, setItems] = useState<Transcript[]>(initial);
   const [query, setQuery] = useState("");
@@ -278,10 +280,12 @@ export const TranscriptGrid = ({ initial }: TranscriptGridProps) => {
               Comece criando sua primeira transcrição
             </p>
           </div>
-          <Button onClick={() => setNewDialogOpen(true)}>
-            <Plus className="mr-2 size-4" />
-            Nova transcrição
-          </Button>
+          {canMutate ? (
+            <Button onClick={() => setNewDialogOpen(true)}>
+              <Plus className="mr-2 size-4" />
+              Nova transcrição
+            </Button>
+          ) : null}
         </div>
       ) : (
         <div className="space-y-6">
@@ -317,10 +321,12 @@ export const TranscriptGrid = ({ initial }: TranscriptGridProps) => {
                   <ArrowDown className="size-4" />
                 )}
               </Button>
-              <Button onClick={() => setNewDialogOpen(true)}>
-                <Plus className="mr-2 size-4" />
-                Nova transcrição
-              </Button>
+              {canMutate ? (
+                <Button onClick={() => setNewDialogOpen(true)}>
+                  <Plus className="mr-2 size-4" />
+                  Nova transcrição
+                </Button>
+              ) : null}
             </div>
           </div>
 

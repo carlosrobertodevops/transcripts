@@ -12,7 +12,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+export const userRoleEnum = pgEnum("user_role", [
+  "super_admin",
+  "admin",
+  "pro",
+  "viewer",
+]);
 export const transcriptStatusEnum = pgEnum("transcript_status", [
   "pending",
   "processing",
@@ -32,7 +37,7 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash"),
   name: text("name"),
   avatarUrl: text("avatar_url"),
-  role: userRoleEnum("role").default("user").notNull(),
+  role: userRoleEnum("role").default("viewer").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -83,6 +88,7 @@ export const media = pgTable("media", {
   durationSeconds: real("duration_seconds"),
   description: text("description"),
   transcriptHtml: text("transcript_html"),
+  hash: text("hash"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

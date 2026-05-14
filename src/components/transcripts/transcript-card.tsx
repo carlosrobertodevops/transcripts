@@ -12,6 +12,7 @@ import {
   Calendar,
   FileText,
   Briefcase,
+  User as UserIcon,
 } from "lucide-react";
 import {
   Card,
@@ -27,7 +28,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { ExportSubmenu } from "@/components/transcripts/export-menu";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
@@ -59,6 +62,8 @@ type Transcript = {
   position: number;
   createdAt: string;
   updatedAt: string;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
   media: Array<{
     id: string;
     filename: string;
@@ -181,6 +186,8 @@ export const TranscriptCard = ({
                   Abrir página
                 </DropdownMenuItem>
               )}
+              <ExportSubmenu transcriptId={transcript.id} />
+              {onDelete && <DropdownMenuSeparator />}
               {onDelete && (
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -293,18 +300,31 @@ export const TranscriptCard = ({
         )}
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between text-sm border-t px-6 py-4">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Mic className="size-4" />
-          <span>{transcript.media?.length ?? 0} mídia(s)</span>
-          {totalDuration > 0 && (
-            <span>• {formatDuration(totalDuration)}</span>
-          )}
+      <CardFooter className="flex flex-col items-stretch gap-2 text-sm border-t px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Mic className="size-4" />
+            <span>{transcript.media?.length ?? 0} mídia(s)</span>
+            {totalDuration > 0 && (
+              <span>• {formatDuration(totalDuration)}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="size-4" />
+            <span>{relativeTime(transcript.createdAt)}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Clock className="size-4" />
-          <span>{relativeTime(transcript.createdAt)}</span>
-        </div>
+        {(transcript.ownerName || transcript.ownerEmail) && (
+          <div
+            className="flex items-center gap-1.5 text-xs text-muted-foreground/80 truncate"
+            title={transcript.ownerEmail ?? undefined}
+          >
+            <UserIcon className="size-3.5 shrink-0" />
+            <span className="truncate">
+              {transcript.ownerName ?? transcript.ownerEmail}
+            </span>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

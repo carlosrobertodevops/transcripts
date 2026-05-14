@@ -509,6 +509,10 @@ className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
 | API provider abstraction | `src/server/services/transcription.ts` |
 | Job runner | `src/server/services/jobs.ts` |
 | Worker loop | `src/workers/loop.ts` |
+| Print view | `src/app/(app)/transcripts/[id]/print/{layout,page,print-view}.tsx` |
+| Export (txt/html/doc/docx) | `src/server/services/export.ts` |
+| Media hash (SHA-256) | `src/server/services/storage.ts`, `src/scripts/backfill-media-hash.ts` |
+| Admin users | `src/app/(app)/admin/users/page.tsx`, `src/server/routes/users.ts` |
 
 ### B. Key Endpoints
 
@@ -525,6 +529,8 @@ className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
 | `POST` | `/api/jobs/run` | Worker tick (internal) |
 | `GET` | `/api/notifications` | Poll (bell) |
 | `PATCH` | `/api/notifications/:id` | Mark read |
+| `GET` | `/api/transcripts/:id/export?format=txt\|html\|doc\|docx` | Export inclui SHA-256 das mídias |
+| `POST` | `/api/media/:id/retranscribe` | Recria job sem reupload |
 
 ### C. Environment Variables
 

@@ -2,47 +2,59 @@ import { db } from "./client";
 import { users, transcripts, media, transcriptSegments } from "./schema";
 import { eq } from "drizzle-orm";
 import bcryptjs from "bcryptjs";
+import type { UserRole } from "@/lib/auth";
 
-const ADMIN_EMAIL = "admin@transcripts.dev";
-const USER_EMAIL = "user@transcripts.dev";
+interface SeedUser {
+  email: string;
+  name: string;
+  password: string;
+  role: UserRole;
+}
+
+const SEED_USERS: SeedUser[] = [
+  { email: "superadmin@transcripts.dev", name: "Super Admin", password: "super123", role: "super_admin" },
+  { email: "admin@transcripts.dev", name: "Admin", password: "admin123", role: "admin" },
+  { email: "pro@transcripts.dev", name: "Pro", password: "pro123", role: "pro" },
+  { email: "viewer@transcripts.dev", name: "Viewer", password: "viewer123", role: "viewer" },
+];
+
+const upsertUser = async (input: SeedUser): Promise<{ id: string; created: boolean }> => {
+  const existing = await db.query.users.findFirst({ where: eq(users.email, input.email) });
+  if (existing) return { id: existing.id, created: false };
+  const passwordHash = await bcryptjs.hash(input.password, 12);
+  const [row] = await db
+    .insert(users)
+    .values({ email: input.email, name: input.name, passwordHash, role: input.role })
+    .returning();
+  return { id: row.id, created: true };
+};
 
 async function seed() {
   try {
-    // Check if admin already exists (idempotent)
-    const existingAdmin = await db.query.users.findFirst({
-      where: eq(users.email, ADMIN_EMAIL),
-    });
+    const results = [];
+    for (const u of SEED_USERS) {
+      const r = await upsertUser(u);
+      results.push({ email: u.email, role: u.role, ...r });
+      console.log(`${r.created ? "✓ Criado" : "↻ Já existe"}: ${u.email} (${u.role})`);
+    }
 
-    if (existingAdmin) {
-      console.log("✓ Seed já aplicado (admin exists)");
+    const superAdmin = results.find((r) => r.role === "super_admin");
+    if (!superAdmin) {
+      console.log("✗ super_admin ausente — abortando seed de transcripts");
       process.exit(0);
     }
 
-    // Create admin user
-    const adminHash = await bcryptjs.hash("admin123", 12);
-    const [admin] = await db
-      .insert(users)
-      .values({
-        email: ADMIN_EMAIL,
-        name: "Admin",
-        passwordHash: adminHash,
-        role: "admin",
-      })
-      .returning();
+    const existingTranscripts = await db
+      .select({ id: transcripts.id })
+      .from(transcripts)
+      .where(eq(transcripts.ownerId, superAdmin.id))
+      .limit(1);
 
-    // Create regular user
-    const userHash = await bcryptjs.hash("user123", 12);
-    const [regularUser] = await db
-      .insert(users)
-      .values({
-        email: USER_EMAIL,
-        name: "User",
-        passwordHash: userHash,
-        role: "user",
-      })
-      .returning();
+    if (existingTranscripts.length > 0) {
+      console.log("↻ Transcripts já existem para super_admin — pulando demo data");
+      process.exit(0);
+    }
 
-    // Seed transcripts for admin
     const transcriptTitles = [
       "Interceptação telemática — alvo TX-001 — sessão 03",
       "Comunicação monitorada — ID 2026-AB-417",
@@ -71,7 +83,7 @@ async function seed() {
       .insert(transcripts)
       .values(
         transcriptTitles.map((title, i) => ({
-          ownerId: admin.id,
+          ownerId: superAdmin.id,
           title,
           operationName: operationNames[i],
           analysis: analyses[i],
@@ -81,7 +93,6 @@ async function seed() {
       )
       .returning();
 
-    // Seed media and segments for each transcript
     for (let i = 0; i < insertedTranscripts.length; i++) {
       const transcript = insertedTranscripts[i];
       const [mediaRecord] = await db
@@ -90,37 +101,30 @@ async function seed() {
           transcriptId: transcript.id,
           filename: `audio-${i}.mp3`,
           mime: "audio/mpeg",
-          sizeBytes: Math.floor(Math.random() * 50000000) + 1000000, // 1-50 MB
+          sizeBytes: Math.floor(Math.random() * 50000000) + 1000000,
           storagePath: `seed/audio-${i}.mp3`,
-          durationSeconds: Math.floor(Math.random() * 240) + 60, // 60-300s
+          durationSeconds: Math.floor(Math.random() * 240) + 60,
         })
         .returning();
 
-      // Create 3 segments per media
       const segmentTexts = [
         "Primeira parte da transcrição com conteúdo relevante sobre o tema discutido.",
         "Segunda parte continuando a discussão com mais detalhes e conclusões.",
         "Terceira parte finalizando o tópico com ações e próximos passos.",
       ];
 
-      await db
-        .insert(transcriptSegments)
-        .values(
-          segmentTexts.map((text, j) => ({
-            mediaId: mediaRecord.id,
-            startMs: j * 30000, // Each segment ~30s
-            endMs: (j + 1) * 30000,
-            text,
-          }))
-        );
+      await db.insert(transcriptSegments).values(
+        segmentTexts.map((text, j) => ({
+          mediaId: mediaRecord.id,
+          startMs: j * 30000,
+          endMs: (j + 1) * 30000,
+          text,
+        }))
+      );
     }
 
     console.log("✓ Seed aplicado com sucesso");
-    console.log(`✓ Admin criado: ${ADMIN_EMAIL} / admin123`);
-    console.log(`✓ Usuário criado: ${USER_EMAIL} / user123`);
-    console.log(`✓ ${insertedTranscripts.length} transcrições inseridas`);
-    console.log(`✓ ${insertedTranscripts.length} mídias + 3 segmentos cada`);
-
+    console.log(`✓ ${insertedTranscripts.length} transcrições + mídias + segmentos`);
     process.exit(0);
   } catch (error) {
     console.error("✗ Erro ao executar seed:", error);

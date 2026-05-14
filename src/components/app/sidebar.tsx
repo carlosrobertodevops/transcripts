@@ -15,11 +15,17 @@ import {
   Sun,
   AudioWaveform,
   Tag,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import type { UserRole } from "@/lib/auth";
 
-export function Sidebar() {
+interface SidebarProps {
+  userRole: UserRole;
+}
+
+export function Sidebar({ userRole }: SidebarProps) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -33,33 +39,30 @@ export function Sidebar() {
     }
   };
 
-  const navItems = [
+  interface NavItem {
+    label: string;
+    href: string;
+    icon: typeof LayoutDashboard;
+    roles?: UserRole[];
+  }
+
+  const navItems: NavItem[] = [
+    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { label: "Transcrições", href: "/transcripts", icon: FileText },
+    { label: "Tags", href: "/tags", icon: Tag },
+    { label: "Notificações", href: "/notifications", icon: Bell },
     {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: LayoutDashboard,
+      label: "Usuários",
+      href: "/admin/users",
+      icon: Users,
+      roles: ["super_admin", "admin", "pro", "viewer"],
     },
-    {
-      label: "Transcrições",
-      href: "/transcripts",
-      icon: FileText,
-    },
-    {
-      label: "Tags",
-      href: "/tags",
-      icon: Tag,
-    },
-    {
-      label: "Notificações",
-      href: "/notifications",
-      icon: Bell,
-    },
-    {
-      label: "Perfil",
-      href: "/profile",
-      icon: User,
-    },
+    { label: "Perfil", href: "/profile", icon: User },
   ];
+
+  const visibleNavItems = navItems.filter(
+    (item) => !item.roles || item.roles.includes(userRole)
+  );
 
   return (
     <aside
@@ -93,7 +96,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-2 p-4">
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href}>

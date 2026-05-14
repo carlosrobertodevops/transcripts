@@ -1,6 +1,6 @@
 # Technical Specification — Chegii Transcripts
 
-**Data:** 2026-05-13 | **Schema:** `src/db/schema.ts` | **Rotas:** `src/server/routes/*.ts`
+**Data:** 2026-05-14 | **Schema:** `src/db/schema.ts` | **Rotas:** `src/server/routes/*.ts` | **Última migração:** `drizzle/0008_add_media_hash.sql`
 
 SaaS transcrição: upload média → fila assíncrona → Whisper local/Groq/OpenAI → edição com segmentos editáveis.
 
@@ -68,6 +68,7 @@ PostgreSQL 16 + Drizzle ORM. Real file: `src/db/schema.ts`.
 | `durationSeconds` | float | YES | — | from worker |
 | `description` | text | YES | — | user-provided |
 | `transcriptHtml` | text | YES | — | rendered segments |
+| `hash` | text | YES | — | SHA-256 do arquivo (migração 0008). Populado em uploads novos; legados ficam null até `backfill-media-hash.ts`. |
 | `createdAt` | timestamp | NO | now() | |
 
 ### Transcription Jobs
@@ -180,6 +181,37 @@ export const passwordChangeSchema = z.object({
 ---
 
 ## Endpoints
+
+### Permissões por role (transcripts/media/shares)
+
+Aplicadas em `src/server/routes/{transcripts,media,shares}.ts` via helpers de `src/lib/permissions.ts`:
+
+| Helper | Regra |
+|--------|-------|
+| `canViewTranscript(actor, owner, share?)` | self ∨ share ∨ (actor !== "viewer" ∧ rank(actor) ≥ rank(owner)) |
+| `canEditTranscript(actor, owner, share?)` | actor !== "viewer" ∧ (self ∨ (share ∧ canEdit) ∨ rank(actor) > rank(owner)) |
+| `canDeleteTranscript(actor, owner)` | actor !== "viewer" ∧ (self ∨ rank(actor) > rank(owner)) |
+| `canCreateTranscript(actor)` | actor !== "viewer" |
+| `visibleOwnerRoles(actor)` | filtro de listagem (`GET /transcripts`) por role do owner |
+
+Rank: `super_admin=4 > admin=3 > pro=2 > viewer=1`.
+
+### Export (`src/server/services/export.ts`)
+
+`GET /api/transcripts/:id/export?format=txt|html|doc|docx` → `200 OK` (binary attachment).
+
+- Validação: `format ∈ {txt, html, doc, docx}` (default `docx`).
+- Auth: `requireAuth`. Owner ou share recipient (canEdit irrelevante para read).
+- Body retornado por `exportTranscript({ transcript, media, segments, ownerName, ownerEmail })`.
+- Inclui em todos os formatos: título, operação, datas, análise (HTML→texto), tabela de mídias com **SHA-256 (`media.hash`)**, segmentos com `[HH:MM:SS]`, footer com proprietário.
+- Filename via `buildExportFilename(transcript, format)`.
+
+### Retranscribe (`src/server/routes/media.ts`)
+
+`POST /api/media/:id/retranscribe` → `202 Accepted` ou `200 OK`.
+
+- Cria novo `transcriptionJobs` (status `pending`) para a mídia existente sem reupload.
+- Reseta `transcripts.status` se necessário.
 
 ### Auth (`src/server/routes/auth.ts`)
 
@@ -758,6 +790,24 @@ Marks all unread notifications as read.
 ---
 
 ## Enums
+
+### Admin (`src/server/routes/users.ts`)
+
+Endpoints protegidos por macro `requireAdmin` (verifica `role === 'admin'` no JWT). Cobrem listagem, edição de role e desativação de usuários. UI em `/(app)/admin/users`.
+
+### Migrations (`drizzle/*.sql`)
+
+| Arquivo | Propósito |
+|---------|-----------|
+| `0000_fuzzy_the_enforcers.sql` | Schema inicial. |
+| `0001_soft_delete_transcripts.sql` | Coluna `deletedAt`. |
+| `0002_add_dates_transcripts.sql` | `operationDate`, `transcriptionDate`. |
+| `0003_add_description_media.sql` | `media.description`. |
+| `0004_add_tags.sql` | Tabela `tags`. |
+| `0005_add_transcript_html_media.sql` | `media.transcriptHtml`. |
+| `0006_old_slayback.sql` | Ajustes diversos. |
+| `0007_expand_user_roles.sql` | Enum `user_role` expandido. |
+| `0008_add_media_hash.sql` | `media.hash` (SHA-256). |
 
 ### User Role
 ```

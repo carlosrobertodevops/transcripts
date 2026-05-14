@@ -15,10 +15,12 @@ export async function verifyPassword(
   return bcryptjs.compare(password, hash);
 }
 
+export type UserRole = "super_admin" | "admin" | "pro" | "viewer";
+
 export interface Session {
   id: string;
   email: string;
-  role: string;
+  role: UserRole;
 }
 
 export async function getSessionFromCookie(req: Request): Promise<Session | null> {
@@ -38,7 +40,7 @@ export async function getSessionFromCookie(req: Request): Promise<Session | null
   return {
     id: payload.sub as string,
     email: payload.email as string,
-    role: payload.role as string,
+    role: payload.role as UserRole,
   };
 }
 

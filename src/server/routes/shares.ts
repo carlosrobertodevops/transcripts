@@ -4,6 +4,24 @@ import { db } from "@/db/client";
 import { shares, transcripts, users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { AuthError, NotFoundError } from "../plugins/error";
+import { canEditTranscript } from "@/lib/permissions";
+import type { UserRole } from "@/lib/auth";
+
+const loadTranscriptOwner = async (
+  transcriptId: string,
+): Promise<{ transcript: typeof transcripts.$inferSelect; owner: { id: string; role: UserRole } } | null> => {
+  const t = await db.select().from(transcripts).where(eq(transcripts.id, transcriptId)).limit(1);
+  if (t.length === 0) return null;
+  const ownerRow = await db
+    .select({ id: users.id, role: users.role })
+    .from(users)
+    .where(eq(users.id, t[0].ownerId))
+    .limit(1);
+  const owner = ownerRow[0]
+    ? { id: ownerRow[0].id, role: ownerRow[0].role as UserRole }
+    : { id: t[0].ownerId, role: "viewer" as UserRole };
+  return { transcript: t[0], owner };
+};
 
 export const sharesRoutes = new Elysia({ prefix: "/transcripts/:id/shares" })
   .post(
@@ -18,21 +36,20 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:id/shares" })
 
       const data = shareSchema.parse(body);
 
-      const transcript = await db
-        .select()
-        .from(transcripts)
-        .where(
-          and(
-            eq(transcripts.id, params.id),
-            eq(transcripts.ownerId, typedUser.id)
-          )
-        )
-        .limit(1);
-
-      if (transcript.length === 0) {
+      const ctxOwner = await loadTranscriptOwner(params.id);
+      if (!ctxOwner) {
         set.status = 404;
         throw new NotFoundError("Transcript not found");
       }
+      if (!canEditTranscript(
+        { id: typedUser.id, role: (user as { role: UserRole }).role },
+        ctxOwner.owner,
+        null,
+      )) {
+        set.status = 403;
+        throw new AuthError("Forbidden");
+      }
+      const transcript = [ctxOwner.transcript];
 
       const sharedUser = await db
         .select()
@@ -87,20 +104,18 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:id/shares" })
       throw new AuthError("Unauthorized");
     }
 
-    const transcript = await db
-      .select()
-      .from(transcripts)
-      .where(
-        and(
-          eq(transcripts.id, params.id),
-          eq(transcripts.ownerId, user.id)
-        )
-      )
-      .limit(1);
-
-    if (transcript.length === 0) {
+    const listCtx = await loadTranscriptOwner(params.id);
+    if (!listCtx) {
       set.status = 404;
       throw new NotFoundError("Transcript not found");
+    }
+    if (!canEditTranscript(
+      { id: user.id, role: user.role as UserRole },
+      listCtx.owner,
+      null,
+    )) {
+      set.status = 403;
+      throw new AuthError("Forbidden");
     }
 
     const result = await db
@@ -160,7 +175,16 @@ export const sharesRoutes = new Elysia({ prefix: "/transcripts/:id/shares" })
         throw new NotFoundError("Share not found");
       }
 
-      if (share[0].ownerId !== user.id) {
+      const shareCtx = await loadTranscriptOwner(share[0].transcriptId);
+      if (!shareCtx) {
+        set.status = 404;
+        throw new NotFoundError("Transcript not found");
+      }
+      if (!canEditTranscript(
+        { id: user.id, role: user.role as UserRole },
+        shareCtx.owner,
+        null,
+      )) {
         set.status = 403;
         throw new AuthError("Forbidden");
       }

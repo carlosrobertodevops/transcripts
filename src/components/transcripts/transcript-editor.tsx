@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Save, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ExportButton } from "@/components/transcripts/export-menu";
+import { useActorRole } from "@/lib/use-actor-role";
 
 const schema = z.object({
   analysis: z.string().max(5000, "Análise não pode exceder 5000 caracteres"),
@@ -30,6 +32,7 @@ export function TranscriptEditor({
   onCancel,
 }: TranscriptEditorProps) {
   const router = useRouter();
+  const { canMutate } = useActorRole();
   const [saving, setSaving] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -71,7 +74,8 @@ export function TranscriptEditor({
       <Textarea
         placeholder="Escreva sua análise aqui..."
         {...form.register("analysis")}
-        disabled={saving}
+        disabled={saving || !canMutate}
+        readOnly={!canMutate}
         className="min-h-48 resize-none"
       />
       {form.formState.errors.analysis && (
@@ -79,20 +83,25 @@ export function TranscriptEditor({
           {form.formState.errors.analysis.message}
         </p>
       )}
-      <div className="flex gap-2 justify-end">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleCancel}
-          disabled={saving}
-        >
-          <X className="size-4 mr-2" />
-          Cancelar
-        </Button>
-        <Button type="submit" disabled={saving}>
-          <Save className="size-4 mr-2" />
-          {saving ? "Salvando..." : "Salvar"}
-        </Button>
+      <div className="flex gap-2 justify-end flex-wrap">
+        <ExportButton transcriptId={transcriptId} variant="outline" />
+        {canMutate ? (
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancel}
+              disabled={saving}
+            >
+              <X className="size-4 mr-2" />
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={saving}>
+              <Save className="size-4 mr-2" />
+              {saving ? "Salvando..." : "Salvar"}
+            </Button>
+          </>
+        ) : null}
       </div>
     </form>
   );
