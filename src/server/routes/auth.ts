@@ -113,9 +113,7 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
     set.status = 200;
     return { ok: true };
   })
-  .get("/me", async (context) => {
-    const user = (context as any).user;
-    const set = (context as any).set;
+  .get("/me", async ({ user, set }) => {
 
     if (!user) {
       set.status = 401;

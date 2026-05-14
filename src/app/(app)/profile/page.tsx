@@ -12,7 +12,7 @@ export default async function Page() {
           Atualize suas informações e senha.
         </p>
       </header>
-      <ProfileForm user={user as any} />
+      <ProfileForm user={user} />
     </div>
   );
 }

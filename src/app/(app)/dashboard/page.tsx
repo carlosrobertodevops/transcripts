@@ -1,6 +1,10 @@
 import { requireUser, getTranscriptsForUser } from "@/lib/auth-server";
 import { TranscriptGrid } from "@/components/transcripts/transcript-grid";
 
+type TranscriptStatus = "pending" | "processing" | "done" | "failed";
+
+const toIso = (d: Date | null) => (d ? d.toISOString() : null);
+
 export default async function DashboardPage({
   searchParams,
 }: {
@@ -9,6 +13,25 @@ export default async function DashboardPage({
   const user = await requireUser();
   const { q } = await searchParams;
   const list = await getTranscriptsForUser(user.id, q);
+
+  const initial = list.map((t) => ({
+    id: t.id,
+    title: t.title,
+    operationName: t.operationName,
+    operationDate: toIso(t.operationDate),
+    transcriptionDate: toIso(t.transcriptionDate),
+    analysis: t.analysis,
+    status: t.status as TranscriptStatus,
+    position: t.position ?? 0,
+    createdAt: t.createdAt.toISOString(),
+    updatedAt: t.updatedAt.toISOString(),
+    media: t.media.map((m) => ({
+      id: m.id,
+      filename: m.filename,
+      mime: m.mime,
+      durationSeconds: m.durationSeconds,
+    })),
+  }));
 
   return (
     <div className="space-y-6">
@@ -20,7 +43,7 @@ export default async function DashboardPage({
           Gerencie e revise transcrições em português brasileiro.
         </p>
       </header>
-      <TranscriptGrid initial={list as any} />
+      <TranscriptGrid initial={initial} />
     </div>
   );
 }

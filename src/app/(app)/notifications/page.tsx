@@ -5,6 +5,11 @@ export default async function Page() {
   const user = await requireUser();
   const list = await getNotifications(user.id);
 
+  const mapped = list.map((n) => ({
+    ...n,
+    createdAt: n.createdAt.toISOString(),
+  }));
+
   return (
     <div className="max-w-3xl space-y-6">
       <header className="flex items-center justify-between">
@@ -17,7 +22,7 @@ export default async function Page() {
           </p>
         </div>
       </header>
-      <NotificationList initial={list as any} />
+      <NotificationList initial={mapped} />
     </div>
   );
 }

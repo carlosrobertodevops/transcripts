@@ -58,6 +58,8 @@ export interface TranscriptWithMedia {
   ownerId: string;
   title: string;
   operationName: string | null;
+  operationDate: Date | null;
+  transcriptionDate: Date | null;
   analysis: string | null;
   status: string;
   position: number | null;
@@ -85,6 +87,8 @@ export const getTranscriptsForUser = async (
       ownerId: transcripts.ownerId,
       title: transcripts.title,
       operationName: transcripts.operationName,
+      operationDate: transcripts.operationDate,
+      transcriptionDate: transcripts.transcriptionDate,
       analysis: transcripts.analysis,
       status: transcripts.status,
       position: transcripts.position,
@@ -180,6 +184,8 @@ export const getTranscriptDetail = async (
       ownerId: transcripts.ownerId,
       title: transcripts.title,
       operationName: transcripts.operationName,
+      operationDate: transcripts.operationDate,
+      transcriptionDate: transcripts.transcriptionDate,
       analysis: transcripts.analysis,
       status: transcripts.status,
       position: transcripts.position,
@@ -245,7 +251,7 @@ export interface Notification {
   id: string;
   userId: string;
   type: string;
-  payload: unknown;
+  payload: Record<string, unknown> | null;
   readAt: Date | null;
   createdAt: Date;
 }
@@ -258,10 +264,15 @@ export const getNotifications = async (
     ? and(eq(notifications.userId, userId), isNull(notifications.readAt))
     : eq(notifications.userId, userId);
 
-  return db
+  const rows = await db
     .select()
     .from(notifications)
     .where(whereConditions)
     .orderBy(sql`${notifications.createdAt} DESC`)
     .limit(50);
+
+  return rows.map((r) => ({
+    ...r,
+    payload: (r.payload ?? null) as Record<string, unknown> | null,
+  }));
 };
