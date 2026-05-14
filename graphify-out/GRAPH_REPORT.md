@@ -1,12 +1,12 @@
 # Graph Report - /Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts  (2026-05-14)
 
 ## Corpus Check
-- 123 files · ~122,604 words
+- 124 files · ~124,332 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 338 nodes · 297 edges · 108 communities detected
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.8)
+- 340 nodes · 299 edges · 108 communities detected
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -154,20 +154,20 @@ Cohesion: 0.18
 Nodes (10): bulkInsertSegments(), collectStream(), runPendingJobs(), createProvider(), getProvider(), GroqProvider, LocalWhisperProvider, OpenAIProvider (+2 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.14
-Nodes (6): Transcribe audio or video file with streaming NDJSON response.      Returns newl, Transcribe audio or video file (bulk response).      Args:         file: Audio/v, transcribe(), transcribe_stream(), LocalStorage, deleteUser()
+Cohesion: 0.12
+Nodes (7): backfill(), Transcribe audio or video file with streaming NDJSON response.      Returns newl, Transcribe audio or video file (bulk response).      Args:         file: Audio/v, transcribe(), transcribe_stream(), LocalStorage, deleteUser()
 
 ### Community 3 - "Community 3"
 Cohesion: 0.19
-Nodes (5): cancelEdit(), handleCreate(), handleDelete(), handleSave(), load()
+Nodes (6): computeEditRoles(), canChangeRole(), canDeleteUser(), canEditUser(), canViewUser(), isSelf()
 
 ### Community 4 - "Community 4"
-Cohesion: 0.38
-Nodes (9): buildDocx(), buildExportFilename(), buildHtml(), buildPlainText(), escapeHtml(), exportTranscript(), fmtDate(), sanitizeFilename() (+1 more)
+Cohesion: 0.25
+Nodes (5): cancelEdit(), handleCreate(), handleDelete(), handleSave(), load()
 
 ### Community 5 - "Community 5"
-Cohesion: 0.25
-Nodes (6): computeEditRoles(), canChangeRole(), canDeleteUser(), canEditUser(), canViewUser(), isSelf()
+Cohesion: 0.38
+Nodes (9): buildDocx(), buildExportFilename(), buildHtml(), buildPlainText(), escapeHtml(), exportTranscript(), fmtDate(), sanitizeFilename() (+1 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.22
@@ -182,16 +182,16 @@ Cohesion: 0.22
 Nodes (2): handleUploadAndTranscribe(), onSubmit()
 
 ### Community 9 - "Community 9"
-Cohesion: 0.36
-Nodes (8): hashPassword(), visibleRoles(), createUser(), findUserByEmail(), findUserById(), listVisibleUsers(), toDTO(), updateUser()
+Cohesion: 0.31
+Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
 
 ### Community 10 - "Community 10"
 Cohesion: 0.36
-Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
+Nodes (8): hashPassword(), visibleRoles(), createUser(), findUserByEmail(), findUserById(), listVisibleUsers(), toDTO(), updateUser()
 
 ### Community 11 - "Community 11"
-Cohesion: 0.31
-Nodes (5): buildPattern(), escapeHtml(), highlightToHtml(), segmentsToHighlightedHtml(), handleApplyTags()
+Cohesion: 0.36
+Nodes (7): api(), apiDelete(), apiGet(), apiPatch(), apiPost(), handleMarkAllAsRead(), handleMarkAsRead()
 
 ### Community 12 - "Community 12"
 Cohesion: 0.33
@@ -223,7 +223,7 @@ Nodes (0):
 
 ### Community 19 - "Community 19"
 Cohesion: 0.5
-Nodes (0): 
+Nodes (2): RichTextEditor(), cn()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.5
@@ -234,12 +234,12 @@ Cohesion: 0.5
 Nodes (0): 
 
 ### Community 22 - "Community 22"
-Cohesion: 0.67
-Nodes (2): computePoll(), poll()
+Cohesion: 0.5
+Nodes (0): 
 
 ### Community 23 - "Community 23"
-Cohesion: 0.5
-Nodes (2): RichTextEditor(), cn()
+Cohesion: 0.67
+Nodes (2): computePoll(), poll()
 
 ### Community 24 - "Community 24"
 Cohesion: 0.67
@@ -740,8 +740,8 @@ Nodes (1): Transcribe audio or video file.      Args:         file: Audio/video 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `deleteUser()` connect `Community 2` to `Community 9`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+- **Why does `deleteUser()` connect `Community 2` to `Community 10`?**
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `runPendingJobs()` (e.g. with `.resolve()` and `getProvider()`) actually correct?**
   _`runPendingJobs()` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `Page()` (e.g. with `requireUser()` and `getTranscriptDetail()`) actually correct?**
@@ -751,4 +751,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.11 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.14 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12 - nodes in this community are weakly interconnected._

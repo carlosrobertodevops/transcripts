@@ -151,9 +151,13 @@ db (pg_isready) → migrate (one-shot) → transcriber (GET /health)
 - **Observabilidade**: Jobs em tabela, visível via `/api/transcripts/:id/jobs`.
 - **Escalabilidade incremental**: Futura: múltiplos workers via load-balancer, Kubernetes, etc.
 
+**Claim atômico (anti-corrida)**: `UPDATE transcription_jobs SET status='processing' WHERE id=? AND status='pending' RETURNING id` — só executa o job se `claimed.length > 0`. Garante exactly-one-worker mesmo com múltiplas instâncias.
+
+**Retry idempotente (anti-duplicata)**: antes de inserir segmentos, `DELETE FROM transcript_segments WHERE media_id=?`. Causa raiz histórica de segmentos duplicados (mesmo `start_ms/end_ms/text` repetido 3-4×) foi retries acumularem inserts. Limpeza legacy via `bun run src/scripts/dedupe-segments.ts`.
+
 **Limites atuais**:
-- Sem garantias de exactly-once (mitigado: retry até 3x antes de `failed`)
-- Sem priorização de jobs (FIFO, limit 5 por tick)
+- Retry até 3x antes de `failed`.
+- Sem priorização de jobs (FIFO, limit 5 por tick).
 
 ---
 
@@ -178,6 +182,34 @@ db (pg_isready) → migrate (one-shot) → transcriber (GET /health)
 - **Escalabilidade**: Container pode rodar multi-threading (GIL mitigation).
 - **Flexibility**: Swap provider em `transcriber/main.py` sem rebuild Next.js.
 - **Cache volumes**: Whisper models em volume persistente (`whisper_cache`).
+- **Tamanho do modelo**: build-arg `WHISPER_MODEL` (`tiny` para VPS ARM 4GB / `base` para dev). `PRE_BAKE_MODEL=true` embute o modelo na imagem para cold-boot resiliente.
+
+---
+
+### ADR-6: Export Server-Side (txt / html / doc / docx)
+
+**Decisão**: Exportação de transcrição em quatro formatos resolvida no servidor por `src/server/services/export.ts`, expondo `GET /api/transcripts/:id/export?format=…`.
+
+**Razão**:
+- **Consistência**: mesmo conteúdo (transcrição + segmentos + metadados + SHA-256 das mídias) em todos os formatos.
+- **Lib única**: `docx@^9.6.1` gera `.docx`/`.doc`; HTML/TXT montados via `buildHtml()` (também usado em print view).
+- **Auditoria**: inclui `media.hash` em cada formato para garantir integridade do arquivo transcrito.
+
+**Trade-offs**:
+- Geração síncrona pode demorar em transcrições muito longas (mitigação futura: streaming).
+
+---
+
+### ADR-7: Hash SHA-256 em `media.hash`
+
+**Decisão**: Cada upload calcula SHA-256 ao gravar arquivo em `STORAGE_DIR` e persiste em `media.hash` (migração `0008_add_media_hash.sql`).
+
+**Razão**:
+- **Integridade**: identifica corrupção / re-upload acidental.
+- **Dedup**: base para detectar mídias iguais entre transcrições.
+- **Auditoria**: hash incluído em todos os documentos exportados.
+
+**Estado legado**: coluna `NULL`-able para mídias antigas. Backfill batch: `bun run src/scripts/backfill-media-hash.ts` lê do `storagePath`, calcula SHA-256, escreve em `media.hash` onde `IS NULL`.
 
 ---
 
@@ -196,7 +228,7 @@ role (ENUM: user | admin) — default: user
 createdAt, updatedAt (TIMESTAMP)
 ```
 
-#### `transcripts` (Contenedor de mídia)
+#### `transcripts` (Container de mídia)
 ```
 id (UUID, PK)
 ownerId (UUID, FK → users.id, CASCADE)
@@ -223,6 +255,7 @@ storagePath (TEXT) — caminho relativo em STORAGE_DIR
 durationSeconds (REAL) — duração do vídeo (segundos)
 description (TEXT) — anotações do usuário
 transcriptHtml (TEXT) — HTML editável desta mídia
+hash (TEXT, NULL-able) — SHA-256 do arquivo (migração 0008), incluído em exports
 createdAt (TIMESTAMP)
 ```
 

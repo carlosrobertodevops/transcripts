@@ -287,7 +287,7 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
           status: t.status,
           createdAt: t.createdAt,
         },
-        media: mediaList.map((m) => ({ id: m.id, filename: m.filename })),
+        media: mediaList.map((m) => ({ id: m.id, filename: m.filename, hash: m.hash })),
         segments: segs.map((s) => ({
           id: s.id,
           mediaId: s.mediaId,

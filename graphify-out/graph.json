@@ -216,7 +216,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_transcripts_page_tsx",
-      "community": 3,
+      "community": 4,
       "norm_label": "page.tsx"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/page.tsx",
       "source_location": "L71",
       "id": "page_formatdate",
-      "community": 3,
+      "community": 4,
       "norm_label": "formatdate()"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L34",
       "id": "page_load",
-      "community": 3,
+      "community": 4,
       "norm_label": "load()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L115",
       "id": "page_handledelete",
-      "community": 3,
+      "community": 4,
       "norm_label": "handledelete()"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/page.tsx",
       "source_location": "L137",
       "id": "page_handleeditclick",
-      "community": 3,
+      "community": 4,
       "norm_label": "handleeditclick()"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/page.tsx",
       "source_location": "L142",
       "id": "page_handlesaved",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlesaved()"
     },
     {
@@ -313,7 +313,7 @@
       "label": "stripHtml()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "id": "print_view_striphtml",
       "community": 15,
       "norm_label": "striphtml()"
@@ -322,7 +322,7 @@
       "label": "fmtDate()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "id": "print_view_fmtdate",
       "community": 15,
       "norm_label": "fmtdate()"
@@ -331,7 +331,7 @@
       "label": "fmtMs()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "id": "print_view_fmtms",
       "community": 15,
       "norm_label": "fmtms()"
@@ -340,7 +340,7 @@
       "label": "PrintView()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "id": "print_view_printview",
       "community": 15,
       "norm_label": "printview()"
@@ -387,7 +387,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/admin/users/page.tsx",
       "source_location": "L98",
       "id": "page_computeeditroles",
-      "community": 5,
+      "community": 3,
       "norm_label": "computeeditroles()"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_tags_page_tsx",
-      "community": 3,
+      "community": 4,
       "norm_label": "page.tsx"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L53",
       "id": "page_handlecreate",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlecreate()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L81",
       "id": "page_startedit",
-      "community": 3,
+      "community": 4,
       "norm_label": "startedit()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L87",
       "id": "page_canceledit",
-      "community": 3,
+      "community": 4,
       "norm_label": "canceledit()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/tags/page.tsx",
       "source_location": "L92",
       "id": "page_handlesave",
-      "community": 3,
+      "community": 4,
       "norm_label": "handlesave()"
     },
     {
@@ -891,97 +891,97 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
-      "community": 4,
+      "community": 5,
       "norm_label": "export.ts"
     },
     {
       "label": "stripHtml()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L50",
+      "source_location": "L51",
       "id": "export_striphtml",
-      "community": 4,
+      "community": 5,
       "norm_label": "striphtml()"
     },
     {
       "label": "escapeHtml()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L66",
+      "source_location": "L67",
       "id": "export_escapehtml",
-      "community": 4,
+      "community": 5,
       "norm_label": "escapehtml()"
     },
     {
       "label": "fmtDate()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L73",
+      "source_location": "L74",
       "id": "export_fmtdate",
-      "community": 4,
+      "community": 5,
       "norm_label": "fmtdate()"
     },
     {
       "label": "fmtMs()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L79",
+      "source_location": "L80",
       "id": "export_fmtms",
-      "community": 4,
+      "community": 5,
       "norm_label": "fmtms()"
     },
     {
       "label": "sanitizeFilename()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L88",
+      "source_location": "L89",
       "id": "export_sanitizefilename",
-      "community": 4,
+      "community": 5,
       "norm_label": "sanitizefilename()"
     },
     {
       "label": "buildExportFilename()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L97",
+      "source_location": "L98",
       "id": "export_buildexportfilename",
-      "community": 4,
+      "community": 5,
       "norm_label": "buildexportfilename()"
     },
     {
       "label": "buildPlainText()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L102",
+      "source_location": "L103",
       "id": "export_buildplaintext",
-      "community": 4,
+      "community": 5,
       "norm_label": "buildplaintext()"
     },
     {
       "label": "buildHtml()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L147",
+      "source_location": "L149",
       "id": "export_buildhtml",
-      "community": 4,
+      "community": 5,
       "norm_label": "buildhtml()"
     },
     {
       "label": "buildDocx()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L220",
+      "source_location": "L225",
       "id": "export_builddocx",
-      "community": 4,
+      "community": 5,
       "norm_label": "builddocx()"
     },
     {
       "label": "exportTranscript()",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L315",
+      "source_location": "L334",
       "id": "export_exporttranscript",
-      "community": 4,
+      "community": 5,
       "norm_label": "exporttranscript()"
     },
     {
@@ -1008,7 +1008,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_user_ts",
-      "community": 9,
+      "community": 10,
       "norm_label": "user.ts"
     },
     {
@@ -1017,7 +1017,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L20",
       "id": "user_todto",
-      "community": 9,
+      "community": 10,
       "norm_label": "todto()"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L30",
       "id": "user_listvisibleusers",
-      "community": 9,
+      "community": 10,
       "norm_label": "listvisibleusers()"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L56",
       "id": "user_finduserbyid",
-      "community": 9,
+      "community": 10,
       "norm_label": "finduserbyid()"
     },
     {
@@ -1044,7 +1044,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L62",
       "id": "user_finduserbyemail",
-      "community": 9,
+      "community": 10,
       "norm_label": "finduserbyemail()"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L68",
       "id": "user_createuser",
-      "community": 9,
+      "community": 10,
       "norm_label": "createuser()"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L89",
       "id": "user_updateuser",
-      "community": 9,
+      "community": 10,
       "norm_label": "updateuser()"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/rich-text-editor.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_ui_rich_text_editor_tsx",
-      "community": 23,
+      "community": 19,
       "norm_label": "rich-text-editor.tsx"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/ui/rich-text-editor.tsx",
       "source_location": "L44",
       "id": "rich_text_editor_richtexteditor",
-      "community": 23,
+      "community": 19,
       "norm_label": "richtexteditor()"
     },
     {
@@ -1548,7 +1548,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_new_transcript_dialog_tsx",
-      "community": 19,
+      "community": 20,
       "norm_label": "new-transcript-dialog.tsx"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L58",
       "id": "new_transcript_dialog_formatsize",
-      "community": 19,
+      "community": 20,
       "norm_label": "formatsize()"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L65",
       "id": "new_transcript_dialog_formatduration",
-      "community": 19,
+      "community": 20,
       "norm_label": "formatduration()"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/new-transcript-dialog.tsx",
       "source_location": "L107",
       "id": "new_transcript_dialog_newtranscriptdialog",
-      "community": 19,
+      "community": 20,
       "norm_label": "newtranscriptdialog()"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_share_dialog_tsx",
-      "community": 20,
+      "community": 21,
       "norm_label": "share-dialog.tsx"
     },
     {
@@ -1773,7 +1773,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L49",
       "id": "share_dialog_fetchshares",
-      "community": 20,
+      "community": 21,
       "norm_label": "fetchshares()"
     },
     {
@@ -1782,7 +1782,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L62",
       "id": "share_dialog_onsubmit",
-      "community": 20,
+      "community": 21,
       "norm_label": "onsubmit()"
     },
     {
@@ -1791,7 +1791,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/share-dialog.tsx",
       "source_location": "L86",
       "id": "share_dialog_handleremove",
-      "community": 20,
+      "community": 21,
       "norm_label": "handleremove()"
     },
     {
@@ -1944,7 +1944,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/export-menu.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_export_menu_tsx",
-      "community": 21,
+      "community": 22,
       "norm_label": "export-menu.tsx"
     },
     {
@@ -1953,7 +1953,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/export-menu.tsx",
       "source_location": "L21",
       "id": "export_menu_triggerexport",
-      "community": 21,
+      "community": 22,
       "norm_label": "triggerexport()"
     },
     {
@@ -1962,7 +1962,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/export-menu.tsx",
       "source_location": "L46",
       "id": "export_menu_exportsubmenu",
-      "community": 21,
+      "community": 22,
       "norm_label": "exportsubmenu()"
     },
     {
@@ -1971,7 +1971,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/export-menu.tsx",
       "source_location": "L75",
       "id": "export_menu_exportbutton",
-      "community": 21,
+      "community": 22,
       "norm_label": "exportbutton()"
     },
     {
@@ -2070,7 +2070,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_media_transcript_editor_tsx",
-      "community": 11,
+      "community": 9,
       "norm_label": "media-transcript-editor.tsx"
     },
     {
@@ -2079,7 +2079,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L55",
       "id": "media_transcript_editor_handleapplytags",
-      "community": 11,
+      "community": 9,
       "norm_label": "handleapplytags()"
     },
     {
@@ -2088,7 +2088,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/media-transcript-editor.tsx",
       "source_location": "L62",
       "id": "media_transcript_editor_handlesave",
-      "community": 11,
+      "community": 9,
       "norm_label": "handlesave()"
     },
     {
@@ -2151,7 +2151,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/live-transcription.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_transcripts_live_transcription_tsx",
-      "community": 22,
+      "community": 23,
       "norm_label": "live-transcription.tsx"
     },
     {
@@ -2160,7 +2160,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/live-transcription.tsx",
       "source_location": "L59",
       "id": "live_transcription_computepoll",
-      "community": 22,
+      "community": 23,
       "norm_label": "computepoll()"
     },
     {
@@ -2169,7 +2169,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/live-transcription.tsx",
       "source_location": "L66",
       "id": "live_transcription_poll",
-      "community": 22,
+      "community": 23,
       "norm_label": "poll()"
     },
     {
@@ -2178,7 +2178,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/transcripts/live-transcription.tsx",
       "source_location": "L111",
       "id": "live_transcription_tick",
-      "community": 22,
+      "community": 23,
       "norm_label": "tick()"
     },
     {
@@ -2196,7 +2196,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_components_app_notification_list_tsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "notification-list.tsx"
     },
     {
@@ -2205,7 +2205,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L28",
       "id": "notification_list_handlemarkasread",
-      "community": 10,
+      "community": 11,
       "norm_label": "handlemarkasread()"
     },
     {
@@ -2214,7 +2214,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/components/app/notification-list.tsx",
       "source_location": "L45",
       "id": "notification_list_handlemarkallasread",
-      "community": 10,
+      "community": 11,
       "norm_label": "handlemarkallasread()"
     },
     {
@@ -2542,12 +2542,30 @@
       "norm_label": "usetoast()"
     },
     {
+      "label": "backfill-media-hash.ts",
+      "file_type": "code",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/scripts/backfill-media-hash.ts",
+      "source_location": "L1",
+      "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_scripts_backfill_media_hash_ts",
+      "community": 2,
+      "norm_label": "backfill-media-hash.ts"
+    },
+    {
+      "label": "backfill()",
+      "file_type": "code",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/scripts/backfill-media-hash.ts",
+      "source_location": "L11",
+      "id": "backfill_media_hash_backfill",
+      "community": 2,
+      "norm_label": "backfill()"
+    },
+    {
       "label": "api-client.ts",
       "file_type": "code",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_api_client_ts",
-      "community": 10,
+      "community": 11,
       "norm_label": "api-client.ts"
     },
     {
@@ -2556,7 +2574,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L1",
       "id": "api_client_api",
-      "community": 10,
+      "community": 11,
       "norm_label": "api()"
     },
     {
@@ -2565,7 +2583,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L23",
       "id": "api_client_apiget",
-      "community": 10,
+      "community": 11,
       "norm_label": "apiget()"
     },
     {
@@ -2574,7 +2592,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L24",
       "id": "api_client_apipost",
-      "community": 10,
+      "community": 11,
       "norm_label": "apipost()"
     },
     {
@@ -2583,7 +2601,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L29",
       "id": "api_client_apipatch",
-      "community": 10,
+      "community": 11,
       "norm_label": "apipatch()"
     },
     {
@@ -2592,7 +2610,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/api-client.ts",
       "source_location": "L34",
       "id": "api_client_apidelete",
-      "community": 10,
+      "community": 11,
       "norm_label": "apidelete()"
     },
     {
@@ -2637,7 +2655,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_highlight_tags_tsx",
-      "community": 11,
+      "community": 9,
       "norm_label": "highlight-tags.tsx"
     },
     {
@@ -2646,7 +2664,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L9",
       "id": "highlight_tags_escaperegexp",
-      "community": 11,
+      "community": 9,
       "norm_label": "escaperegexp()"
     },
     {
@@ -2655,7 +2673,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L11",
       "id": "highlight_tags_escapehtml",
-      "community": 11,
+      "community": 9,
       "norm_label": "escapehtml()"
     },
     {
@@ -2664,7 +2682,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L19",
       "id": "highlight_tags_buildpattern",
-      "community": 11,
+      "community": 9,
       "norm_label": "buildpattern()"
     },
     {
@@ -2673,7 +2691,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L26",
       "id": "highlight_tags_highlighttohtml",
-      "community": 11,
+      "community": 9,
       "norm_label": "highlighttohtml()"
     },
     {
@@ -2682,7 +2700,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/highlight-tags.tsx",
       "source_location": "L41",
       "id": "highlight_tags_segmentstohighlightedhtml",
-      "community": 11,
+      "community": 9,
       "norm_label": "segmentstohighlightedhtml()"
     },
     {
@@ -2727,7 +2745,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_permissions_ts",
-      "community": 5,
+      "community": 3,
       "norm_label": "permissions.ts"
     },
     {
@@ -2736,7 +2754,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L22",
       "id": "permissions_isself",
-      "community": 5,
+      "community": 3,
       "norm_label": "isself()"
     },
     {
@@ -2745,7 +2763,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L24",
       "id": "permissions_canviewuser",
-      "community": 5,
+      "community": 3,
       "norm_label": "canviewuser()"
     },
     {
@@ -2754,7 +2772,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L36",
       "id": "permissions_canedituser",
-      "community": 5,
+      "community": 3,
       "norm_label": "canedituser()"
     },
     {
@@ -2763,7 +2781,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L51",
       "id": "permissions_candeleteuser",
-      "community": 5,
+      "community": 3,
       "norm_label": "candeleteuser()"
     },
     {
@@ -2772,7 +2790,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L56",
       "id": "permissions_cancreateuser",
-      "community": 5,
+      "community": 3,
       "norm_label": "cancreateuser()"
     },
     {
@@ -2781,7 +2799,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L62",
       "id": "permissions_visibleroles",
-      "community": 9,
+      "community": 10,
       "norm_label": "visibleroles()"
     },
     {
@@ -2790,7 +2808,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L69",
       "id": "permissions_editabletargetroles",
-      "community": 5,
+      "community": 3,
       "norm_label": "editabletargetroles()"
     },
     {
@@ -2799,7 +2817,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L77",
       "id": "permissions_creatableroles",
-      "community": 5,
+      "community": 3,
       "norm_label": "creatableroles()"
     },
     {
@@ -2808,7 +2826,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L83",
       "id": "permissions_canaccessusermodule",
-      "community": 5,
+      "community": 3,
       "norm_label": "canaccessusermodule()"
     },
     {
@@ -2817,7 +2835,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/permissions.ts",
       "source_location": "L85",
       "id": "permissions_canchangerole",
-      "community": 5,
+      "community": 3,
       "norm_label": "canchangerole()"
     },
     {
@@ -2826,7 +2844,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/utils.ts",
       "source_location": "L1",
       "id": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_lib_utils_ts",
-      "community": 23,
+      "community": 19,
       "norm_label": "utils.ts"
     },
     {
@@ -2835,7 +2853,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/utils.ts",
       "source_location": "L4",
       "id": "utils_cn",
-      "community": 23,
+      "community": 19,
       "norm_label": "cn()"
     },
     {
@@ -2916,7 +2934,7 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/lib/auth.ts",
       "source_location": "L7",
       "id": "auth_hashpassword",
-      "community": 9,
+      "community": 10,
       "norm_label": "hashpassword()"
     },
     {
@@ -3423,7 +3441,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_transcripts_id_print_print_view_tsx",
       "_tgt": "print_view_striphtml",
@@ -3435,7 +3453,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_transcripts_id_print_print_view_tsx",
       "_tgt": "print_view_fmtdate",
@@ -3447,7 +3465,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_transcripts_id_print_print_view_tsx",
       "_tgt": "print_view_fmtms",
@@ -3459,7 +3477,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_app_app_transcripts_id_print_print_view_tsx",
       "_tgt": "print_view_printview",
@@ -3471,7 +3489,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/app/(app)/transcripts/[id]/print/print-view.tsx",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0,
       "_src": "print_view_printview",
       "_tgt": "print_view_striphtml",
@@ -3903,6 +3921,18 @@
       "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/scripts/backfill-media-hash.ts",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_src": "storage_localstorage_read",
+      "_tgt": "backfill_media_hash_backfill",
+      "source": "storage_localstorage_read",
+      "target": "backfill_media_hash_backfill"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L115",
       "weight": 1.0,
@@ -4059,7 +4089,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_striphtml",
@@ -4071,7 +4101,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_escapehtml",
@@ -4083,7 +4113,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L73",
+      "source_location": "L74",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_fmtdate",
@@ -4095,7 +4125,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_fmtms",
@@ -4107,7 +4137,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L88",
+      "source_location": "L89",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_sanitizefilename",
@@ -4119,7 +4149,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L97",
+      "source_location": "L98",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_buildexportfilename",
@@ -4131,7 +4161,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L102",
+      "source_location": "L103",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_buildplaintext",
@@ -4143,7 +4173,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L147",
+      "source_location": "L149",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_buildhtml",
@@ -4155,7 +4185,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L220",
+      "source_location": "L225",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_builddocx",
@@ -4167,7 +4197,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L315",
+      "source_location": "L334",
       "weight": 1.0,
       "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_server_services_export_ts",
       "_tgt": "export_exporttranscript",
@@ -4179,7 +4209,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0,
       "_src": "export_buildplaintext",
       "_tgt": "export_striphtml",
@@ -4191,7 +4221,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L192",
+      "source_location": "L194",
       "weight": 1.0,
       "_src": "export_buildhtml",
       "_tgt": "export_striphtml",
@@ -4203,7 +4233,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L254",
+      "source_location": "L259",
       "weight": 1.0,
       "_src": "export_builddocx",
       "_tgt": "export_striphtml",
@@ -4215,7 +4245,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L174",
+      "source_location": "L176",
       "weight": 1.0,
       "_src": "export_buildhtml",
       "_tgt": "export_escapehtml",
@@ -4227,7 +4257,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L111",
+      "source_location": "L112",
       "weight": 1.0,
       "_src": "export_buildplaintext",
       "_tgt": "export_fmtdate",
@@ -4239,7 +4269,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L181",
+      "source_location": "L183",
       "weight": 1.0,
       "_src": "export_buildhtml",
       "_tgt": "export_fmtdate",
@@ -4251,7 +4281,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L240",
+      "source_location": "L245",
       "weight": 1.0,
       "_src": "export_builddocx",
       "_tgt": "export_fmtdate",
@@ -4263,7 +4293,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L100",
+      "source_location": "L101",
       "weight": 1.0,
       "_src": "export_buildexportfilename",
       "_tgt": "export_sanitizefilename",
@@ -4275,7 +4305,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L321",
+      "source_location": "L340",
       "weight": 1.0,
       "_src": "export_exporttranscript",
       "_tgt": "export_buildplaintext",
@@ -4287,7 +4317,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L328",
+      "source_location": "L347",
       "weight": 1.0,
       "_src": "export_exporttranscript",
       "_tgt": "export_buildhtml",
@@ -4299,7 +4329,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/export.ts",
-      "source_location": "L341",
+      "source_location": "L360",
       "weight": 1.0,
       "_src": "export_exporttranscript",
       "_tgt": "export_builddocx",
@@ -5925,6 +5955,18 @@
       "_tgt": "use_toast_usetoast",
       "source": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_hooks_use_toast_ts",
       "target": "use_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/scripts/backfill-media-hash.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_scripts_backfill_media_hash_ts",
+      "_tgt": "backfill_media_hash_backfill",
+      "source": "users_carlosroberto_workspace_projetos_fullstack_chegii_transcripts_src_scripts_backfill_media_hash_ts",
+      "target": "backfill_media_hash_backfill",
       "confidence_score": 1.0
     },
     {

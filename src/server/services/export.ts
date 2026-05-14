@@ -21,6 +21,7 @@ export interface ExportSegment {
 export interface ExportMediaLite {
   id: string;
   filename: string;
+  hash?: string | null;
 }
 
 export interface ExportTranscriptInput {
@@ -85,6 +86,29 @@ const fmtMs = (ms: number): string => {
   return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 };
 
+const shortHash = (h?: string | null): string =>
+  h ? `${h.slice(0, 12)}…${h.slice(-4)}` : "";
+
+const dedupeSegments = (segs: ExportSegment[]): ExportSegment[] => {
+  const seen = new Set<string>();
+  const out: ExportSegment[] = [];
+  for (const s of segs) {
+    const key = `${s.startMs}|${s.endMs}|${s.text.trim()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(s);
+  }
+  return out;
+};
+
+const orderedSegmentsFor = (
+  segByMedia: Map<string, ExportSegment[]>,
+  mediaId: string,
+): ExportSegment[] =>
+  dedupeSegments(
+    [...(segByMedia.get(mediaId) ?? [])].sort((a, b) => a.startMs - b.startMs),
+  );
+
 const sanitizeFilename = (s: string): string =>
   s
     .normalize("NFD")
@@ -133,8 +157,9 @@ const buildPlainText = (input: ExportTranscriptInput): string => {
     });
     media.forEach((m) => {
       lines.push("");
-      lines.push(`[${m.filename}]`);
-      const segs = (segByMedia.get(m.id) ?? []).sort((a, b) => a.startMs - b.startMs);
+      const hashTag = m.hash ? `  ·  SHA-256: ${m.hash}` : "";
+      lines.push(`[${m.filename}]${hashTag}`);
+      const segs = orderedSegmentsFor(segByMedia, m.id);
       segs.forEach((s) => {
         lines.push(`  ${fmtMs(s.startMs)} → ${fmtMs(s.endMs)}  ${s.text}`);
       });
@@ -160,7 +185,8 @@ const buildHtml = (input: ExportTranscriptInput): string => {
     .meta div { margin: 0.15rem 0; }
     .analysis { white-space: pre-wrap; }
     .media-block { margin: 1rem 0; padding: 0.75rem 1rem; background: #f7f7f8; border-left: 3px solid #888; border-radius: 4px; }
-    .media-block h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+    .media-block h3 { margin: 0 0 0.5rem; font-size: 1rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem; }
+    .media-block .hash { font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 0.75rem; color: #666; font-weight: 400; word-break: break-all; }
     .seg { padding: 0.25rem 0; display: flex; gap: 0.75rem; }
     .seg time { color: #888; font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 0.8125rem; min-width: 90px; }
     .seg p { margin: 0; flex: 1; }
@@ -198,10 +224,11 @@ const buildHtml = (input: ExportTranscriptInput): string => {
     segments.length > 0
       ? `<h2>Transcrição</h2>${media
           .map((m) => {
-            const segs = (segByMedia.get(m.id) ?? []).sort(
-              (a, b) => a.startMs - b.startMs,
-            );
-            return `<div class="media-block"><h3>${escapeHtml(m.filename)}</h3>${segs
+            const segs = orderedSegmentsFor(segByMedia, m.id);
+            const hashSpan = m.hash
+              ? `<span class="hash" title="${escapeHtml(m.hash)}">· SHA-256: ${escapeHtml(m.hash)}</span>`
+              : "";
+            return `<div class="media-block"><h3>${escapeHtml(m.filename)}${hashSpan}</h3>${segs
               .map(
                 (s) =>
                   `<div class="seg"><time>${fmtMs(s.startMs)} → ${fmtMs(s.endMs)}</time><p>${escapeHtml(s.text)}</p></div>`,
@@ -275,15 +302,26 @@ const buildDocx = async (input: ExportTranscriptInput): Promise<Buffer> => {
       }),
     );
     media.forEach((m) => {
+      const filenameRuns: TextRun[] = [
+        new TextRun({ text: m.filename, bold: true, size: 24 }),
+      ];
+      if (m.hash) {
+        filenameRuns.push(
+          new TextRun({
+            text: `  ·  SHA-256: ${m.hash}`,
+            size: 16,
+            color: "666666",
+            font: "Courier New",
+          }),
+        );
+      }
       children.push(
         new Paragraph({
-          children: [new TextRun({ text: m.filename, bold: true, size: 24 })],
+          children: filenameRuns,
           spacing: { before: 300 },
         }),
       );
-      const segs = (segByMedia.get(m.id) ?? []).sort(
-        (a, b) => a.startMs - b.startMs,
-      );
+      const segs = orderedSegmentsFor(segByMedia, m.id);
       segs.forEach((s) => {
         children.push(
           new Paragraph({

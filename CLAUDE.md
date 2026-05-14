@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   sequential `Edit`calls. Speed matters.
 
 Don't fetch well-known websites (Apple, Google, Stripe, etc.) for design/
-JAPI inspiration if you already know the patterns. Just start working.
+API inspiration if you already know the patterns. Just start working.
 
 ## Interaction Rules
 
@@ -54,7 +54,20 @@ Fluxo de transcrição: upload mídia → cria `media` + `transcription_jobs` (s
 
 ### Tabelas (`src/db/schema.ts`)
 
-`users` · `transcripts` · `media` · `transcription_jobs` · `transcript_segments` · `notifications`.
+`users` · `transcripts` · `media` (com `hash` SHA-256, migração `drizzle/0008_add_media_hash.sql`) · `transcription_jobs` · `transcript_segments` · `notifications`.
+
+Enums: `user_role` (estendido em `drizzle/0007_expand_user_roles.sql`), `transcript_status`, `job_status`.
+
+### Export / Print
+
+- Serviço `src/server/services/export.ts` produz `txt | html | doc | docx` (lib `docx`). Inclui SHA-256 de cada mídia como campo no documento exportado.
+- Endpoint `GET /api/transcripts/:id/export?format=…`.
+- Rota Next `/(app)/transcripts/[id]/print` (`page.tsx` + `print-view.tsx` + `layout.tsx`) renderiza versão otimizada para impressão.
+
+### Admin
+
+- Página `src/app/(app)/admin/users/page.tsx` lista/gerencia usuários (gated por `requireAdmin`).
+- Endpoints admin sob `src/server/routes/users.ts` (CRUD além de `GET /me`, `DELETE /me`).
 
 ### Auth
 
@@ -63,6 +76,11 @@ JWT via `jose`. Plugin em `src/server/plugins/auth.ts` faz `.derive` lendo cooki
 ### Worker contract
 
 `src/workers/loop.ts` é stateless — autenticação só por `INTERNAL_API_KEY`. Um endpoint, sem fila externa. Para processar manualmente: `bun run worker:tick` (single-shot, exit code).
+
+**Claim atômico e retry idempotente** em `runPendingJobs` (`src/server/services/jobs.ts`):
+- `UPDATE transcription_jobs SET status='processing' … WHERE id=? AND status='pending' RETURNING id` garante que apenas um worker pega cada job (sem corrida em múltiplas instâncias).
+- Antes de inserir segmentos, `DELETE FROM transcript_segments WHERE media_id=?` para que retries não acumulem duplicatas (`(startMs, endMs, text)` repetidos).
+- Em export, `dedupeSegments()` em `services/export.ts` defende contra dados legados duplicados.
 
 ## Comandos
 
@@ -82,6 +100,19 @@ bun run db:seed          # bun run src/db/seed.ts
 # Workers
 bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
 bun run worker:tick      # single tick
+
+# Tipos / formato
+bun run typecheck        # tsc --noEmit
+bun run format           # prettier --write .
+bun run format:check
+
+# Deploy (Easypanel)
+bun run deploy           # bun --env-file=.env.deploy.local scripts/deploy-easypanel.ts
+bun run deploy:push      # git push && bun run deploy
+
+# Scripts utilitários
+bun run src/scripts/backfill-media-hash.ts   # backfill SHA-256 em media legadas
+bun run src/scripts/dedupe-segments.ts       # limpa segmentos duplicados (legacy, pré atomic-claim)
 
 # Docker — 4 variantes de compose
 docker compose up --build                                      # prod padrão
@@ -145,6 +176,10 @@ Para Coolify, ver `.env.coolify` e `docs/COOLIFY_DEPLOY.md` — usa `SERVICE_FQD
 - **Shares nested REST**: `/api/transcripts/:id/shares[/:shareId]`.
 - **Theme**: dark default via `next-themes`.
 - **Datas**: `dayjs` locale pt-BR.
+- **Rich text**: TipTap (`@tiptap/react` + `starter-kit` + `extension-link`) para `analysis` e `transcriptHtml`.
+- **Drag-and-drop**: `@dnd-kit/*` em `transcript-grid` (reorder `transcripts.position`).
+- **Export docs**: `docx` lib para gerar `.docx`/`.doc`; HTML/TXT montados via `buildHtml()` (god node em graphify).
+- **Hash de mídia**: `media.hash` SHA-256 calculado em `src/server/services/storage.ts` ao salvar; backfill via `src/scripts/backfill-media-hash.ts`. Hash aparece em todos os formatos exportados.
 
 ## Git
 

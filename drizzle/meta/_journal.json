@@ -57,6 +57,13 @@
       "when": 1778590000000,
       "tag": "0007_expand_user_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1778591000000,
+      "tag": "0008_add_media_hash",
+      "breakpoints": true
     }
   ]
 }

@@ -88,6 +88,7 @@ export const media = pgTable("media", {
   durationSeconds: real("duration_seconds"),
   description: text("description"),
   transcriptHtml: text("transcript_html"),
+  hash: text("hash"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

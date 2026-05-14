@@ -129,6 +129,7 @@ export const mediaRoutes = new Elysia()
 
       const buffer = await file.arrayBuffer();
       const buf = Buffer.from(buffer);
+      const hash = crypto.createHash("sha256").update(buf).digest("hex");
 
       const dest = `${params.id}/${crypto.randomUUID()}-${sanitizeFilename(file.name)}`;
 
@@ -151,6 +152,7 @@ export const mediaRoutes = new Elysia()
           storagePath: dest,
           durationSeconds: null,
           description: desc && desc.trim().length > 0 ? desc : null,
+          hash,
         })
         .returning();
 

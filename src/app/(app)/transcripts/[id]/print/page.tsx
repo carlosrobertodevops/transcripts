@@ -73,7 +73,7 @@ const Page = async ({ params }: PageProps) => {
         analysis: t.analysis,
         status: t.status,
       }}
-      media={mediaList.map((m) => ({ id: m.id, filename: m.filename }))}
+      media={mediaList.map((m) => ({ id: m.id, filename: m.filename, hash: m.hash }))}
       segments={segs.map((s) => ({
         id: s.id,
         mediaId: s.mediaId,

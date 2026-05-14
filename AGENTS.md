@@ -9,7 +9,7 @@ This project has a graphify knowledge graph at graphify-out/.
   sequential `Edit`calls. Speed matters.
 
 Don't fetch well-known websites (Apple, Google, Stripe, etc.) for design/
-JAPI inspiration if you already know the patterns. Just start working.
+API inspiration if you already know the patterns. Just start working.
 
 ## Interaction Rules
 
@@ -48,7 +48,9 @@ Rules:
 |-------|-----------|----------|--------|--------|
 | `worker-loop-agent` | Orquestrar ticks periódicos e invocar job runner para processar transcrições | Timer `WORKER_INTERVAL_MS` (padrão 3000ms) | READ-ONLY jobs/transcription logic | N/A (Bun service) |
 | `job-runner-agent` | Executar lote de jobs pendentes (pending → processing → done/failed) | POST /api/jobs/run | READ-WRITE DB (transcriptions, media) | N/A (Elysia route) |
-| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, PRD.md, SDD.md, SPEC.md, DESIGN.md e .claude/rules/*.md com codebase real. Revisa código e detecta divergências. | Manual (invocação direta ou pós-merge). Usar quando stack/padrões mudarem ou antes de release | READ-ONLY código + graphify. WRITE-ONLY docs/rules | Claude Sonnet 4.5 (qualidade máxima) |
+| `export-agent` | Gerar export de transcrição em `txt | html | doc | docx` incluindo SHA-256 das mídias | GET /api/transcripts/:id/export?format=… | READ-ONLY DB; serializa via `src/server/services/export.ts` (lib `docx`) | N/A (Elysia route + service) |
+| `media-hash-agent` | Calcular SHA-256 de uploads e persistir em `media.hash`; backfill para mídias legadas | Upload em `POST /transcripts/:id/media` (síncrono) ou `bun run src/scripts/backfill-media-hash.ts` (batch) | WRITE `media.hash`; READ filesystem (`STORAGE_DIR`) | N/A (service + script Bun) |
+| `project-docs-synchronizer` | Sincronizar CLAUDE.md, AGENTS.md, GEMINI.md, PRD.md, SDD.md, SPEC.md, DESIGN.md e .claude/rules/*.md com codebase real. Revisa código e detecta divergências. | Manual (invocação direta ou pós-merge). Usar quando stack/padrões mudarem ou antes de release | READ-ONLY código + graphify. WRITE-ONLY docs/rules | Claude Sonnet 4.5 (qualidade máxima) |
 
 ---
 
@@ -115,10 +117,11 @@ Rules:
 **Escopo:**
 
 - **Inspeciona** (READ-ONLY): 
-  - `src/app/`, `src/server/`, `src/db/schema.ts`, `src/workers/`, `transcriber/`
-  - `package.json`, `docker-compose*.yml`, `drizzle.config.ts`, `tsconfig.json`, `.env.example`
+  - `src/app/` (inclui `(app)/admin/users`, `(app)/transcripts/[id]/print`), `src/server/` (rotas + services incl. `export.ts`), `src/db/schema.ts`, `src/workers/`, `src/scripts/` (ex.: `backfill-media-hash.ts`), `transcriber/`
+  - `package.json`, `docker-compose*.yml`, `drizzle.config.ts`, `tsconfig.json`, `.env.example`, `drizzle/*.sql`
   - `graphify-out/GRAPH_REPORT.md` (primário), `graphify-out/manifest.json` (frescor), `graphify-out/graph.json` (dependências)
   - `.claude/rules/*.md` (general.md, architecture.md, ui.md, e novos)
+  - `docs/PRD.md`, `docs/SPEC.md`, `docs/SDD.md`, `docs/DESIGN.md`, `docs/PLANO-CACHE-EASYPANEL.md`, `docs/PLANO-CICD.md`
 - **Escreve** (WRITE-ONLY):
   - `CLAUDE.md`, `AGENTS.md`, `PRD.md`, `SDD.md`, `SPEC.md`, `DESIGN.md`
   - `.claude/rules/*.md` (quando padrões estáveis no código justificarem)
@@ -184,7 +187,7 @@ Agentes devem espelhar esses padrões obrigatoriamente.
 claude-code invoke project-docs-synchronizer --scope src
 
 # worker-loop-agent
-bun run worker:loop      # loop infinito (15s)
+bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
 bun run worker:tick      # single tick, exit code
 
 # job-runner-agent (via worker, ou manual para debug)
@@ -301,17 +304,26 @@ Versões confirmadas de dependencies críticas (source: package.json):
 ```json
 {
   "runtime": "bun@1.x",
-  "framework": "next@16.0.0",
-  "api": "elysia@1.1.27",
-  "orm": "drizzle-orm@0.36.4",
+  "framework": "next@^16.0.0",
+  "react": "^19.0.0",
+  "api": "elysia@^1.1.27",
+  "orm": "drizzle-orm@^0.36.4",
+  "drizzle-kit": "^0.28.1",
   "database": "postgres@16-alpine",
-  "validation": "zod@4.x",
+  "pg-driver": "postgres@^3.4.5",
+  "validation": "zod@^4.0.0",
   "ui": {
-    "tailwind": "4.0.0",
-    "shadcn": "new-york"
+    "tailwind": "^4.0.0",
+    "shadcn": "new-york",
+    "framer-motion": "^12.38.0",
+    "tiptap": "^3.23.1",
+    "dnd-kit": "^6.1.0"
   },
-  "auth": "jose@5.9.6",
-  "sync_date": "2025-05-08"
+  "auth": "jose@^5.9.6",
+  "export": "docx@^9.6.1",
+  "transcriber": "python@3.11/3.12 + faster-whisper",
+  "migrations_latest": "0008_add_media_hash.sql",
+  "sync_date": "2026-05-14"
 }
 ```
 

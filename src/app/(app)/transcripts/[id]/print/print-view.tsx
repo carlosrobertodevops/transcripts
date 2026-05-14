@@ -17,6 +17,7 @@ interface Segment {
 interface MediaLite {
   id: string;
   filename: string;
+  hash?: string | null;
 }
 
 interface PrintViewProps {
@@ -151,6 +152,19 @@ export const PrintView = ({
               return (
                 <div key={m.id} className="print-media">
                   <h3>{m.filename}</h3>
+                  {m.hash ? (
+                    <div
+                      style={{
+                        fontFamily: "ui-monospace, monospace",
+                        fontSize: "0.75rem",
+                        color: "#666",
+                        marginBottom: "0.5rem",
+                        wordBreak: "break-all",
+                      }}
+                    >
+                      <strong>SHA-256:</strong> {m.hash}
+                    </div>
+                  ) : null}
                   {segs.map((s) => (
                     <div key={s.id} className="print-seg">
                       <time>
