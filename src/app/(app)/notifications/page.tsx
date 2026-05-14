@@ -6,7 +6,10 @@ export default async function Page() {
   const list = await getNotifications(user.id);
 
   const mapped = list.map((n) => ({
-    ...n,
+    id: n.id,
+    type: n.type,
+    payload: n.payload,
+    readAt: n.readAt ? n.readAt.toISOString() : null,
     createdAt: n.createdAt.toISOString(),
   }));
 
