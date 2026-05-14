@@ -80,7 +80,7 @@ export const creatableRoles = (actor: Actor): UserRole[] => {
   return [];
 };
 
-export const canAccessUserModule = (actor: Actor): boolean => actor.role !== "viewer" || true;
+export const canAccessUserModule = (_actor: Actor): boolean => true;
 
 export const canChangeRole = (actor: Actor, target: Target, newRole: UserRole): boolean => {
   if (actor.role === "super_admin") return true;

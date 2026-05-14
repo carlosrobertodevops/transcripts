@@ -1,9 +1,14 @@
 import { Elysia } from "elysia";
 import { db } from "@/db/client";
-import { transcripts, media, shares, transcriptSegments } from "@/db/schema";
+import { transcripts, media, shares, transcriptSegments, users } from "@/db/schema";
 import { authPlugin } from "../plugins/auth";
 import { createNotification } from "@/server/services/notification";
 import { storage } from "@/server/services/storage";
+import {
+  exportTranscript,
+  buildExportFilename,
+  type ExportFormat,
+} from "@/server/services/export";
 import { eq, and, or, desc, asc, ilike, inArray, sql, isNull } from "drizzle-orm";
 
 export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
@@ -75,11 +80,23 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
         mediaByTranscript[m.transcriptId].push(m);
       });
 
+      const ownerIds = Array.from(new Set(result.map((t) => t.ownerId)));
+      const owners = await db
+        .select({ id: users.id, name: users.name, email: users.email })
+        .from(users)
+        .where(inArray(users.id, ownerIds));
+      const ownerById = new Map(owners.map((o) => [o.id, o]));
+
       return {
-        items: result.map((t) => ({
-          ...t,
-          media: mediaByTranscript[t.id] || [],
-        })),
+        items: result.map((t) => {
+          const owner = ownerById.get(t.ownerId);
+          return {
+            ...t,
+            media: mediaByTranscript[t.id] || [],
+            ownerName: owner?.name ?? null,
+            ownerEmail: owner?.email ?? null,
+          };
+        }),
         page,
         hasMore,
       };
@@ -192,6 +209,110 @@ export const transcriptsRoutes = new Elysia({ prefix: "/transcripts" })
       media: mediaList,
       segments,
     };
+  })
+  .get("/:id/export", async (ctx: any) => {
+    const { user, params, query, set } = ctx;
+    if (!user) {
+      set.status = 401;
+      return { error: "unauthorized" };
+    }
+
+    const format = (query.format as string | undefined)?.toLowerCase();
+    const VALID: ExportFormat[] = ["txt", "html", "doc", "docx"];
+    if (!format || !VALID.includes(format as ExportFormat)) {
+      set.status = 400;
+      return { error: "invalid_format" };
+    }
+
+    const rows = await db
+      .select()
+      .from(transcripts)
+      .where(and(eq(transcripts.id, params.id), isNull(transcripts.deletedAt)))
+      .limit(1);
+
+    if (rows.length === 0) {
+      set.status = 404;
+      return { error: "not_found" };
+    }
+    const t = rows[0];
+
+    const isOwner = t.ownerId === user.id;
+    if (!isOwner) {
+      const share = await db
+        .select()
+        .from(shares)
+        .where(
+          and(
+            eq(shares.transcriptId, params.id),
+            eq(shares.sharedWithUserId, user.id),
+          ),
+        )
+        .limit(1);
+      if (share.length === 0) {
+        set.status = 403;
+        return { error: "forbidden" };
+      }
+    }
+
+    const mediaList = await db
+      .select()
+      .from(media)
+      .where(eq(media.transcriptId, params.id));
+
+    const mediaIds = mediaList.map((m) => m.id);
+    const segs =
+      mediaIds.length > 0
+        ? await db
+            .select()
+            .from(transcriptSegments)
+            .where(inArray(transcriptSegments.mediaId, mediaIds))
+        : [];
+
+    const ownerRow = await db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, t.ownerId))
+      .limit(1);
+
+    const result = await exportTranscript(
+      {
+        transcript: {
+          id: t.id,
+          title: t.title,
+          operationName: t.operationName,
+          operationDate: t.operationDate,
+          transcriptionDate: t.transcriptionDate,
+          analysis: t.analysis,
+          transcriptHtml: t.transcriptHtml,
+          status: t.status,
+          createdAt: t.createdAt,
+        },
+        media: mediaList.map((m) => ({ id: m.id, filename: m.filename })),
+        segments: segs.map((s) => ({
+          id: s.id,
+          mediaId: s.mediaId,
+          startMs: s.startMs,
+          endMs: s.endMs,
+          text: s.text,
+        })),
+        ownerName: ownerRow[0]?.name ?? null,
+        ownerEmail: ownerRow[0]?.email ?? null,
+      },
+      format as ExportFormat,
+    );
+
+    const filename = buildExportFilename(t.title, result.ext);
+    set.headers["Content-Type"] = result.mime;
+    set.headers["Content-Disposition"] = `attachment; filename="${filename}"`;
+    set.headers["Cache-Control"] = "no-store";
+    return new Response(new Uint8Array(result.bytes), {
+      status: 200,
+      headers: {
+        "Content-Type": result.mime,
+        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Cache-Control": "no-store",
+      },
+    });
   })
   .patch("/reorder", async (ctx: any) => { const { user, body, set } = ctx;
     if (!user) {

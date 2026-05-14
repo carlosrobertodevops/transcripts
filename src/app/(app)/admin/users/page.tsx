@@ -209,11 +209,7 @@ const AdminUsersPage = () => {
                 ? allowedEditRoles
                 : [editing.role]
           }
-          canChangeRole={
-            !!actor && canChangeRole(actor, editing, editing.role) === false
-              ? computeEditRoles(editing).length > 1
-              : computeEditRoles(editing).length > 1
-          }
+          canChangeRole={computeEditRoles(editing).length > 1}
           onSaved={() => loadUsers()}
         />
       ) : null}

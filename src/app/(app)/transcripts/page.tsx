@@ -32,6 +32,7 @@ import {
 import { StatusBadge } from "@/components/transcripts/status-badge";
 import { NewTranscriptDialog } from "@/components/transcripts/new-transcript-dialog";
 import { EditTranscriptDialog } from "@/components/transcripts/edit-transcript-dialog";
+import { ExportSubmenu } from "@/components/transcripts/export-menu";
 import { toast } from "sonner";
 import {
   Loader2,
@@ -248,6 +249,7 @@ const TranscriptsPage = () => {
                           <Pencil className="mr-2 h-4 w-4" />
                           Editar
                         </DropdownMenuItem>
+                        <ExportSubmenu transcriptId={t.id} />
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"

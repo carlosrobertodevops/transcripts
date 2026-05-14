@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Save, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ExportButton } from "@/components/transcripts/export-menu";
 
 const schema = z.object({
   analysis: z.string().max(5000, "Análise não pode exceder 5000 caracteres"),
@@ -79,7 +80,8 @@ export function TranscriptEditor({
           {form.formState.errors.analysis.message}
         </p>
       )}
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end flex-wrap">
+        <ExportButton transcriptId={transcriptId} variant="outline" />
         <Button
           type="button"
           variant="outline"

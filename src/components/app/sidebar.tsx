@@ -55,7 +55,7 @@ export function Sidebar({ userRole }: SidebarProps) {
       label: "Usuários",
       href: "/admin/users",
       icon: Users,
-      roles: ["super_admin", "admin", "pro"],
+      roles: ["super_admin", "admin", "pro", "viewer"],
     },
     { label: "Perfil", href: "/profile", icon: User },
   ];
