@@ -3615,8 +3615,8 @@
       "source_file": "/Users/carlosroberto/Workspace/Projetos/fullstack/chegii/transcripts/src/server/services/user.ts",
       "source_location": "L115",
       "weight": 1.0,
-      "_src": "user_deleteuser",
-      "_tgt": "storage_localstorage_delete",
+      "_src": "storage_localstorage_delete",
+      "_tgt": "user_deleteuser",
       "source": "storage_localstorage_delete",
       "target": "user_deleteuser"
     },
