@@ -15,19 +15,23 @@
 
 ## Elysia API
 
-- Crie rotas REST com Elysia em `src/server/`.
-- Handlers validam entrada, chamam camada de negócio e retornam HTTP status correto.
-- Não coloque regra de negócio complexa diretamente no handler.
-- Use Zod 4 para validar body, params, query e responses quando aplicável.
-- Rotas protegidas devem centralizar autenticação em middleware/plugin.
+- Crie rotas REST com Elysia em `src/server/routes/*`. Registre em `src/server/index.ts` com `.use()`.
+- Handlers validam entrada via Zod, chamam services em `src/server/services/*`, retornam status HTTP correto.
+- Não coloque lógica de negócio complexa no handler — extraia para services.
+- Use Zod 4 para validar body, params, query e response schemas quando aplicável.
+- Rotas protegidas usam macros `requireAuth` / `requireAdmin` do plugin `src/server/plugins/auth.ts`.
+- Prefix padrão: `/api` (montado via catch-all Next `src/app/api/[...path]/route.ts` → `app.handle(req)`).
+- Retorne DTOs, nunca rows brutas do banco com campos sensíveis.
 
 ## Drizzle ORM
 
-- Schema do banco deve ficar em `src/db/schema.ts` ou arquivos dentro de `src/db/schema/`.
-- Client Drizzle deve ficar em `src/db/client.ts` ou `src/db/index.ts`.
-- Migrations devem ser geradas por `bunx drizzle-kit generate` e aplicadas por `bunx drizzle-kit migrate`.
-- Não retorne linhas do banco diretamente pela API quando houver campos sensíveis ou formato público diferente; mapeie para DTO.
-- Use transações Drizzle quando uma regra alterar múltiplas tabelas de forma atômica.
+- Schema em `src/db/schema.ts` (tipos, enums, relações via `relations()`).
+- Client em `src/db/client.ts` (export `db` singleton).
+- Migrations geradas por `bun run db:generate` (Drizzle introspection), aplicadas por `bun run db:migrate`.
+- Para dev: `bun run db:push` sincroniza schema sem migration; `bun run db:studio` abre UI.
+- Nunca retorne rows brutas do banco pela API com campos sensíveis — mapeie para DTOs.
+- Use `db.transaction()` quando regra altera múltiplas tabelas de forma atômica.
+- Exemplo de claim atômico: `UPDATE transcription_jobs SET status='processing' WHERE id=? AND status='pending' RETURNING id` previne corrida entre workers.
 
 ## JWT
 
@@ -66,8 +70,26 @@
 - Variáveis em `.env`/`.env.coolify`/`.env.easypanel`; secrets nunca commitados.
 - Coolify usa `expose` (não `ports`) e variáveis `SERVICE_FQDN_APP`, `SERVICE_USER_POSTGRES`, `SERVICE_BASE64_64_*` autogeradas.
 
+## Export & Print
+
+- Serviço `src/server/services/export.ts` produz `txt | html | doc | docx` via lib `docx`.
+- Endpoint `GET /api/transcripts/:id/export?format=…` retorna arquivo baixável.
+- Rota Next `/(app)/transcripts/[id]/print` renderiza versão otimizada para impressão (page + print-view + layout).
+- Todos os formatos incluem SHA-256 (`media.hash`) de cada mídia como metadado no documento.
+- `dedupeSegments()` em export.ts defende contra dados legados duplicados.
+
+## Permissions & Roles
+
+- Hierarquia: `super_admin > admin > pro (label "Editor") > viewer`.
+- **Mesmo tier**: view-only. **Tier inferior**: CRUD completo. **Tier superior**: bloqueado.
+- `viewer`: read-only (próprio + shares via token).
+- Helpers em `src/lib/permissions.ts`: `canViewTranscript()`, `canEditTranscript()`, `canDeleteTranscript()`, `canCreateTranscript()`, `visibleOwnerRoles()`, `roleRank()`.
+- UI hook: `useActorRole()` em `src/lib/use-actor-role.ts`. Aplicar checagens em `routes/transcripts.ts`, `routes/media.ts`, `routes/shares.ts`.
+
 ## Worker
 
-- `src/workers/loop.ts` faz `setInterval(WORKER_INTERVAL_MS, …)`. Padrão `3000` (3s). Anteriormente documentado como 15s — corrigido.
+- `src/workers/loop.ts` faz `setInterval(WORKER_INTERVAL_MS, …)`. Padrão `3000` (3s).
 - Tick chama `POST /api/jobs/run` com header `x-internal-key: $INTERNAL_API_KEY`.
-- `runPendingJobs` em `src/server/services/jobs.ts` processa até `limit` jobs (padrão 3). FFmpeg pré-processa vídeo → MP3 16kHz mono. Provider escolhido por `getProvider()`. Retry até 3x antes de marcar `failed`.
+- `runPendingJobs` em `src/server/services/jobs.ts` processa até `limit` jobs (padrão 3, máx 5). FFmpeg pré-processa vídeo → MP3 16kHz mono. Provider escolhido por `getProvider()`. Retry até 3x antes de marcar `failed`.
+- **Claim atômico**: `UPDATE transcription_jobs SET status='processing' … WHERE id=? AND status='pending' RETURNING id` garante que apenas um worker pega cada job (sem corrida em múltiplas instâncias).
+- **Idempotência de retry**: antes de inserir segmentos, `DELETE FROM transcript_segments WHERE media_id=?` previne duplicatas.

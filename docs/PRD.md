@@ -43,26 +43,26 @@
 
 ## 3. Público-alvo e Personas
 
-| Persona              | Setor       | Caso de Uso                                      | Requisito-chave                              |
-| -------------------- | ----------- | ------------------------------------------------ | -------------------------------------------- |
+| Persona              | Setor       | Caso de Uso                                     | Requisito-chave                               |
+| -------------------- | ----------- | ----------------------------------------------- | --------------------------------------------- |
 | **Advogada Marina**  | Jurídico    | Transcrever audiências, depoimentos, mediações  | Confidencialidade, precisão, compartilhamento |
-| **Jornalista Pedro** | Mídia       | Entrevistas, transcrição de podcast editado     | Busca rápida, compartilhamento com editor    |
-| **Gerente Ana**      | Atendimento | Qualidade de voz do cliente, análise sentimento | Análise rich-text, exportação de dados       |
-| **Criador Lucas**    | Conteúdo    | Podcasts, vídeos YouTube, múltiplas mídias      | Upload múltiplo, editor de segmentos        |
+| **Jornalista Pedro** | Mídia       | Entrevistas, transcrição de podcast editado     | Busca rápida, compartilhamento com editor     |
+| **Gerente Ana**      | Atendimento | Qualidade de voz do cliente, análise sentimento | Análise rich-text, exportação de dados        |
+| **Criador Lucas**    | Conteúdo    | Podcasts, vídeos YouTube, múltiplas mídias      | Upload múltiplo, editor de segmentos          |
 
 ---
 
 ## 4. Objetivos Mensuráveis
 
-| Métrica                             | Target           | Justificativa                 |
-| ----------------------------------- | ---------------- | ----------------------------- |
-| **Latência p95 transcrição**        | < 0.3x duração   | Provider (local/Groq/OpenAI)  |
-| **WER (Word Error Rate) PT-BR**     | < 8% em áudio    | Whisper-large-v3 baseline     |
-| **Conversão Free → Pro**            | 30% em D30       | Benchmarks SaaS transcrição   |
-| **Retenção D30**                    | > 40%            | Early-stage SaaS típico       |
-| **NPS**                             | > 40             | Produto opinável              |
-| **Minutos transcritos/usuário/mês** | > 60 (pro)       | Métrica de uso                |
-| **Uptime**                          | 99.5% (ops)      | SLA MVP em produção (Coolify) |
+| Métrica                             | Target         | Justificativa                 |
+| ----------------------------------- | -------------- | ----------------------------- |
+| **Latência p95 transcrição**        | < 0.3x duração | Provider (local/Groq/OpenAI)  |
+| **WER (Word Error Rate) PT-BR**     | < 8% em áudio  | Whisper-large-v3 baseline     |
+| **Conversão Free → Pro**            | 30% em D30     | Benchmarks SaaS transcrição   |
+| **Retenção D30**                    | > 40%          | Early-stage SaaS típico       |
+| **NPS**                             | > 40           | Produto opinável              |
+| **Minutos transcritos/usuário/mês** | > 60 (pro)     | Métrica de uso                |
+| **Uptime**                          | 99.5% (ops)    | SLA MVP em produção (Coolify) |
 
 ---
 
@@ -74,7 +74,7 @@
 - **RF-2:** Login com email/senha, JWT em cookie httpOnly, samesite=lax
 - **RF-3:** Refresh token automático (7 dias), logout limpa sessão
 - **RF-4:** Perfil: visualizar/editar nome, alterar senha
-- **Endpoints:** 
+- **Endpoints:**
   - `POST /auth/register` — criar usuário
   - `POST /auth/login` — autenticar
   - `POST /auth/logout` — destruir sessão
@@ -241,12 +241,12 @@
 
 Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
 
-| Actor       | Próprio tier (peers) | Tier inferior | Tier superior | Viewer-owned |
-|-------------|----------------------|---------------|---------------|--------------|
-| SuperAdmin  | view-only            | CRUD          | —             | CRUD         |
-| Admin       | view-only            | CRUD (Pro/Viewer) | bloqueado | CRUD         |
-| Editor (pro)| view-only            | CRUD (Viewer) | bloqueado     | CRUD         |
-| Viewer      | view-only (próprio + shares) | — | bloqueado | view-only (próprio) |
+| Actor        | Próprio tier (peers)         | Tier inferior     | Tier superior | Viewer-owned        |
+| ------------ | ---------------------------- | ----------------- | ------------- | ------------------- |
+| SuperAdmin   | view-only                    | CRUD              | —             | CRUD                |
+| Admin        | view-only                    | CRUD (Pro/Viewer) | bloqueado     | CRUD                |
+| Editor (pro) | view-only                    | CRUD (Viewer)     | bloqueado     | CRUD                |
+| Viewer       | view-only (próprio + shares) | —                 | bloqueado     | view-only (próprio) |
 
 - **Dono** sempre tem CRUD nas próprias transcrições.
 - **Share** (`shares.canEdit`) preserva acesso explícito mesmo cruzando hierarquia.
@@ -285,60 +285,60 @@ Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
 
 ## 7. Requisitos Não-Funcionais
 
-| Requisito           | Especificação                                                                    |
-| ------------------- | -------------------------------------------------------------------------------- |
-| **Performance**     | GET /transcripts p95 < 200ms. Upload + fila < 1s. Transcrição < 0.3x duração    |
-| **Disponibilidade** | 99% uptime (SLA pago em v1.0, MVP em produção via Coolify)                      |
+| Requisito           | Especificação                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| **Performance**     | GET /transcripts p95 < 200ms. Upload + fila < 1s. Transcrição < 0.3x duração                |
+| **Disponibilidade** | 99% uptime (SLA pago em v1.0, MVP em produção via Coolify)                                  |
 | **Segurança**       | JWT httpOnly samesite=lax. Bcrypt 10+ rounds. Validação Zod toda rota. No secret hardcoded. |
-| **Escalabilidade**  | Suportar 1k usuários simultâneos com 1k transcrições/dia (5 min avg).            |
-| **Banco de Dados**  | PostgreSQL 16, Drizzle ORM, migrations versionadas, backup daily.                |
-| **LGPD**            | Dados em servidores PT-BR (Coolify VPS, Easypanel cloud). Soft-delete, audit.   |
-| **Acessibilidade**  | WCAG 2.1 AA (roadmap, MVP em progresso com ShadCN).                             |
-| **SEO**             | Meta tags, og:image, sitemap (landing page futura).                             |
-| **Build**           | Bun build < 2 min. Docker build < 10 min. Deploy < 5 min.                       |
-| **Storage**         | Filesystem local ou S3-compatible. Limite 500MB por arquivo.                    |
+| **Escalabilidade**  | Suportar 1k usuários simultâneos com 1k transcrições/dia (5 min avg).                       |
+| **Banco de Dados**  | PostgreSQL 16, Drizzle ORM, migrations versionadas, backup daily.                           |
+| **LGPD**            | Dados em servidores PT-BR (Coolify VPS, Easypanel cloud). Soft-delete, audit.               |
+| **Acessibilidade**  | WCAG 2.1 AA (roadmap, MVP em progresso com ShadCN).                                         |
+| **SEO**             | Meta tags, og:image, sitemap (landing page futura).                                         |
+| **Build**           | Bun build < 2 min. Docker build < 10 min. Deploy < 5 min.                                   |
+| **Storage**         | Filesystem local ou S3-compatible. Limite 500MB por arquivo.                                |
 
 ---
 
 ## 8. Riscos e Mitigações
 
-| Risco                                    | Probabilidade | Impacto | Mitigação                                                    |
-| ---------------------------------------- | ------------- | ------- | ------------------------------------------------------------ |
+| Risco                                    | Probabilidade | Impacto | Mitigação                                                     |
+| ---------------------------------------- | ------------- | ------- | ------------------------------------------------------------- |
 | **Custo Groq/OpenAI escala com uso**     | Alta          | Alto    | Plano pago limita minutos. Cache requests. Fallback provider. |
-| **WER ruim em áudio com ruído**          | Alta          | Médio   | Aviso no upload. FFmpeg pré-proc. Guia qualidade áudio.      |
-| **Privacidade áudios sensíveis**         | Média         | Alto    | Criptografia at-rest (roadmap). Termo de serviço + LGPD.     |
-| **Integração provider falha**            | Baixa         | Alto    | Circuit breaker. Retry exponencial 3x. Notificar usuário.    |
-| **Perda dados transcrição**              | Muito Baixa   | Crítico | Transação BD. Backup daily. Audit log.                       |
-| **Concorrência edição (race condition)** | Baixa         | Médio   | Lock pessimista on `transcripts.updatedAt`. Roadmap: OT.    |
+| **WER ruim em áudio com ruído**          | Alta          | Médio   | Aviso no upload. FFmpeg pré-proc. Guia qualidade áudio.       |
+| **Privacidade áudios sensíveis**         | Média         | Alto    | Criptografia at-rest (roadmap). Termo de serviço + LGPD.      |
+| **Integração provider falha**            | Baixa         | Alto    | Circuit breaker. Retry exponencial 3x. Notificar usuário.     |
+| **Perda dados transcrição**              | Muito Baixa   | Crítico | Transação BD. Backup daily. Audit log.                        |
+| **Concorrência edição (race condition)** | Baixa         | Médio   | Lock pessimista on `transcripts.updatedAt`. Roadmap: OT.      |
 
 ---
 
 ## 9. Stack Tecnológico
 
-| Camada              | Tecnologia                                           |
-| ------------------- | ---------------------------------------------------- |
-| **Frontend**        | Next.js 16 App Router, React 19, TypeScript          |
-| **Estilo**          | Tailwind CSS v4, ShadCN/UI new-york, Framer Motion  |
-| **Forms**           | react-hook-form + @hookform/resolvers/zod           |
-| **Backend**         | Elysia (Bun), TypeScript, José (JWT)                 |
-| **ORM**             | Drizzle ORM                                          |
-| **Banco de Dados**  | PostgreSQL 16                                        |
-| **Validação**       | Zod v4                                               |
-| **Auth**            | JWT (cookie httpOnly, samesite=lax)                  |
-| **Transcrição**     | Faster-Whisper (local, Python 3.12) + Groq/OpenAI   |
-| **Processamento**   | FFmpeg (MP3 16kHz mono)                              |
-| **Date/Time**       | dayjs (locale pt-BR)                                 |
-| **Runtime**         | Bun (package manager, executor, worker)              |
-| **Hosting**         | Docker Compose (4 variantes)                         |
-| **Deployment**      | Coolify VPS (produção) + Easypanel (cloud beta)      |
-| **Transcriber**     | Container Python 3.12 + FastAPI + faster-whisper    |
-| **Icons**           | Lucide React                                         |
-| **Toast**           | Sonner                                               |
-| **Rich text**       | TipTap (`@tiptap/react`, `starter-kit`, `extension-link`) |
-| **Drag-and-drop**   | `@dnd-kit/core`, `@dnd-kit/sortable`                 |
-| **Export**          | `docx` (txt/html/doc/docx)                           |
-| **Hash**            | SHA-256 (Node `crypto`) em `media.hash`              |
-| **Deploy script**   | `scripts/deploy-easypanel.ts` (`bun run deploy`)     |
+| Camada             | Tecnologia                                                |
+| ------------------ | --------------------------------------------------------- |
+| **Frontend**       | Next.js 16 App Router, React 19, TypeScript               |
+| **Estilo**         | Tailwind CSS v4, ShadCN/UI new-york, Framer Motion        |
+| **Forms**          | react-hook-form + @hookform/resolvers/zod                 |
+| **Backend**        | Elysia (Bun), TypeScript, José (JWT)                      |
+| **ORM**            | Drizzle ORM                                               |
+| **Banco de Dados** | PostgreSQL 16                                             |
+| **Validação**      | Zod v4                                                    |
+| **Auth**           | JWT (cookie httpOnly, samesite=lax)                       |
+| **Transcrição**    | Faster-Whisper (local, Python 3.12) + Groq/OpenAI         |
+| **Processamento**  | FFmpeg (MP3 16kHz mono)                                   |
+| **Date/Time**      | dayjs (locale pt-BR)                                      |
+| **Runtime**        | Bun (package manager, executor, worker)                   |
+| **Hosting**        | Docker Compose (4 variantes)                              |
+| **Deployment**     | Coolify VPS (produção) + Easypanel (cloud beta)           |
+| **Transcriber**    | Container Python 3.12 + FastAPI + faster-whisper          |
+| **Icons**          | Lucide React                                              |
+| **Toast**          | Sonner                                                    |
+| **Rich text**      | TipTap (`@tiptap/react`, `starter-kit`, `extension-link`) |
+| **Drag-and-drop**  | `@dnd-kit/core`, `@dnd-kit/sortable`                      |
+| **Export**         | `docx` (txt/html/doc/docx)                                |
+| **Hash**           | SHA-256 (Node `crypto`) em `media.hash`                   |
+| **Deploy script**  | `scripts/deploy-easypanel.ts` (`bun run deploy`)          |
 
 ---
 
@@ -348,19 +348,19 @@ Hierarquia (rank ↓): **SuperAdmin > Admin > Editor (`pro`) > Viewer**.
 
 - **`docker-compose.yml`** — Produção padrão (db, migrate, transcriber, app, worker)
 - **`docker-compose.local.yml`** — Dev local (+ pgadmin :5050 para debug)
-- **`docker-compose-easypanel.yml`** — Cloud Easypanel (expose sem ports, variáveis SERVICE_*)
+- **`docker-compose-easypanel.yml`** — Cloud Easypanel (expose sem ports, variáveis SERVICE\_\*)
 - **`docker-compose-coolify.yml`** — Coolify VPS (mesmo pattern Easypanel)
 
 ### 10.2 Serviços
 
-| Serviço     | Imagem               | Porta | Volume                    | Healthcheck                   |
-| ----------- | -------------------- | ----- | ------------------------- | ----------------------------- |
-| `db`        | postgres:16-alpine   | 5432  | pgdata (/var/lib/postgresql) | SQL check                     |
-| `migrate`   | (Node.js + drizzle)  | —     | —                         | one-shot, exit 0 = ok         |
-| `transcriber` | python:3.12-slim     | 8000  | whisper_cache (/root/.cache) | GET /health                   |
-| `app`       | (Node.js)            | 3000  | uploads (/app/uploads)    | GET /health (Elysia)          |
-| `worker`    | (Node.js)            | —     | uploads (/app/uploads)    | stateless, logs               |
-| `pgadmin`   | dpage/pgadmin4 (dev) | 5050  | —                         | (dev only)                    |
+| Serviço       | Imagem               | Porta | Volume                       | Healthcheck           |
+| ------------- | -------------------- | ----- | ---------------------------- | --------------------- |
+| `db`          | postgres:16-alpine   | 5432  | pgdata (/var/lib/postgresql) | SQL check             |
+| `migrate`     | (Node.js + drizzle)  | —     | —                            | one-shot, exit 0 = ok |
+| `transcriber` | python:3.12-slim     | 8000  | whisper_cache (/root/.cache) | GET /health           |
+| `app`         | (Node.js)            | 3000  | uploads (/app/uploads)       | GET /health (Elysia)  |
+| `worker`      | (Node.js)            | —     | uploads (/app/uploads)       | stateless, logs       |
+| `pgadmin`     | dpage/pgadmin4 (dev) | 5050  | —                            | (dev only)            |
 
 ### 10.3 Variáveis de Ambiente
 
@@ -443,12 +443,12 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 
 ## 12. Roadmap
 
-| Versão   | Release        | Features Principais                                      |
-| -------- | -------------- | -------------------------------------------------------- |
-| **v0.1** | MVP (Entregue) | Auth, CRUD transcrições, upload múltiplo, fila, shares  |
-| **v0.2** | +60 dias       | Stripe real, SSO Google, API pública draft               |
-| **v0.3** | +90 dias       | Webhooks, export SRT/VTT, realtime SSE início            |
-| **v0.4** | +120 dias      | Realtime colaboração, integração WhatsApp, mobile beta   |
+| Versão   | Release        | Features Principais                                    |
+| -------- | -------------- | ------------------------------------------------------ |
+| **v0.1** | MVP (Entregue) | Auth, CRUD transcrições, upload múltiplo, fila, shares |
+| **v0.2** | +60 dias       | Stripe real, SSO Google, API pública draft             |
+| **v0.3** | +90 dias       | Webhooks, export SRT/VTT, realtime SSE início          |
+| **v0.4** | +120 dias      | Realtime colaboração, integração WhatsApp, mobile beta |
 
 ---
 
@@ -471,85 +471,85 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 
 ### Routes
 
-| Funcionalidade       | Arquivo                              | Endpoints                                         |
-| -------------------- | ------------------------------------ | ------------------------------------------------- |
-| **Auth**             | `/src/server/routes/auth.ts`         | POST /register, /login, /logout, GET /me, POST /refresh |
-| **Transcrições**     | `/src/server/routes/transcripts.ts`  | GET /, POST /, GET/:id, PATCH/:id, DELETE/:id, PATCH /reorder, **GET /:id/export** |
-| **Mídia**            | `/src/server/routes/media.ts`        | POST /transcripts/:id/media, PATCH/:id, DELETE/:id, **POST /:id/retranscribe** |
-| **Compartilhamento** | `/src/server/routes/shares.ts`       | GET /shares, DELETE /:shareId (nested em transcripts) |
-| **Notificações**     | `/src/server/routes/notifications.ts` | GET /, POST /read-all                            |
-| **Jobs/Transcrição** | `/src/server/routes/jobs.ts`         | POST /jobs/run, GET /transcripts/:id/jobs        |
-| **Tags**             | `/src/server/routes/tags.ts`         | GET /, POST /, PATCH/:id, DELETE/:id             |
-| **Users / Admin**    | `/src/server/routes/users.ts`        | GET /me, DELETE /me, endpoints admin (`requireAdmin`) |
-| **Health**           | `/src/server/routes/health.ts`       | GET /health (readiness)                          |
+| Funcionalidade       | Arquivo                               | Endpoints                                                                          |
+| -------------------- | ------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Auth**             | `/src/server/routes/auth.ts`          | POST /register, /login, /logout, GET /me, POST /refresh                            |
+| **Transcrições**     | `/src/server/routes/transcripts.ts`   | GET /, POST /, GET/:id, PATCH/:id, DELETE/:id, PATCH /reorder, **GET /:id/export** |
+| **Mídia**            | `/src/server/routes/media.ts`         | POST /transcripts/:id/media, PATCH/:id, DELETE/:id, **POST /:id/retranscribe**     |
+| **Compartilhamento** | `/src/server/routes/shares.ts`        | GET /shares, DELETE /:shareId (nested em transcripts)                              |
+| **Notificações**     | `/src/server/routes/notifications.ts` | GET /, POST /read-all                                                              |
+| **Jobs/Transcrição** | `/src/server/routes/jobs.ts`          | POST /jobs/run, GET /transcripts/:id/jobs                                          |
+| **Tags**             | `/src/server/routes/tags.ts`          | GET /, POST /, PATCH/:id, DELETE/:id                                               |
+| **Users / Admin**    | `/src/server/routes/users.ts`         | GET /me, DELETE /me, endpoints admin (`requireAdmin`)                              |
+| **Health**           | `/src/server/routes/health.ts`        | GET /health (readiness)                                                            |
 
 ### Schema
 
-| Tabela               | Arquivo              | Campos-chave                                       |
-| -------------------- | -------------------- | -------------------------------------------------- |
-| **users**            | `/src/db/schema.ts`  | id, email, name, avatarUrl, role, createdAt       |
-| **transcripts**      | —                    | id, ownerId, title, operationName, analysis, status, position, deletedAt |
-| **media**            | —                    | id, transcriptId, filename, mime, sizeBytes, storagePath, durationSeconds, description, transcriptHtml, **hash** (SHA-256) |
-| **transcriptionJobs** | —                    | id, mediaId, provider, status, attempts, error, segmentCount, processingMs |
-| **transcriptSegments** | —                    | id, mediaId, startMs, endMs, text                 |
-| **shares**           | —                    | id, transcriptId, ownerId, sharedWithUserId, canEdit |
-| **notifications**    | —                    | id, userId, type, payload (JSONB), readAt        |
-| **tags**             | —                    | id, ownerId, name, color                         |
+| Tabela                 | Arquivo             | Campos-chave                                                                                                               |
+| ---------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **users**              | `/src/db/schema.ts` | id, email, name, avatarUrl, role, createdAt                                                                                |
+| **transcripts**        | —                   | id, ownerId, title, operationName, analysis, status, position, deletedAt                                                   |
+| **media**              | —                   | id, transcriptId, filename, mime, sizeBytes, storagePath, durationSeconds, description, transcriptHtml, **hash** (SHA-256) |
+| **transcriptionJobs**  | —                   | id, mediaId, provider, status, attempts, error, segmentCount, processingMs                                                 |
+| **transcriptSegments** | —                   | id, mediaId, startMs, endMs, text                                                                                          |
+| **shares**             | —                   | id, transcriptId, ownerId, sharedWithUserId, canEdit                                                                       |
+| **notifications**      | —                   | id, userId, type, payload (JSONB), readAt                                                                                  |
+| **tags**               | —                   | id, ownerId, name, color                                                                                                   |
 
 ### Pages (Next.js)
 
-| Página                    | Arquivo                             | Tipo      | Auth    |
-| ------------------------- | ----------------------------------- | --------- | ------- |
-| **Root Redirect**         | `/src/app/page.tsx`                 | server    | auto    |
-| **Login**                 | `/src/app/(auth)/login/page.tsx`    | client    | public  |
-| **Register**              | `/src/app/(auth)/register/page.tsx` | client    | public  |
-| **Dashboard**             | `/src/app/(app)/dashboard/page.tsx` | client    | auth    |
-| **Transcrição (detalhe)** | `/src/app/(app)/transcripts/[id]/page.tsx` | client | auth |
-| **Transcrições (list)**   | `/src/app/(app)/transcripts/page.tsx` | client    | auth    |
-| **Perfil**                | `/src/app/(app)/profile/page.tsx`   | client    | auth    |
-| **Notificações**          | `/src/app/(app)/notifications/page.tsx` | client | auth    |
-| **Tags**                  | `/src/app/(app)/tags/page.tsx`      | client    | auth    |
-| **Admin Users**           | `/src/app/(app)/admin/users/page.tsx` | client  | admin   |
-| **Print View**            | `/src/app/(app)/transcripts/[id]/print/page.tsx` | client/print | auth |
+| Página                    | Arquivo                                          | Tipo         | Auth   |
+| ------------------------- | ------------------------------------------------ | ------------ | ------ |
+| **Root Redirect**         | `/src/app/page.tsx`                              | server       | auto   |
+| **Login**                 | `/src/app/(auth)/login/page.tsx`                 | client       | public |
+| **Register**              | `/src/app/(auth)/register/page.tsx`              | client       | public |
+| **Dashboard**             | `/src/app/(app)/dashboard/page.tsx`              | client       | auth   |
+| **Transcrição (detalhe)** | `/src/app/(app)/transcripts/[id]/page.tsx`       | client       | auth   |
+| **Transcrições (list)**   | `/src/app/(app)/transcripts/page.tsx`            | client       | auth   |
+| **Perfil**                | `/src/app/(app)/profile/page.tsx`                | client       | auth   |
+| **Notificações**          | `/src/app/(app)/notifications/page.tsx`          | client       | auth   |
+| **Tags**                  | `/src/app/(app)/tags/page.tsx`                   | client       | auth   |
+| **Admin Users**           | `/src/app/(app)/admin/users/page.tsx`            | client       | admin  |
+| **Print View**            | `/src/app/(app)/transcripts/[id]/print/page.tsx` | client/print | auth   |
 
 ### Componentes (Domain)
 
-| Componente                      | Arquivo                                         | Uso                          |
-| ------------------------------- | ----------------------------------------------- | ---------------------------- |
-| **NewTranscriptDialog**         | `/src/components/transcripts/new-transcript-dialog.tsx` | Create + upload múltiplo |
-| **TranscriptGrid**              | `/src/components/transcripts/transcript-grid.tsx` | Dashboard (cards drag-drop) |
-| **MediaTranscriptEditor**       | `/src/components/transcripts/media-transcript-editor.tsx` | Edit segments |
-| **LiveTranscription**           | `/src/components/transcripts/live-transcription.tsx` | Monitor fila (real-time UI) |
-| **ShareDialog**                 | `/src/components/transcripts/share-dialog.tsx` | Compartilhar transcript |
-| **RichTextEditor**              | `/src/components/ui/rich-text-editor.tsx`      | Edit analysis (Tiptap?)     |
-| **BgGrid**                      | `/src/components/ui/bg-grid.tsx`                | Background grid visual      |
+| Componente                | Arquivo                                                   | Uso                         |
+| ------------------------- | --------------------------------------------------------- | --------------------------- |
+| **NewTranscriptDialog**   | `/src/components/transcripts/new-transcript-dialog.tsx`   | Create + upload múltiplo    |
+| **TranscriptGrid**        | `/src/components/transcripts/transcript-grid.tsx`         | Dashboard (cards drag-drop) |
+| **MediaTranscriptEditor** | `/src/components/transcripts/media-transcript-editor.tsx` | Edit segments               |
+| **LiveTranscription**     | `/src/components/transcripts/live-transcription.tsx`      | Monitor fila (real-time UI) |
+| **ShareDialog**           | `/src/components/transcripts/share-dialog.tsx`            | Compartilhar transcript     |
+| **RichTextEditor**        | `/src/components/ui/rich-text-editor.tsx`                 | Edit analysis (Tiptap?)     |
+| **BgGrid**                | `/src/components/ui/bg-grid.tsx`                          | Background grid visual      |
 
 ### Serviços
 
-| Serviço             | Arquivo                              | Funções-chave                                  |
-| ------------------- | ------------------------------------ | ---------------------------------------------- |
-| **Jobs/Transcrição** | `/src/server/services/jobs.ts`       | runPendingJobs, createTranscriptionJob, retryJob |
-| **Transcription**   | `/src/server/services/transcription.ts` | getProvider, transcribeMedia, parseSegments |
-| **Notification**    | `/src/server/services/notification.ts` | createNotification, markRead, delete           |
-| **Storage**         | `/src/server/services/storage.ts`    | saveFile (+ SHA-256), deleteFile, getMetadata  |
-| **Export**          | `/src/server/services/export.ts`     | exportTranscript (txt/html/doc/docx), buildExportFilename, buildHtml |
-| **Share**           | `/src/server/services/share.ts`      | createShare, revokeShare                       |
-| **User**            | `/src/server/services/user.ts`       | listUsers (admin), updateProfile, deleteAccount |
+| Serviço              | Arquivo                                 | Funções-chave                                                        |
+| -------------------- | --------------------------------------- | -------------------------------------------------------------------- |
+| **Jobs/Transcrição** | `/src/server/services/jobs.ts`          | runPendingJobs, createTranscriptionJob, retryJob                     |
+| **Transcription**    | `/src/server/services/transcription.ts` | getProvider, transcribeMedia, parseSegments                          |
+| **Notification**     | `/src/server/services/notification.ts`  | createNotification, markRead, delete                                 |
+| **Storage**          | `/src/server/services/storage.ts`       | saveFile (+ SHA-256), deleteFile, getMetadata                        |
+| **Export**           | `/src/server/services/export.ts`        | exportTranscript (txt/html/doc/docx), buildExportFilename, buildHtml |
+| **Share**            | `/src/server/services/share.ts`         | createShare, revokeShare                                             |
+| **User**             | `/src/server/services/user.ts`          | listUsers (admin), updateProfile, deleteAccount                      |
 
 ### Worker
 
-| Componente       | Arquivo                         | Descrição                                |
-| ---------------- | ------------------------------- | ---------------------------------------- |
-| **Loop infinito** | `/src/workers/loop.ts`          | setInterval(WORKER_INTERVAL_MS, callEndpoint) |
-| **Single-shot**  | `/src/workers/tick.ts`          | Manual trigger (bun run worker:tick)    |
+| Componente        | Arquivo                | Descrição                                     |
+| ----------------- | ---------------------- | --------------------------------------------- |
+| **Loop infinito** | `/src/workers/loop.ts` | setInterval(WORKER_INTERVAL_MS, callEndpoint) |
+| **Single-shot**   | `/src/workers/tick.ts` | Manual trigger (bun run worker:tick)          |
 
 ### Helpers
 
-| Helper              | Arquivo                      | Uso                                |
-| ------------------- | ----------------------------- | ---------------------------------- |
-| **Auth (client)**   | `/src/lib/auth.ts`            | getSessionFromCookie, logout helpers |
-| **Auth (server)**   | `/src/lib/auth-server.ts`     | verifyJWT, extractPayload (Jose)  |
-| **Zod schemas**     | `/src/lib/zod.ts`             | Validadores reutilizáveis         |
+| Helper            | Arquivo                   | Uso                                  |
+| ----------------- | ------------------------- | ------------------------------------ |
+| **Auth (client)** | `/src/lib/auth.ts`        | getSessionFromCookie, logout helpers |
+| **Auth (server)** | `/src/lib/auth-server.ts` | verifyJWT, extractPayload (Jose)     |
+| **Zod schemas**   | `/src/lib/zod.ts`         | Validadores reutilizáveis            |
 
 ---
 
@@ -567,4 +567,3 @@ SERVICE_BASE64_64_*=<> (secrets encoded)
 - [x] Roadmap v0.2-v0.4 preservado
 - [x] Personas e métricas preservadas do PRD anterior
 - [x] Rigor: nenhuma feature inventada — tudo vem do código
-

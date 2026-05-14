@@ -14,20 +14,33 @@
 
 ```bash
 bun install
-bun run dev
-bunx drizzle-kit generate
-bunx drizzle-kit migrate
-bunx drizzle-kit studio
+bun run dev              # Next.js + Elysia turbopack
+bun run build && bun start
+bun run lint             # next lint (eslint-config-next)
+bun run typecheck        # tsc --noEmit
+bun run format           # prettier --write .
+bun run format:check
+
+# DB (Drizzle)
+bun run db:generate      # drizzle-kit generate
+bun run db:migrate       # aplicar migrations
+bun run db:push          # dev: sync schema sem migration
+bun run db:studio        # UI Drizzle Studio
+bun run db:seed          # bun run src/db/seed.ts
+
+# Workers
+bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
+bun run worker:tick      # single-shot
+
+# Deploy
+bun run deploy           # deploy Easypanel
+bun run deploy:push      # git push && deploy
 
 # Compose variants
 docker compose up --build                                      # prod padrão
 docker compose -f docker-compose.local.yml up --build           # dev local + pgadmin
 docker compose -f docker-compose-easypanel.yml up --build       # Easypanel
 docker compose -f docker-compose-coolify.yml up --build         # Coolify VPS
-
-# Workers
-bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
-bun run worker:tick      # single-shot
 ```
 
 ## Estrutura Esperada

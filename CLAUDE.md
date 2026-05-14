@@ -5,23 +5,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Atentions
 
 - Don't over-explain, over-engineer, or add unrequested improvements.
-- When making widespread changes to a file, use one "Write” instead of many
-  sequential `Edit`calls. Speed matters.
+- When making widespread changes to a file, use one "Write" instead of many
+  sequential `Edit` calls. Speed matters.
 
 Don't fetch well-known websites (Apple, Google, Stripe, etc.) for design/
 API inspiration if you already know the patterns. Just start working.
 
 ## Interaction Rules
 
-"Again" or "re-run" means repeat the same workflow with the same approach never rebuild from scratch.
+"Again" or "re-run" means repeat the same workflow with the same approach, never rebuild from scratch.
 For tasks >3 steps involving an external API or tool, outline your plan
 in 3-5 bullets and wait for approval before executing.
 Only make the specific edits requested. Never add face swaps, composite
 changes, extra refactors, or modifications that weren't asked for.
 
 - When iterating on creative work (thumbnails, designs, copy),
-  change only
-  what the user asked to change. Preserve everything else excty
+  change only what the user asked to change. Preserve everything else exactly.
 
 ## Browser Automation
 
@@ -36,21 +35,21 @@ profiles if MCP is unresponsive.
 
 ## Visão Geral
 
-SaaS de transcrição de mídia (áudio/vídeo) com dashboard web. Upload → fila assíncrona → provider Whisper (local Faster-Whisper, Groq, ou OpenAI) → transcrição editável com segmentos.
+SaaS de transcrição de mídia (áudio/vídeo) com dashboard web. Upload → fila assíncrona → provider Whisper (local Faster-Whisper, Groq, ou OpenAI) → transcrição editável com segmentos. Suporta exportação em múltiplos formatos (txt, html, doc, docx) com hash SHA-256 das mídias.
 
 Responda em **português do Brasil**, objetivo, sem floreios.
 
 ## Arquitetura
 
-Quatro processos, um repositório:
+Cinco processos, um repositório:
 
-1. **Next.js 16 (App Router)** em `src/app/` — UI + monta a API.
+1. **Next.js 16 (App Router)** em `src/app/` — UI (Server Components por padrão) + monta a API.
 2. **Elysia HTTP** em `src/server/index.ts` (prefix `/api`) — montada dentro do Next via catch-all `src/app/api/[...path]/route.ts`. Toda rota Next `/api/*` cai em `app.handle(req)`.
-3. **PostgreSQL 16** via Drizzle ORM. Schema em `src/db/schema.ts`. Client em `src/db/client.ts`.
+3. **PostgreSQL 16** via Drizzle ORM. Schema em `src/db/schema.ts`. Client em `src/db/client.ts`. Migrations em `drizzle/`.
 4. **Worker Bun** em `src/workers/loop.ts` — chama `POST /api/jobs/run` com header `x-internal-key` a cada `WORKER_INTERVAL_MS` (padrão `3000`). Endpoint roda `runPendingJobs(limit)` em `src/server/services/jobs.ts` (limit padrão 3, aceita até 5).
 5. **Transcriber Python** em `transcriber/` (FastAPI + faster-whisper) — container separado em `:8000`, usado quando `TRANSCRIPTION_PROVIDER=local` via `TRANSCRIBER_URL`.
 
-Fluxo de transcrição: upload mídia → cria `media` + `transcription_jobs` (status=`pending`) → worker tick → `runPendingJobs` marca `processing`, lê arquivo de `STORAGE_DIR`, chama provider (`getProvider()` em `services/transcription.ts`), grava `transcript_segments`, status `done`/`failed`, cria `notifications`.
+**Fluxo de transcrição:** upload mídia → cria `media` + `transcription_jobs` (status=`pending`) → worker tick → `runPendingJobs` marca `processing`, lê arquivo de `STORAGE_DIR`, chama provider (`getProvider()` em `services/transcription.ts`), grava `transcript_segments`, status `done`/`failed`, cria `notifications`.
 
 ### Tabelas (`src/db/schema.ts`)
 
@@ -73,11 +72,12 @@ Enums: `user_role` (estendido em `drizzle/0007_expand_user_roles.sql`), `transcr
 
 JWT via `jose`. Plugin em `src/server/plugins/auth.ts` faz `.derive` lendo cookie de sessão (`getSessionFromCookie`), expõe `user: Session | null`. Macros `requireAuth` / `requireAdmin` aplicam em rotas. Payload usa `sub` para id (nunca `id`). Helpers: `src/lib/auth.ts` (cliente) e `src/lib/auth-server.ts`.
 
-### Worker contract
+### Worker Contract
 
-`src/workers/loop.ts` é stateless — autenticação só por `INTERNAL_API_KEY`. Um endpoint, sem fila externa. Para processar manualmente: `bun run worker:tick` (single-shot, exit code).
+`src/workers/loop.ts` é stateless — autenticação só por `INTERNAL_API_KEY`. Um endpoint, sem fila externa. Para processar manualmente: `bun run worker:tick` (single-shot, exit code 0/1).
 
 **Claim atômico e retry idempotente** em `runPendingJobs` (`src/server/services/jobs.ts`):
+
 - `UPDATE transcription_jobs SET status='processing' … WHERE id=? AND status='pending' RETURNING id` garante que apenas um worker pega cada job (sem corrida em múltiplas instâncias).
 - Antes de inserir segmentos, `DELETE FROM transcript_segments WHERE media_id=?` para que retries não acumulem duplicatas (`(startMs, endMs, text)` repetidos).
 - Em export, `dedupeSegments()` em `services/export.ts` defende contra dados legados duplicados.
@@ -98,8 +98,8 @@ bun run db:studio
 bun run db:seed          # bun run src/db/seed.ts
 
 # Workers
-bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3s)
-bun run worker:tick      # single tick
+bun run worker:loop      # loop infinito (WORKER_INTERVAL_MS, padrão 3000ms)
+bun run worker:tick      # single tick, exit code 0/1
 
 # Tipos / formato
 bun run typecheck        # tsc --noEmit
@@ -116,7 +116,7 @@ bun run src/scripts/dedupe-segments.ts       # limpa segmentos duplicados (legac
 
 # Docker — 4 variantes de compose
 docker compose up --build                                      # prod padrão
-docker compose -f docker-compose.local.yml up --build           # dev local
+docker compose -f docker-compose.local.yml up --build           # dev local + pgadmin
 docker compose -f docker-compose-easypanel.yml up --build       # Easypanel
 docker compose -f docker-compose-coolify.yml up --build         # Coolify VPS
 # Serviços: db (postgres:16-alpine), migrate (one-shot Drizzle),
@@ -184,7 +184,7 @@ Para Coolify, ver `.env.coolify` e `docs/COOLIFY_DEPLOY.md` — usa `SERVICE_FQD
 
 ## Git
 
-Conventional Commits obrigatório (`feat:`, `fix:`, `docs:`, `refactor:`). **Nunca** commitar sem aprovação explícita do usuário.
+Conventional Commits obrigatório (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`). **Nunca** commitar sem aprovação explícita do usuário.
 
 ## graphify
 
